@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Los id deben ser iguales a los id de los destinos en nav_graph.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/panelFragment"
+        android:icon="@drawable/ic_inicio"
+        android:title="@string/menu_inicio" />
+    <item
+        android:id="@+id/pacientesFragment"
+        android:icon="@drawable/ic_pacientes"
+        android:title="@string/menu_pacientes" />
+    <item
+        android:id="@+id/inventarioFragment"
+        android:icon="@drawable/ic_inventario"
+        android:title="@string/menu_inventario" />
+    <item
+        android:id="@+id/ventaFragment"
+        android:icon="@drawable/ic_ventas"
+        android:title="@string/menu_ventas" />
+    <item
+        android:id="@+id/laboratorioFragment"
+        android:icon="@drawable/ic_laboratorio"
+        android:title="@string/menu_laboratorio" />
+</menu>

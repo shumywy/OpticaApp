@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Tema de la app. Cambiar un color aquí lo cambia en todas las pantallas. -->
+    <style name="Theme.OpticaApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/azul</item>
+        <item name="colorOnPrimary">@color/blanco</item>
+        <item name="colorPrimaryContainer">@color/azul_claro</item>
+        <item name="colorOnPrimaryContainer">@color/azul</item>
+        <item name="colorSecondary">@color/azul</item>
+        <item name="colorSecondaryContainer">@color/azul_claro</item>
+        <item name="colorOnSecondaryContainer">@color/azul</item>
+        <item name="colorError">@color/rojo</item>
+
+        <item name="android:colorBackground">@color/fondo</item>
+        <item name="colorSurface">@color/superficie</item>
+        <item name="colorOnSurface">@color/texto</item>
+        <item name="colorOnSurfaceVariant">@color/texto_secundario</item>
+        <item name="colorOutline">@color/borde</item>
+        <item name="colorOutlineVariant">@color/borde</item>
+        <item name="colorSurfaceContainerLowest">@color/superficie</item>
+        <item name="colorSurfaceContainerLow">@color/superficie</item>
+        <item name="colorSurfaceContainer">@color/superficie</item>
+        <item name="colorSurfaceContainerHigh">@color/superficie</item>
+        <item name="colorSurfaceContainerHighest">@color/icono_fondo</item>
+
+        <item name="android:textColorPrimary">@color/texto</item>
+        <item name="android:textColorSecondary">@color/texto_secundario</item>
+        <item name="android:textColorHint">@color/texto_secundario</item>
+
+        <!-- Estilos por defecto de los controles -->
+        <item name="editTextStyle">@style/Campo</item>
+        <item name="android:editTextStyle">@style/Campo</item>
+        <item name="spinnerStyle">@style/Selector</item>
+        <item name="android:spinnerStyle">@style/Selector</item>
+        <item name="materialButtonStyle">@style/Boton</item>
+        <item name="materialCardViewStyle">@style/Tarjeta</item>
+        <item name="bottomNavigationStyle">@style/BarraInferior</item>
+        <item name="toolbarStyle">@style/BarraSuperior</item>
+        <item name="floatingActionButtonStyle">@style/BotonFlotante</item>
+    </style>
+
+</resources>

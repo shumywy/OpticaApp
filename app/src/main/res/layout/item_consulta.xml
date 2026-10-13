@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    app:cardCornerRadius="18dp">
+
+    <LinearLayout
+        style="@style/Fila"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            style="@style/IconoFila"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_documento" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvFecha"
+                style="@style/Texto.Fila"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="07/10/2026 11:20" />
+
+            <TextView
+                android:id="@+id/tvGraduacion"
+                style="@style/Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="OD -1.25 -0.50 x 180 · OI -1.50 -0.75 x 175" />
+
+            <TextView
+                android:id="@+id/tvDetalle"
+                style="@style/Texto.Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Progresivo · Laura Martínez" />
+        </LinearLayout>
+
+        <ImageView
+            style="@style/FlechaFila"
+            android:layout_width="22dp"
+            android:layout_height="22dp" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

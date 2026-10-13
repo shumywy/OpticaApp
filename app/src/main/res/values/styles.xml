@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ===================== Textos ===================== -->
+
+    <style name="Texto">
+        <item name="android:textColor">@color/texto</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Nombre grande (perfil, título de la app) -->
+    <style name="Texto.Titulo">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Título de sección dentro de una pantalla ("Datos de la óptica") -->
+    <style name="Texto.Seccion">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Título de un renglón de lista -->
+    <style name="Texto.Fila">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Texto gris debajo del título -->
+    <style name="Texto.Secundario">
+        <item name="android:textColor">@color/texto_secundario</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <!-- Etiqueta pequeña gris (debajo de un ícono del panel) -->
+    <style name="Texto.Etiqueta">
+        <item name="android:textColor">@color/texto_secundario</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <!-- Valor en negritas (debajo de un ícono del panel) -->
+    <style name="Texto.Valor">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Píldora de estado ("En stock", "Enviado") -->
+    <style name="Texto.Pildora">
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+    </style>
+
+    <!-- ===================== Campos ===================== -->
+
+    <!-- Campo de texto blanco con borde redondeado -->
+    <style name="Campo" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/bg_campo</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/texto</item>
+        <item name="android:textColorHint">@color/texto_secundario</item>
+    </style>
+
+    <!-- Campo chico y centrado para la tabla de graduación -->
+    <style name="Campo.Compacto">
+        <item name="android:minHeight">44dp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Lista desplegable con el mismo aspecto que los campos -->
+    <style name="Selector" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@drawable/bg_selector</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">40dp</item>
+        <item name="android:popupBackground">@drawable/bg_popup</item>
+    </style>
+
+    <!-- ===================== Botones ===================== -->
+
+    <!-- Botón principal azul -->
+    <style name="Boton" parent="Widget.Material3.Button">
+        <item name="android:minHeight">54dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <!-- Botón blanco con borde, en forma de píldora ("Editar foto") -->
+    <style name="Boton.Secundario" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/texto</item>
+        <item name="backgroundTint">@color/superficie</item>
+        <item name="strokeColor">@color/borde</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="iconTint">@color/texto</item>
+    </style>
+
+    <!-- Botón de texto azul, sin fondo -->
+    <style name="Boton.Texto" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/azul</item>
+    </style>
+
+    <style name="BotonFlotante" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="backgroundTint">@color/azul</item>
+        <item name="tint">@color/blanco</item>
+        <item name="shapeAppearanceOverlay">@style/Forma.Redondeada</item>
+    </style>
+
+    <!-- ===================== Controles segmentados (12MP | 24MP | 48MP) ===================== -->
+
+    <!-- Contenedor gris del control segmentado (es un RadioGroup) -->
+    <style name="Segmentos">
+        <item name="android:background">@drawable/bg_segmentos</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <!-- Cada opción del control segmentado (es un RadioButton sin círculo) -->
+    <style name="Segmento">
+        <item name="android:button">@null</item>
+        <!-- AppCompat dibuja el círculo con buttonCompat; también se quita -->
+        <item name="buttonCompat">@null</item>
+        <item name="android:background">@drawable/sel_segmento</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/sel_segmento_texto</item>
+    </style>
+
+    <!-- Filtros en forma de chip (Inventario y Laboratorio) -->
+    <style name="Filtro" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/sel_chip_fondo</item>
+        <item name="android:textColor">@color/sel_chip_texto</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="chipCornerRadius">20dp</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipMinHeight">38dp</item>
+    </style>
+
+    <!-- ===================== Contenedores ===================== -->
+
+    <!-- Tarjeta blanca sin sombra con esquinas redondeadas -->
+    <style name="Tarjeta" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/superficie</item>
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <!-- Renglón de una lista dentro de una tarjeta: ícono + textos + flecha -->
+    <style name="Fila">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">68dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
+    <!-- Ícono gris dentro de un cuadro redondeado (a la izquierda de cada renglón) -->
+    <style name="IconoFila">
+        <item name="android:background">@drawable/bg_icono_cuadro</item>
+        <item name="android:padding">9dp</item>
+        <item name="android:layout_marginEnd">14dp</item>
+        <item name="tint">@color/texto_secundario</item>
+    </style>
+
+    <!-- Flecha ">" al final del renglón -->
+    <style name="FlechaFila">
+        <item name="android:src">@drawable/ic_flecha_derecha</item>
+        <item name="tint">@color/texto_secundario</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+
+    <!-- Línea divisoria entre renglones -->
+    <style name="Divisor">
+        <item name="android:background">@color/borde</item>
+        <item name="android:layout_marginStart">66dp</item>
+    </style>
+
+    <!-- Ícono redondo del panel (gris) -->
+    <style name="IconoPanel">
+        <item name="android:background">@drawable/bg_icono_circulo</item>
+        <item name="android:padding">13dp</item>
+        <item name="tint">@color/texto</item>
+    </style>
+
+    <!-- Ícono redondo del panel resaltado (azul con ícono blanco) -->
+    <style name="IconoPanel.Activo">
+        <item name="android:background">@drawable/bg_icono_circulo_activo</item>
+        <item name="tint">@color/blanco</item>
+    </style>
+
+    <!-- ===================== Barras ===================== -->
+
+    <style name="BarraSuperior" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/TextoBarraSuperior</item>
+    </style>
+
+    <style name="TextoBarraSuperior" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/texto</item>
+    </style>
+
+    <style name="BarraInferior" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/superficie</item>
+        <item name="itemIconTint">@color/sel_barra_inferior</item>
+        <item name="itemTextColor">@color/sel_barra_inferior</item>
+        <item name="itemActiveIndicatorStyle">@style/IndicadorInvisible</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <!-- Sin "píldora" detrás del ícono activo: solo cambia a azul, como en el diseño -->
+    <style name="IndicadorInvisible" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@android:color/transparent</item>
+    </style>
+
+    <!-- ===================== Formas ===================== -->
+
+    <style name="Forma.Circulo" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Forma.Redondeada" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">18dp</item>
+    </style>
+
+</resources>

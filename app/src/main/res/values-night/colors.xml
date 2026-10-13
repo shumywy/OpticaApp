@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mismos nombres que values/colors.xml, pero para el tema oscuro -->
+    <color name="azul">#6E93F7</color>
+    <color name="azul_claro">#1F2A45</color>
+    <color name="fondo">#111214</color>
+    <color name="superficie">#1C1D21</color>
+    <color name="texto">#F2F3F5</color>
+    <color name="texto_secundario">#9A9DA4</color>
+    <color name="borde">#2C2E34</color>
+    <color name="icono_fondo">#2A2C31</color>
+
+    <color name="verde">#4CC985</color>
+    <color name="verde_claro">#16301F</color>
+    <color name="naranja">#F5A04A</color>
+    <color name="naranja_claro">#33240F</color>
+    <color name="rojo">#FF6B70</color>
+    <color name="rojo_claro">#3A1A1C</color>
+    <color name="morado">#A88BF0</color>
+    <color name="morado_claro">#2A2240</color>
+</resources>

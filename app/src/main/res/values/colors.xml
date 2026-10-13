@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta tomada del diseño de referencia: gris muy claro, tarjetas blancas y acento azul -->
+    <color name="azul">#3D6EF0</color>
+    <color name="azul_claro">#E9EFFE</color>
+    <color name="fondo">#F2F3F7</color>
+    <color name="superficie">#FFFFFF</color>
+    <color name="texto">#1B1C1F</color>
+    <color name="texto_secundario">#8A8D94</color>
+    <color name="borde">#E4E6EB</color>
+    <color name="icono_fondo">#EFF0F4</color>
+
+    <!-- Indicadores de estado -->
+    <color name="verde">#23A15C</color>
+    <color name="verde_claro">#E3F6EB</color>
+    <color name="naranja">#E07B12</color>
+    <color name="naranja_claro">#FDF0E1</color>
+    <color name="rojo">#E5484D</color>
+    <color name="rojo_claro">#FDE8E9</color>
+    <color name="morado">#7B55D6</color>
+    <color name="morado_claro">#EFE9FC</color>
+
+    <color name="blanco">#FFFFFF</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+</resources>

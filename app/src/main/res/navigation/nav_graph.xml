@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mapa de navegación. MainActivity cambia el destino inicial según haya sesión o no. -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="mx.itch.opticaapp.ui.login.LoginFragment"
+        android:label="@string/titulo_login">
+        <action
+            android:id="@+id/action_login_to_registro"
+            app:destination="@id/registroFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registroFragment"
+        android:name="mx.itch.opticaapp.ui.registro.RegistroFragment"
+        android:label="@string/titulo_registro" />
+
+    <fragment
+        android:id="@+id/panelFragment"
+        android:name="mx.itch.opticaapp.ui.panel.PanelFragment"
+        android:label="@string/titulo_panel" />
+
+    <fragment
+        android:id="@+id/pacientesFragment"
+        android:name="mx.itch.opticaapp.ui.pacientes.PacientesFragment"
+        android:label="@string/titulo_pacientes">
+        <action
+            android:id="@+id/action_pacientes_to_expediente"
+            app:destination="@id/expedienteFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/expedienteFragment"
+        android:name="mx.itch.opticaapp.ui.expediente.ExpedienteFragment"
+        android:label="@string/titulo_expediente" />
+
+    <fragment
+        android:id="@+id/inventarioFragment"
+        android:name="mx.itch.opticaapp.ui.inventario.InventarioFragment"
+        android:label="@string/titulo_inventario">
+        <action
+            android:id="@+id/action_inventario_to_productoForm"
+            app:destination="@id/productoFormFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productoFormFragment"
+        android:name="mx.itch.opticaapp.ui.inventario.ProductoFormFragment"
+        android:label="@string/titulo_producto" />
+
+    <fragment
+        android:id="@+id/ventaFragment"
+        android:name="mx.itch.opticaapp.ui.venta.VentaFragment"
+        android:label="@string/titulo_venta" />
+
+    <fragment
+        android:id="@+id/laboratorioFragment"
+        android:name="mx.itch.opticaapp.ui.laboratorio.LaboratorioFragment"
+        android:label="@string/titulo_laboratorio" />
+
+    <fragment
+        android:id="@+id/ajustesFragment"
+        android:name="mx.itch.opticaapp.ui.ajustes.AjustesFragment"
+        android:label="@string/titulo_ajustes" />
+
+</navigation>

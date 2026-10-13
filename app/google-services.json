@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "417924052161",
+    "project_id": "opticaapp-moviles12",
+    "storage_bucket": "opticaapp-moviles12.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417924052161:android:c16b2afb5e724199751040",
+        "android_client_info": {
+          "package_name": "mx.itch.opticaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "417924052161-0i4url2s9ucreicbk227j2dvinol6bfo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mx.itch.opticaapp",
+            "certificate_hash": "130d4cfa1a861236aae380f0087a928c5bd31969"
+          }
+        },
+        {
+          "client_id": "417924052161-27od5tbnaril5a7cpeev8s9nl94bdqf1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFijItIhIF6f6C_3ML_V-KGuQAKIwgcCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417924052161-27od5tbnaril5a7cpeev8s9nl94bdqf1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

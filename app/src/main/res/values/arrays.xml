@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="estados_mexico">
+        <item>Aguascalientes</item>
+        <item>Baja California</item>
+        <item>Baja California Sur</item>
+        <item>Campeche</item>
+        <item>Chiapas</item>
+        <item>Chihuahua</item>
+        <item>Ciudad de México</item>
+        <item>Coahuila</item>
+        <item>Colima</item>
+        <item>Durango</item>
+        <item>Estado de México</item>
+        <item>Guanajuato</item>
+        <item>Guerrero</item>
+        <item>Hidalgo</item>
+        <item>Jalisco</item>
+        <item>Michoacán</item>
+        <item>Morelos</item>
+        <item>Nayarit</item>
+        <item>Nuevo León</item>
+        <item>Oaxaca</item>
+        <item>Puebla</item>
+        <item>Querétaro</item>
+        <item>Quintana Roo</item>
+        <item>San Luis Potosí</item>
+        <item>Sinaloa</item>
+        <item>Sonora</item>
+        <item>Tabasco</item>
+        <item>Tamaulipas</item>
+        <item>Tlaxcala</item>
+        <item>Veracruz</item>
+        <item>Yucatán</item>
+        <item>Zacatecas</item>
+    </string-array>
+
+    <!-- Roles que puede elegir el personal al unirse con un código -->
+    <string-array name="roles_union">
+        <item>Optometrista</item>
+        <item>Vendedor</item>
+    </string-array>
+
+    <!-- Roles que el administrador puede asignar -->
+    <string-array name="roles_todos">
+        <item>Administrador</item>
+        <item>Optometrista</item>
+        <item>Vendedor</item>
+    </string-array>
+
+    <string-array name="categorias_producto">
+        <item>Armazones</item>
+        <item>Micas</item>
+        <item>Lentes de contacto</item>
+        <item>Accesorios</item>
+    </string-array>
+
+    <string-array name="tipos_lente">
+        <item>Monofocal</item>
+        <item>Bifocal</item>
+        <item>Progresivo</item>
+        <item>Lente de contacto</item>
+    </string-array>
+
+</resources>

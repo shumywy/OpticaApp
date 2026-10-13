@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Fotos temporales de la cámara -->
+    <cache-path name="imagenes" path="imagenes/" />
+    <!-- Recetas y notas de venta en PDF -->
+    <cache-path name="pdf" path="pdf/" />
+</paths>

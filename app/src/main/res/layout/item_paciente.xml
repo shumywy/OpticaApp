@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    app:cardCornerRadius="18dp">
+
+    <LinearLayout
+        style="@style/Fila"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Iniciales del paciente en un círculo azul claro -->
+        <TextView
+            android:id="@+id/tvIniciales"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/bg_avatar"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:textColor="@color/azul"
+            android:textSize="15sp"
+            tools:text="MF" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNombre"
+                style="@style/Texto.Fila"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="María Fernanda López" />
+
+            <TextView
+                android:id="@+id/tvDetalle"
+                style="@style/Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Última consulta: 07/10/2026" />
+
+            <TextView
+                android:id="@+id/tvGraduacion"
+                style="@style/Texto.Etiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                tools:text="OD -1.25 / OI -1.50" />
+        </LinearLayout>
+
+        <ImageView
+            style="@style/FlechaFila"
+            android:layout_width="22dp"
+            android:layout_height="22dp" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Óptica App</string>
+
+    <!-- Títulos de la barra superior (los usa el nav_graph) -->
+    <string name="titulo_login">Iniciar sesión</string>
+    <string name="titulo_registro">Registro</string>
+    <string name="titulo_panel">Inicio</string>
+    <string name="titulo_pacientes">Pacientes</string>
+    <string name="titulo_expediente">Expediente clínico</string>
+    <string name="titulo_inventario">Inventario</string>
+    <string name="titulo_producto">Producto</string>
+    <string name="titulo_venta">Nueva venta</string>
+    <string name="titulo_laboratorio">Órdenes de laboratorio</string>
+    <string name="titulo_ajustes">Perfil y ajustes</string>
+
+    <!-- Barra inferior -->
+    <string name="menu_inicio">Inicio</string>
+    <string name="menu_pacientes">Pacientes</string>
+    <string name="menu_inventario">Inventario</string>
+    <string name="menu_ventas">Ventas</string>
+    <string name="menu_laboratorio">Laboratorio</string>
+    <string name="menu_perfil">Perfil y ajustes</string>
+</resources>

@@ -1,0 +1,76 @@
+rules_version = '2';
+
+// Reglas de Cloud Firestore para Óptica App.
+// Cópialas en Firebase Console > Firestore Database > Reglas > Publicar.
+// Idea principal: cada usuario solo puede leer y escribir los datos de SU óptica.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    function tieneUsuario() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function miUsuario() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function esMiembro(opticaId) {
+      return autenticado() && tieneUsuario() && miUsuario().opticaId == opticaId;
+    }
+
+    function esAdmin(opticaId) {
+      return esMiembro(opticaId) && miUsuario().rol == 'ADMIN';
+    }
+
+    // ---------- Usuarios ----------
+    match /users/{uid} {
+      // Cada quien lee su documento; el personal de una óptica puede verse entre sí
+      allow read: if autenticado() && (request.auth.uid == uid
+                    || (tieneUsuario() && miUsuario().opticaId == resource.data.opticaId));
+
+      // Alta: el dueño (ADMIN de la óptica que acaba de crear) o personal que trae un código válido
+      allow create: if autenticado() && request.auth.uid == uid && (
+          (request.resource.data.rol == 'ADMIN'
+            && getAfter(/databases/$(database)/documents/opticas/$(request.resource.data.opticaId)).data.ownerId == uid)
+          ||
+          (request.resource.data.rol in ['OPTOMETRISTA', 'VENDEDOR']
+            && get(/databases/$(database)/documents/codigos/$(request.resource.data.codigoUsado)).data.opticaId
+               == request.resource.data.opticaId)
+        );
+
+      // Cambios: el propio usuario (sin tocar su rol ni su óptica) o el administrador de su óptica
+      allow update: if autenticado() && (
+          (request.auth.uid == uid
+            && request.resource.data.rol == resource.data.rol
+            && request.resource.data.opticaId == resource.data.opticaId)
+          ||
+          (esAdmin(resource.data.opticaId)
+            && request.resource.data.opticaId == resource.data.opticaId)
+        );
+    }
+
+    // ---------- Códigos de invitación ----------
+    match /codigos/{codigo} {
+      // Se puede consultar un código exacto, pero no listarlos todos
+      allow get: if autenticado();
+      allow create: if autenticado()
+        && getAfter(/databases/$(database)/documents/opticas/$(request.resource.data.opticaId)).data.ownerId == request.auth.uid;
+    }
+
+    // ---------- Ópticas y todo su contenido ----------
+    match /opticas/{opticaId} {
+      allow create: if autenticado() && request.resource.data.ownerId == request.auth.uid;
+      allow read: if esMiembro(opticaId);
+      allow update: if esAdmin(opticaId);
+
+      // pacientes, consultas, productos, ventas, ordenes...
+      match /{coleccion}/{documento=**} {
+        allow read, write: if esMiembro(opticaId);
+      }
+    }
+  }
+}

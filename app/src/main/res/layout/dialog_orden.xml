@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/espacio"
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="24dp"
+    android:showDividers="middle">
+
+    <EditText
+        android:id="@+id/etPaciente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre del paciente"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName|textCapWords" />
+
+    <EditText
+        android:id="@+id/etDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Trabajo (ej. Mica monofocal AR)"
+        android:importantForAutofill="no"
+        android:inputType="textCapSentences" />
+</LinearLayout>

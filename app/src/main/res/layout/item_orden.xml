@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    app:cardCornerRadius="18dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvTitulo"
+                style="@style/Texto.Fila"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="#A1B2C · María F. López" />
+
+            <TextView
+                android:id="@+id/tvEstatus"
+                style="@style/Texto.Pildora"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pildora_morado"
+                android:textColor="@color/morado"
+                tools:text="Recibido" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDescripcion"
+            style="@style/Texto.Secundario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            tools:text="Mica progresiva AR" />
+
+        <!-- Avance de la orden: 25 % enviado ... 100 % entregado -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/barraEtapas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:max="100"
+            app:indicatorColor="@color/azul"
+            app:trackColor="@color/borde"
+            app:trackCornerRadius="3dp"
+            app:trackThickness="6dp"
+            tools:progress="75" />
+
+        <TextView
+            android:id="@+id/tvEtapas"
+            style="@style/Texto.Etiqueta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            tools:text="Enviado → En proceso → Recibido → Entregado" />
+
+        <TextView
+            android:id="@+id/tvFechas"
+            style="@style/Texto.Etiqueta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            tools:text="Enviada: 01/10/2026" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
