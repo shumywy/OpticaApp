@@ -24,6 +24,7 @@ import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentInventarioBinding;
 import mx.itch.opticaapp.model.Producto;
 import mx.itch.opticaapp.util.AlEscribir;
+import mx.itch.opticaapp.util.Animaciones;
 
 /** Pantalla 6: catálogo de productos con búsqueda y filtro por categoría. */
 public class InventarioFragment extends Fragment {
@@ -55,6 +56,11 @@ public class InventarioFragment extends Fragment {
         binding.chipsCategoria.setOnCheckedStateChangeListener((grupo, elegidos) -> aplicarFiltro());
         binding.etBuscar.addTextChangedListener(new AlEscribir(texto -> aplicarFiltro()));
         binding.fabAgregar.setOnClickListener(v -> abrirFormulario(null));
+
+        // Animación de entrada: título en cascada, hoja que sube y el botón + que aparece con rebote
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            Animaciones.aparecer(binding.fabAgregar, 450);
+        }
     }
 
     @Override
@@ -103,6 +109,7 @@ public class InventarioFragment extends Fragment {
             }
         }
         adaptador.mostrar(visibles);
+        Animaciones.listaUnaVez(this, binding.rvProductos);   // los mosaicos entran uno tras otro
         binding.tvVacio.setVisibility(visibles.isEmpty() ? View.VISIBLE : View.GONE);
         // Contador "08/24": productos que se ven / total, como el "01/20" del diseño
         binding.tvContador.setText(String.format(Locale.US, "%02d/%02d", visibles.size(), todos.size()));

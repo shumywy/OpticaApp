@@ -20,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.NavGraph;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -96,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.bottomNav, navController);
+        // NavigationUI marca la sección actual; la navegación la hacemos nosotros para usar nuestras animaciones
+        binding.bottomNav.setOnItemSelectedListener(this::navegarSeccion);
         configurarMenuLateral();
 
         // Muestra u oculta las barras según la pantalla
@@ -208,7 +211,51 @@ public class MainActivity extends AppCompatActivity {
     public void abrirPerfil() {
         NavDestination actual = navController.getCurrentDestination();
         if (actual != null && actual.getId() == R.id.ajustesFragment) return;   // ya está abierta
-        navController.navigate(R.id.ajustesFragment);
+        navController.navigate(R.id.ajustesFragment, null, opcionesDetalle().build());
+    }
+
+    // ---------------- Animaciones entre pantallas ----------------
+
+    /** Ir a una pantalla "hija" (detalle, formulario, ajustes): entra desde la derecha y al regresar sale a la derecha. */
+    private NavOptions.Builder opcionesDetalle() {
+        return new NavOptions.Builder()
+                .setEnterAnim(R.anim.nav_entrar)
+                .setExitAnim(R.anim.nav_salir)
+                .setPopEnterAnim(R.anim.nav_regresar_entrar)
+                .setPopExitAnim(R.anim.nav_regresar_salir);
+    }
+
+    /** Cambiar de sección: la anterior se desvanece y la nueva aparece creciendo un poco. */
+    private NavOptions.Builder opcionesSeccion() {
+        return new NavOptions.Builder()
+                .setEnterAnim(R.anim.nav_seccion_entrar)
+                .setExitAnim(R.anim.nav_seccion_salir)
+                .setPopEnterAnim(R.anim.nav_seccion_entrar)
+                .setPopExitAnim(R.anim.nav_seccion_salir);
+    }
+
+    /**
+     * Navega a la sección de un botón de la barra inferior o del menú lateral.
+     * Hace lo mismo que NavigationUI.onNavDestinationSelected (guardar y restaurar el historial
+     * de cada sección), pero con nuestras animaciones. Las opciones marcadas como
+     * menuCategory="secondary" (Configuración) se abren encima de la pantalla actual.
+     */
+    private boolean navegarSeccion(MenuItem item) {
+        boolean secundaria = (item.getOrder() & Menu.CATEGORY_SECONDARY) != 0;
+        NavOptions.Builder opciones = secundaria ? opcionesDetalle() : opcionesSeccion();
+        opciones.setLaunchSingleTop(true).setRestoreState(true);
+        if (!secundaria) {
+            opciones.setPopUpTo(navController.getGraph().getStartDestinationId(), false, true);
+        }
+        NavDestination actual = navController.getCurrentDestination();
+        if (actual != null && actual.getId() == item.getItemId()) return true;   // ya estamos ahí
+        try {
+            navController.navigate(item.getItemId(), null, opciones.build());
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        NavDestination nuevo = navController.getCurrentDestination();
+        return nuevo != null && nuevo.getId() == item.getItemId();
     }
 
     /** Abre el menú lateral (lo usa el botón ☰ del panel, que no tiene barra superior). */
@@ -239,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                 confirmarCierreDeSesion();
                 return false;
             }
-            return NavigationUI.onNavDestinationSelected(item, navController);
+            return navegarSeccion(item);
         });
 
         // Tocar la foto o el nombre abre Perfil y ajustes
@@ -389,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.accionPerfil) {
-            navController.navigate(R.id.ajustesFragment);
+            abrirPerfil();
             return true;
         }
         return super.onOptionsItemSelected(item);

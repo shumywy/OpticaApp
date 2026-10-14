@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Mapa de navegación. MainActivity cambia el destino inicial según haya sesión o no. -->
+<!--
+    Mapa de navegación. MainActivity cambia el destino inicial según haya sesión o no.
+    Animaciones (res/anim): ir a un detalle o formulario = entra desde la derecha (nav_entrar…);
+    cambiar de sección = se desvanece y crece un poco (nav_seccion_…). Las secciones de la barra
+    inferior y del menú lateral usan las mismas desde MainActivity.navegarSeccion().
+-->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
@@ -11,7 +16,11 @@
         android:label="@string/titulo_login">
         <action
             android:id="@+id/action_login_to_registro"
-            app:destination="@id/registroFragment" />
+            app:destination="@id/registroFragment"
+            app:enterAnim="@anim/nav_entrar"
+            app:exitAnim="@anim/nav_salir"
+            app:popEnterAnim="@anim/nav_regresar_entrar"
+            app:popExitAnim="@anim/nav_regresar_salir" />
     </fragment>
 
     <fragment
@@ -30,7 +39,11 @@
         android:label="@string/titulo_pacientes">
         <action
             android:id="@+id/action_pacientes_to_expediente"
-            app:destination="@id/expedienteFragment" />
+            app:destination="@id/expedienteFragment"
+            app:enterAnim="@anim/nav_entrar"
+            app:exitAnim="@anim/nav_salir"
+            app:popEnterAnim="@anim/nav_regresar_entrar"
+            app:popExitAnim="@anim/nav_regresar_salir" />
     </fragment>
 
     <fragment
@@ -44,10 +57,18 @@
         android:label="@string/titulo_inventario">
         <action
             android:id="@+id/action_inventario_to_productoForm"
-            app:destination="@id/productoFormFragment" />
+            app:destination="@id/productoFormFragment"
+            app:enterAnim="@anim/nav_entrar"
+            app:exitAnim="@anim/nav_salir"
+            app:popEnterAnim="@anim/nav_regresar_entrar"
+            app:popExitAnim="@anim/nav_regresar_salir" />
         <action
             android:id="@+id/action_inventario_to_detalle"
-            app:destination="@id/productoDetalleFragment" />
+            app:destination="@id/productoDetalleFragment"
+            app:enterAnim="@anim/nav_entrar"
+            app:exitAnim="@anim/nav_salir"
+            app:popEnterAnim="@anim/nav_regresar_entrar"
+            app:popExitAnim="@anim/nav_regresar_salir" />
     </fragment>
 
     <!-- Detalle de producto: "Editar" abre el formulario y "Vender" abre Punto de venta -->
@@ -57,7 +78,11 @@
         android:label="@string/titulo_producto">
         <action
             android:id="@+id/action_detalle_to_productoForm"
-            app:destination="@id/productoFormFragment" />
+            app:destination="@id/productoFormFragment"
+            app:enterAnim="@anim/nav_entrar"
+            app:exitAnim="@anim/nav_salir"
+            app:popEnterAnim="@anim/nav_regresar_entrar"
+            app:popExitAnim="@anim/nav_regresar_salir" />
         <!--
             Va a Ventas como si se tocara su botón de la barra inferior: deja guardado
             Inventario → Detalle para cuando el usuario regrese a esa sección.
@@ -65,6 +90,10 @@
         <action
             android:id="@+id/action_detalle_to_venta"
             app:destination="@id/ventaFragment"
+            app:enterAnim="@anim/nav_seccion_entrar"
+            app:exitAnim="@anim/nav_seccion_salir"
+            app:popEnterAnim="@anim/nav_seccion_entrar"
+            app:popExitAnim="@anim/nav_seccion_salir"
             app:popUpTo="@id/panelFragment"
             app:popUpToSaveState="true" />
     </fragment>

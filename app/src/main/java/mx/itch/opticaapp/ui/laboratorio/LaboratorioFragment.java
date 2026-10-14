@@ -25,6 +25,7 @@ import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.DialogOrdenBinding;
 import mx.itch.opticaapp.databinding.FragmentLaboratorioBinding;
 import mx.itch.opticaapp.model.Orden;
+import mx.itch.opticaapp.util.Animaciones;
 
 /**
  * Pantalla 8: seguimiento de órdenes de laboratorio en tiempo real.
@@ -60,6 +61,11 @@ public class LaboratorioFragment extends Fragment {
         // El optometrista consulta; administrador y vendedor pueden crear órdenes a mano
         binding.fabAgregar.setVisibility(Sesion.esOptometrista() ? View.GONE : View.VISIBLE);
         binding.fabAgregar.setOnClickListener(v -> dialogoNuevaOrden());
+
+        // Animación de entrada: título en cascada, hoja que sube y el botón + que aparece con rebote
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            Animaciones.aparecer(binding.fabAgregar, 450);
+        }
     }
 
     @Override
@@ -111,6 +117,7 @@ public class LaboratorioFragment extends Fragment {
             }
         }
         adaptador.mostrar(visibles);
+        Animaciones.listaUnaVez(this, binding.rvOrdenes);   // las órdenes entran una tras otra
         binding.tvVacio.setVisibility(visibles.isEmpty() ? View.VISIBLE : View.GONE);
     }
 

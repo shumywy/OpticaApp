@@ -40,6 +40,7 @@ import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentAjustesBinding;
 import mx.itch.opticaapp.model.Optica;
 import mx.itch.opticaapp.model.Usuario;
+import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Fechas;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Imagenes;
@@ -99,6 +100,11 @@ public class AjustesFragment extends Fragment {
         binding.filaMeta.setOnClickListener(v -> editarMeta());
 
         binding.filaCerrarSesion.setOnClickListener(v -> cerrarSesion());
+
+        // Animación de entrada: nombre y correo en cascada, la foto crece y la hoja sube
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            Animaciones.aparecer(binding.ivFoto, 150);
+        }
     }
 
     // ---------------- Apariencia ----------------

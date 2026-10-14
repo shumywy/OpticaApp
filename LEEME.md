@@ -75,6 +75,35 @@ Otros archivos importantes:
 
 - `MainActivity` — barra superior, barra inferior, menú lateral y navegación (`res/navigation/nav_graph.xml`).
 
+### Animaciones
+
+**Entre pantallas** (`res/anim`, usadas en `nav_graph.xml` y en `MainActivity.navegarSeccion()`):
+
+| Cuándo | Animación |
+|--------|-----------|
+| Cambiar de sección (barra inferior, menú lateral, mosaicos del panel) | La pantalla anterior se desvanece y la nueva aparece creciendo un poco (`nav_seccion_entrar` / `nav_seccion_salir`) |
+| Abrir un detalle o formulario (expediente, producto, registro, ajustes) | Entra desde la derecha; al regresar sale hacia la derecha (`nav_entrar`, `nav_salir`, `nav_regresar_*`) |
+
+**Dentro de cada fragmento** (`util/Animaciones.java`, se llama al final de `onViewCreated`):
+
+- Todas: el título sobre el degradado baja en cascada y la hoja blanca sube.
+- Además, cada pantalla anima sus propias piezas:
+
+| Pantalla | Además… |
+|----------|---------|
+| Inicio de sesión / Registro | Solo título en cascada y hoja |
+| Panel | Íconos de arriba en cascada, tarjeta de avance crece, mosaicos uno tras otro y la barra de avance se llena |
+| Pacientes / Laboratorio | Renglones uno tras otro (`anim/lista_entrada`) y el botón + con rebote |
+| Inventario | Mosaicos del catálogo uno tras otro y el botón + |
+| Expediente | Iniciales con rebote e historial uno tras otro |
+| Detalle de producto | La foto crece y el pie con el precio sube al final |
+| Punto de venta | El pie con el total sube; los productos del carrito aparecen y se desvanecen al agregar o quitar |
+| Formulario de producto | Foto, botones y título en cascada |
+| Perfil y ajustes | La foto crece |
+
+- La entrada se hace solo la primera vez: al volver con "atrás" no se repite.
+- Si el teléfono tiene las animaciones desactivadas (Opciones de desarrollador → Escala de animación), todo aparece al instante.
+
 ### Detalle de producto
 
 Al tocar un mosaico del inventario se abre el detalle: foto grande, categoría, nombre, descripción y existencias, que se actualizan en tiempo real.

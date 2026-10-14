@@ -28,6 +28,7 @@ import mx.itch.opticaapp.model.Optica;
 import mx.itch.opticaapp.model.Orden;
 import mx.itch.opticaapp.model.Producto;
 import mx.itch.opticaapp.model.Usuario;
+import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Fechas;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Imagenes;
@@ -100,6 +101,16 @@ public class PanelFragment extends Fragment {
             binding.tileAccion.setOnClickListener(v -> actividad.irASeccion(R.id.pacientesFragment));
         }
         binding.tvMeta.setText(o.metaSemanal > 0 ? Formato.moneda(o.metaSemanal) : "Sin meta");
+
+        // Animación de entrada: íconos y saludo en cascada, la tarjeta de avance crece,
+        // la hoja sube y los mosaicos aparecen uno tras otro
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            float dp = getResources().getDisplayMetrics().density;
+            Animaciones.cascada(binding.barraIconos, -12 * dp, 0);
+            Animaciones.aparecer(binding.layoutAvance, 180);
+            Animaciones.aparecerEnCascada(Arrays.asList(binding.tileVentas, binding.tilePacientes,
+                    binding.tileOrdenes, binding.tileStock, binding.tileMeta, binding.tileAccion), 320);
+        }
     }
 
     private String saludo() {
@@ -160,14 +171,15 @@ public class PanelFragment extends Fragment {
         double meta = Sesion.getOptica().metaSemanal;
         if (meta <= 0) {
             binding.tvAvancePorcentaje.setText("—");
-            binding.barraAvance.setProgress(0);
+            binding.barraAvance.setProgressCompat(0, true);
             binding.tvAvanceMonto.setText(Formato.moneda(vendidoEnLaSemana) + " vendidos esta semana");
             binding.tvFaltante.setText("Define una meta semanal en Perfil y ajustes");
             return;
         }
         double porcentaje = vendidoEnLaSemana / meta * 100;
         binding.tvAvancePorcentaje.setText(String.format(Locale.US, "%.0f %%", porcentaje));
-        binding.barraAvance.setProgress((int) Math.min(100, Math.round(porcentaje)));
+        // setProgressCompat(..., true) hace que la barra se llene con animación
+        binding.barraAvance.setProgressCompat((int) Math.min(100, Math.round(porcentaje)), true);
         binding.tvAvanceMonto.setText(Formato.moneda(vendidoEnLaSemana) + " de " + Formato.moneda(meta));
         double faltante = meta - vendidoEnLaSemana;
         if (faltante > 0) {

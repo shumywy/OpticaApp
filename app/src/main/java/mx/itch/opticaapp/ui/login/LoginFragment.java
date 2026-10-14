@@ -36,6 +36,7 @@ import mx.itch.opticaapp.databinding.FragmentLoginBinding;
 import mx.itch.opticaapp.model.Optica;
 import mx.itch.opticaapp.model.Usuario;
 import mx.itch.opticaapp.ui.registro.RegistroFragment;
+import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Validaciones;
 
 /** Pantalla 1: inicio de sesión con correo o con Google. */
@@ -64,6 +65,9 @@ public class LoginFragment extends Fragment {
         binding.btnOlvide.setOnClickListener(v -> recuperarContrasena());
         binding.btnRegistrar.setOnClickListener(v -> irARegistro(RegistroFragment.MODO_NUEVA, false));
         binding.btnUnirme.setOnClickListener(v -> irARegistro(RegistroFragment.MODO_UNIRME, false));
+
+        // Animación de entrada: el título baja en cascada y la hoja blanca sube
+        Animaciones.entrada(this, binding.encabezado, binding.hoja);
 
         // Si Firebase recuerda una sesión abierta, cargamos sus datos sin pedir la contraseña otra vez
         if (auth.getCurrentUser() != null) {

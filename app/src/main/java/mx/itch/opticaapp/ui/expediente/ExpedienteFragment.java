@@ -31,6 +31,7 @@ import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentExpedienteBinding;
 import mx.itch.opticaapp.model.Consulta;
 import mx.itch.opticaapp.model.Paciente;
+import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Fechas;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Pdf;
@@ -85,6 +86,11 @@ public class ExpedienteFragment extends Fragment {
 
         binding.btnGuardar.setOnClickListener(v -> guardar());
         binding.btnPdf.setOnClickListener(v -> generarReceta());
+
+        // Animación de entrada: nombre en cascada, iniciales con rebote y la hoja que sube
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            Animaciones.aparecer(binding.tvIniciales, 200);
+        }
     }
 
     @Override
@@ -113,6 +119,7 @@ public class ExpedienteFragment extends Fragment {
                 return b.fecha.compareTo(a.fecha);
             });
             adaptador.mostrar(consultas);
+            Animaciones.listaUnaVez(this, binding.rvHistorial);
             binding.tvSinHistorial.setVisibility(consultas.isEmpty() ? View.VISIBLE : View.GONE);
         });
     }

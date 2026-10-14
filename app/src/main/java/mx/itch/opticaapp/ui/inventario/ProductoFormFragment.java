@@ -23,6 +23,7 @@ import mx.itch.opticaapp.R;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentProductoFormBinding;
 import mx.itch.opticaapp.model.Producto;
+import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Imagenes;
 
@@ -84,6 +85,9 @@ public class ProductoFormFragment extends Fragment {
         } else {
             Imagenes.mostrar(binding.ivFoto, null);   // ícono mientras no haya foto
         }
+
+        // Animación de entrada: el título baja en cascada y la hoja blanca sube
+        Animaciones.entrada(this, binding.encabezado, binding.hoja);
     }
 
     private void cargarProducto() {

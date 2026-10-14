@@ -23,6 +23,7 @@
 
             <!-- ===== Encabezado sobre el degradado ===== -->
             <LinearLayout
+                android:id="@+id/encabezado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -47,6 +48,7 @@
 
             <!-- ===== Hoja blanca con el formulario ===== -->
             <LinearLayout
+                android:id="@+id/hoja"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -267,6 +269,7 @@
 
     <!-- ===== Pie fijo: total y botón azul cielo ===== -->
     <LinearLayout
+        android:id="@+id/pie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/superficie"

@@ -29,6 +29,7 @@ import mx.itch.opticaapp.databinding.FragmentPacientesBinding;
 import mx.itch.opticaapp.model.Paciente;
 import mx.itch.opticaapp.ui.expediente.ExpedienteFragment;
 import mx.itch.opticaapp.util.AlEscribir;
+import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Formato;
 
 /** Pantalla 4: lista de pacientes con búsqueda y orden. */
@@ -64,6 +65,11 @@ public class PacientesFragment extends Fragment {
         // El vendedor solo consulta: no puede dar de alta pacientes
         binding.fabAgregar.setVisibility(Sesion.esVendedor() ? View.GONE : View.VISIBLE);
         binding.fabAgregar.setOnClickListener(v -> dialogoNuevoPaciente());
+
+        // Animación de entrada: título en cascada, hoja que sube y el botón + que aparece con rebote
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            Animaciones.aparecer(binding.fabAgregar, 450);
+        }
     }
 
     @Override
@@ -120,6 +126,7 @@ public class PacientesFragment extends Fragment {
             });
         }
         adaptador.mostrar(visibles);
+        Animaciones.listaUnaVez(this, binding.rvPacientes);   // los renglones entran uno tras otro
         binding.tvVacio.setVisibility(visibles.isEmpty() ? View.VISIBLE : View.GONE);
     }
 

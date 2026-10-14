@@ -34,6 +34,7 @@ import mx.itch.opticaapp.databinding.FragmentRegistroBinding;
 import mx.itch.opticaapp.model.Optica;
 import mx.itch.opticaapp.model.Usuario;
 import mx.itch.opticaapp.util.AlEscribir;
+import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Imagenes;
 import mx.itch.opticaapp.util.Validaciones;
@@ -122,6 +123,9 @@ public class RegistroFragment extends Fragment {
                 .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                 .build()));
         binding.btnContinuar.setOnClickListener(v -> continuar());
+
+        // Animación de entrada: el título baja en cascada y la hoja blanca sube
+        Animaciones.entrada(this, binding.encabezado, binding.hoja);
     }
 
     private void llenarSpinner(Spinner spinner, int arreglo) {

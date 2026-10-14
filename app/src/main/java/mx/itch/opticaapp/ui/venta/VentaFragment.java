@@ -37,6 +37,7 @@ import mx.itch.opticaapp.model.Paciente;
 import mx.itch.opticaapp.model.Producto;
 import mx.itch.opticaapp.model.Venta;
 import mx.itch.opticaapp.util.AlEscribir;
+import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Pdf;
 
@@ -105,6 +106,11 @@ public class VentaFragment extends Fragment {
         if (getArguments() != null && getArguments().containsKey(ARG_PRODUCTO_ID)) {
             productoPorAgregar = getArguments().getString(ARG_PRODUCTO_ID);
             getArguments().remove(ARG_PRODUCTO_ID);
+        }
+
+        // Animación de entrada: título en cascada, hoja que sube y el pie con el total al final
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            Animaciones.subir(binding.pie, 40 * getResources().getDisplayMetrics().density, 260);
         }
     }
 
@@ -195,10 +201,13 @@ public class VentaFragment extends Fragment {
             binding.etCantidad.setError("Solo quedan " + p.stock);
             return;
         }
+        // Avisos por renglón (no notifyDataSetChanged) para que RecyclerView anime la entrada o el cambio
         if (existente != null) {
             existente.cantidad += cantidad;
+            adaptadorCarrito.notifyItemChanged(carrito.indexOf(existente));
         } else {
             carrito.add(new ItemVenta(p, cantidad));
+            adaptadorCarrito.notifyItemInserted(carrito.size() - 1);
         }
         // Si lleva micas, normalmente se manda a laboratorio
         if (Producto.CATEGORIA_MICAS.equals(p.categoria)) {
@@ -208,14 +217,13 @@ public class VentaFragment extends Fragment {
             }
         }
         binding.etCantidad.setText("1");
-        adaptadorCarrito.notifyDataSetChanged();
         actualizarTotales();
     }
 
     private void quitarDelCarrito(int posicion) {
         if (posicion == RecyclerView.NO_POSITION || posicion >= carrito.size()) return;
         carrito.remove(posicion);
-        adaptadorCarrito.notifyDataSetChanged();
+        adaptadorCarrito.notifyItemRemoved(posicion);   // el renglón se desvanece
         actualizarTotales();
     }
 
