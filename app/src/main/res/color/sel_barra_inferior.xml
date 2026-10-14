@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Ícono y texto de la barra inferior: azul el seleccionado, gris los demás -->
+<!-- Ícono y texto de la barra inferior: marino el seleccionado, gris claro los demás -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/azul" android:state_checked="true" />
-    <item android:color="@color/texto_secundario" />
+    <item android:color="@color/texto" android:state_checked="true" />
+    <item android:color="@color/texto_tenue" />
 </selector>

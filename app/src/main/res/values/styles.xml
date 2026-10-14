@@ -1,77 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        Estilo "catálogo":
+        - Lexend Exa (ancha) para títulos grandes, precios y nombres.
+        - Barlow Condensed (angosta) para los títulos de sección ("Más vendidos", "Color").
+        - Lexend para el texto normal.
+    -->
 
     <!-- ===================== Textos ===================== -->
 
     <style name="Texto">
         <item name="android:textColor">@color/texto</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/lexend_regular</item>
     </style>
 
-    <!-- Nombre grande (perfil, título de la app) -->
+    <!-- Título enorme y delgado de cada pantalla ("Collection") -->
+    <style name="Texto.Hero">
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontFamily">@font/lexend_exa_light</item>
+        <item name="android:lineSpacingMultiplier">0.95</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
+    <!-- Texto chico en negritas arriba del título enorme ("Chimi Eyewear") -->
+    <style name="Texto.Eyebrow">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/lexend_exa_semibold</item>
+    </style>
+
+    <!-- Etiqueta color vino en mayúsculas ("CORE COLLECTION") -->
+    <style name="Texto.Categoria">
+        <item name="android:textColor">@color/vino</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/lexend_exa_semibold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <!-- Nombre grande de un producto o persona ("Aqua #004") -->
     <style name="Texto.Titulo">
-        <item name="android:textSize">24sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+        <item name="android:letterSpacing">-0.01</item>
     </style>
 
-    <!-- Título de sección dentro de una pantalla ("Datos de la óptica") -->
+    <!-- Título de sección en letra angosta ("Best Selling", "Color", "Lens") -->
     <style name="Texto.Seccion">
-        <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/barlow_condensed_semibold</item>
     </style>
 
     <!-- Título de un renglón de lista -->
     <style name="Texto.Fila">
         <item name="android:textSize">15sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
     </style>
 
-    <!-- Texto gris debajo del título -->
+    <!-- Texto gris de apoyo y descripciones -->
     <style name="Texto.Secundario">
         <item name="android:textColor">@color/texto_secundario</item>
         <item name="android:textSize">13sp</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
     </style>
 
-    <!-- Etiqueta pequeña gris (debajo de un ícono del panel) -->
+    <!-- Etiqueta pequeña gris -->
     <style name="Texto.Etiqueta">
         <item name="android:textColor">@color/texto_secundario</item>
         <item name="android:textSize">11sp</item>
     </style>
 
-    <!-- Valor en negritas (debajo de un ícono del panel) -->
+    <!-- Valor o precio dentro de un mosaico ("€99.00") -->
     <style name="Texto.Valor">
-        <item name="android:textSize">13sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+    </style>
+
+    <!-- Precio grande al pie de la pantalla -->
+    <style name="Texto.Precio">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+    </style>
+
+    <!-- Contador "01/20" -->
+    <style name="Texto.Contador">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/lexend_exa_semibold</item>
     </style>
 
     <!-- Píldora de estado ("En stock", "Enviado") -->
     <style name="Texto.Pildora">
         <item name="android:textSize">11sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
         <item name="android:paddingStart">10dp</item>
         <item name="android:paddingEnd">10dp</item>
-        <item name="android:paddingTop">3dp</item>
-        <item name="android:paddingBottom">3dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
+    <!-- Apariencias de texto que usa el tema (diálogos y botones) -->
+    <style name="TextoDialogoTitulo" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+        <item name="fontFamily">@font/lexend_exa_medium</item>
+    </style>
+
+    <style name="TextoDialogoCuerpo" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/lexend_regular</item>
+        <item name="fontFamily">@font/lexend_regular</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+    </style>
+
+    <style name="TextoBoton" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
+        <item name="fontFamily">@font/lexend_medium</item>
+    </style>
+
+    <style name="TextoChip" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
+        <item name="fontFamily">@font/lexend_medium</item>
     </style>
 
     <!-- ===================== Campos ===================== -->
 
-    <!-- Campo de texto blanco con borde redondeado -->
+    <!-- Campo de texto lila claro con esquinas redondeadas (borde azul cielo al escribir) -->
     <style name="Campo" parent="Widget.AppCompat.EditText">
         <item name="android:background">@drawable/bg_campo</item>
-        <item name="android:minHeight">52dp</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
+        <item name="android:minHeight">54dp</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">18dp</item>
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingBottom">12dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/texto</item>
-        <item name="android:textColorHint">@color/texto_secundario</item>
+        <item name="android:textColorHint">@color/texto_tenue</item>
+        <item name="android:fontFamily">@font/lexend_regular</item>
+    </style>
+
+    <!-- Buscador blanco translúcido que va sobre el degradado ("Search") -->
+    <style name="Campo.Busqueda">
+        <item name="android:background">@drawable/bg_busqueda</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="android:drawableEnd">@drawable/ic_buscar</item>
+        <item name="android:drawableTint">@color/texto_secundario</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:inputType">text</item>
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <!-- Campo chico y centrado para la tabla de graduación -->
     <style name="Campo.Compacto">
-        <item name="android:minHeight">44dp</item>
+        <item name="android:minHeight">46dp</item>
         <item name="android:paddingStart">4dp</item>
         <item name="android:paddingEnd">4dp</item>
         <item name="android:gravity">center</item>
@@ -81,91 +165,129 @@
     <!-- Lista desplegable con el mismo aspecto que los campos -->
     <style name="Selector" parent="Widget.AppCompat.Spinner">
         <item name="android:background">@drawable/bg_selector</item>
-        <item name="android:minHeight">52dp</item>
-        <item name="android:paddingStart">8dp</item>
-        <item name="android:paddingEnd">40dp</item>
+        <item name="android:minHeight">54dp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">44dp</item>
         <item name="android:popupBackground">@drawable/bg_popup</item>
     </style>
 
     <!-- ===================== Botones ===================== -->
 
-    <!-- Botón principal azul -->
+    <!-- Botón principal azul cielo con sombra azul ("Add to bag") -->
     <style name="Boton" parent="Widget.Material3.Button">
-        <item name="android:minHeight">54dp</item>
+        <item name="android:minHeight">56dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
         <item name="cornerRadius">16dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">10dp</item>
+        <item name="elevation">6dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:outlineSpotShadowColor" tools:targetApi="p">@color/cielo</item>
+        <item name="android:outlineAmbientShadowColor" tools:targetApi="p">@color/cielo</item>
     </style>
 
-    <!-- Botón blanco con borde, en forma de píldora ("Editar foto") -->
-    <style name="Boton.Secundario" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:minHeight">48dp</item>
+    <!-- Botón lila claro con texto marino -->
+    <style name="Boton.Secundario" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minHeight">52dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
         <item name="android:textColor">@color/texto</item>
-        <item name="backgroundTint">@color/superficie</item>
-        <item name="strokeColor">@color/borde</item>
-        <item name="cornerRadius">24dp</item>
+        <item name="backgroundTint">@color/lavanda</item>
+        <item name="iconTint">@color/texto</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <!-- Botón de texto marino, sin fondo -->
+    <style name="Boton.Texto" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
+        <item name="android:textColor">@color/texto</item>
         <item name="iconTint">@color/texto</item>
     </style>
 
-    <!-- Botón de texto azul, sin fondo -->
-    <style name="Boton.Texto" parent="Widget.Material3.Button.TextButton">
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/azul</item>
-    </style>
-
     <style name="BotonFlotante" parent="Widget.Material3.FloatingActionButton.Primary">
-        <item name="backgroundTint">@color/azul</item>
+        <item name="backgroundTint">@color/cielo</item>
         <item name="tint">@color/blanco</item>
         <item name="shapeAppearanceOverlay">@style/Forma.Redondeada</item>
+        <item name="elevation">6dp</item>
+        <item name="android:outlineSpotShadowColor" tools:targetApi="p">@color/cielo</item>
+        <item name="android:outlineAmbientShadowColor" tools:targetApi="p">@color/cielo</item>
     </style>
 
-    <!-- ===================== Controles segmentados (12MP | 24MP | 48MP) ===================== -->
+    <!-- Botón redondo solo con ícono, sobre el degradado (menú ⁘, campana, editar) -->
+    <style name="BotonIcono">
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="tint">@color/texto</item>
+    </style>
 
-    <!-- Contenedor gris del control segmentado (es un RadioGroup) -->
+    <!-- ===================== Pestañas subrayadas ("BLACK LENS · CLEAR LENS") ===================== -->
+
+    <!-- Contenedor de las pestañas (es un RadioGroup) -->
     <style name="Segmentos">
-        <item name="android:background">@drawable/bg_segmentos</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:padding">4dp</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
-    <!-- Cada opción del control segmentado (es un RadioButton sin círculo) -->
+    <!-- Cada pestaña: texto en mayúsculas subrayado y un punto debajo de la elegida -->
     <style name="Segmento">
         <item name="android:button">@null</item>
         <!-- AppCompat dibuja el círculo con buttonCompat; también se quita -->
         <item name="buttonCompat">@null</item>
         <item name="android:background">@drawable/sel_segmento</item>
         <item name="android:gravity">center</item>
-        <item name="android:minHeight">40dp</item>
-        <item name="android:paddingStart">8dp</item>
-        <item name="android:paddingEnd">8dp</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:layout_marginEnd">22dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.03</item>
         <item name="android:textColor">@color/sel_segmento_texto</item>
     </style>
 
-    <!-- Filtros en forma de chip (Inventario y Laboratorio) -->
+    <!-- Filtros en forma de píldora: lila claro, y marino cuando están elegidos -->
     <style name="Filtro" parent="Widget.Material3.Chip.Filter">
         <item name="chipBackgroundColor">@color/sel_chip_fondo</item>
         <item name="android:textColor">@color/sel_chip_texto</item>
+        <item name="android:textAppearance">@style/TextoChip</item>
         <item name="chipStrokeWidth">0dp</item>
         <item name="chipCornerRadius">20dp</item>
         <item name="checkedIconVisible">false</item>
         <item name="chipMinHeight">38dp</item>
+        <item name="chipStartPadding">6dp</item>
+        <item name="chipEndPadding">6dp</item>
     </style>
 
     <!-- ===================== Contenedores ===================== -->
 
-    <!-- Tarjeta blanca sin sombra con esquinas redondeadas -->
+    <!-- Tarjeta lila muy clara, sin sombra, con esquinas redondeadas -->
     <style name="Tarjeta" parent="Widget.Material3.CardView.Filled">
-        <item name="cardBackgroundColor">@color/superficie</item>
-        <item name="cardCornerRadius">20dp</item>
+        <item name="cardBackgroundColor">@color/lavanda_suave</item>
+        <item name="cardCornerRadius">22dp</item>
         <item name="cardElevation">0dp</item>
         <item name="strokeWidth">0dp</item>
+    </style>
+
+    <!-- Mosaico lila de producto o indicador ("€99.00 ♥") -->
+    <style name="Tarjeta.Mosaico">
+        <item name="cardBackgroundColor">@color/lavanda</item>
+        <item name="cardCornerRadius">20dp</item>
+    </style>
+
+    <!-- Tarjeta blanca translúcida que va sobre el degradado -->
+    <style name="Tarjeta.Cristal">
+        <item name="cardBackgroundColor">@color/blanco_translucido</item>
+        <item name="cardCornerRadius">24dp</item>
     </style>
 
     <!-- Renglón de una lista dentro de una tarjeta: ícono + textos + flecha -->
@@ -180,18 +302,18 @@
         <item name="android:paddingBottom">10dp</item>
     </style>
 
-    <!-- Ícono gris dentro de un cuadro redondeado (a la izquierda de cada renglón) -->
+    <!-- Ícono marino dentro de un cuadro blanco (a la izquierda de cada renglón) -->
     <style name="IconoFila">
         <item name="android:background">@drawable/bg_icono_cuadro</item>
         <item name="android:padding">9dp</item>
         <item name="android:layout_marginEnd">14dp</item>
-        <item name="tint">@color/texto_secundario</item>
+        <item name="tint">@color/texto</item>
     </style>
 
     <!-- Flecha ">" al final del renglón -->
     <style name="FlechaFila">
         <item name="android:src">@drawable/ic_flecha_derecha</item>
-        <item name="tint">@color/texto_secundario</item>
+        <item name="tint">@color/texto_tenue</item>
         <item name="android:importantForAccessibility">no</item>
     </style>
 
@@ -201,41 +323,72 @@
         <item name="android:layout_marginStart">66dp</item>
     </style>
 
-    <!-- Ícono redondo del panel (gris) -->
+    <!-- Ícono marino dentro de un círculo blanco (mosaicos del panel) -->
     <style name="IconoPanel">
         <item name="android:background">@drawable/bg_icono_circulo</item>
-        <item name="android:padding">13dp</item>
+        <item name="android:padding">10dp</item>
         <item name="tint">@color/texto</item>
-    </style>
-
-    <!-- Ícono redondo del panel resaltado (azul con ícono blanco) -->
-    <style name="IconoPanel.Activo">
-        <item name="android:background">@drawable/bg_icono_circulo_activo</item>
-        <item name="tint">@color/blanco</item>
     </style>
 
     <!-- ===================== Barras ===================== -->
 
+    <!-- Barra superior transparente: solo íconos marinos sobre el degradado (el título va en cada pantalla) -->
     <style name="BarraSuperior" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="navigationIconTint">@color/texto</item>
         <item name="titleTextAppearance">@style/TextoBarraSuperior</item>
     </style>
 
+    <!-- Íconos de la barra superior en marino (el de perfil y los de menú/regresar) -->
+    <style name="TemaBarraSuperior" parent="">
+        <item name="colorControlNormal">@color/texto</item>
+    </style>
+
     <style name="TextoBarraSuperior" parent="TextAppearance.Material3.TitleLarge">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/texto</item>
     </style>
 
+    <!-- Barra inferior blanca, sin línea: continúa la hoja blanca de cada pantalla -->
     <style name="BarraInferior" parent="Widget.Material3.BottomNavigationView">
         <item name="backgroundTint">@color/superficie</item>
+        <item name="elevation">0dp</item>
         <item name="itemIconTint">@color/sel_barra_inferior</item>
         <item name="itemTextColor">@color/sel_barra_inferior</item>
+        <item name="itemTextAppearanceActive">@style/TextoBarraInferior</item>
+        <item name="itemTextAppearanceInactive">@style/TextoBarraInferior</item>
         <item name="itemActiveIndicatorStyle">@style/IndicadorInvisible</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
 
-    <!-- Sin "píldora" detrás del ícono activo: solo cambia a azul, como en el diseño -->
+    <style name="TextoBarraInferior" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
+        <item name="fontFamily">@font/lexend_medium</item>
+    </style>
+
+    <!-- Sin "píldora" detrás del ícono activo: solo cambia a marino -->
     <style name="IndicadorInvisible" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@android:color/transparent</item>
+    </style>
+
+    <!-- Menú lateral: fondo blanco y la sección actual en una píldora lila -->
+    <style name="MenuLateral" parent="Widget.Material3.NavigationView">
+        <item name="android:background">@color/superficie</item>
+        <item name="itemTextColor">@color/sel_menu_texto</item>
+        <item name="itemIconTint">@color/sel_menu_icono</item>
+        <item name="itemShapeFillColor">@color/sel_menu_fondo</item>
+        <item name="itemTextAppearance">@style/TextoMenuLateral</item>
+        <!-- Sin la franja oscura arriba y abajo: el encabezado llega hasta la barra de estado -->
+        <item name="topInsetScrimEnabled">false</item>
+        <item name="bottomInsetScrimEnabled">false</item>
+    </style>
+
+    <style name="TextoMenuLateral" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+        <item name="fontFamily">@font/lexend_exa_medium</item>
     </style>
 
     <!-- ===================== Formas ===================== -->
@@ -248,6 +401,11 @@
     <style name="Forma.Redondeada" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">18dp</item>
+    </style>
+
+    <style name="Forma.Foto" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
     </style>
 
 </resources>

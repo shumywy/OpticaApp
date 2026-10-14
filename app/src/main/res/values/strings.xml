@@ -21,4 +21,10 @@
     <string name="menu_ventas">Ventas</string>
     <string name="menu_laboratorio">Laboratorio</string>
     <string name="menu_perfil">Perfil y ajustes</string>
+
+    <!-- Menú lateral -->
+    <string name="menu_configuracion">Configuración</string>
+    <string name="menu_cerrar_sesion">Cerrar sesión</string>
+    <string name="menu_abrir">Abrir menú</string>
+    <string name="atras">Regresar</string>
 </resources>

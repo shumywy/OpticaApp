@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Pantalla 1: Inicio de sesión -->
+<!-- Pantalla 1: Inicio de sesión. Arriba el título sobre el degradado; abajo la hoja blanca con el formulario. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -9,145 +9,157 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/espacio"
-        android:orientation="vertical"
-        android:paddingStart="24dp"
-        android:paddingTop="40dp"
-        android:paddingEnd="24dp"
-        android:paddingBottom="24dp"
-        android:showDividers="middle">
+        android:orientation="vertical">
 
-        <!-- Logotipo: ojo blanco dentro de un círculo azul -->
-        <ImageView
-            android:layout_width="84dp"
-            android:layout_height="84dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/bg_icono_circulo_activo"
-            android:importantForAccessibility="no"
-            android:padding="20dp"
-            android:src="@drawable/ic_inventario"
-            app:tint="@color/blanco" />
-
+        <!-- ===== Encabezado sobre el degradado ===== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingStart="28dp"
+            android:paddingTop="40dp"
+            android:paddingEnd="28dp"
+            android:paddingBottom="36dp">
+
+            <!-- Logotipo: lentes marinos dentro de un círculo blanco -->
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_icono_circulo"
+                android:importantForAccessibility="no"
+                android:padding="14dp"
+                android:src="@drawable/ic_inventario"
+                app:tint="@color/texto" />
 
             <TextView
-                style="@style/Texto.Titulo"
+                style="@style/Texto.Eyebrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
                 android:text="Óptica App" />
+
+            <TextView
+                style="@style/Texto.Hero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Tu óptica,\nen orden" />
 
             <TextView
                 style="@style/Texto.Secundario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Gestión integral para tu óptica" />
+                android:layout_marginTop="10dp"
+                android:text="Pacientes, inventario, ventas y laboratorio en un solo lugar." />
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/etCorreo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="emailAddress"
-            android:drawableStart="@drawable/ic_correo"
-            android:drawablePadding="12dp"
-            android:drawableTint="@color/texto_secundario"
-            android:hint="Correo electrónico"
-            android:inputType="textEmailAddress" />
-
-        <EditText
-            android:id="@+id/etContrasena"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="password"
-            android:drawableStart="@drawable/ic_candado"
-            android:drawablePadding="12dp"
-            android:drawableTint="@color/texto_secundario"
-            android:hint="Contraseña"
-            android:inputType="textPassword" />
-
-        <Button
-            android:id="@+id/btnOlvide"
-            style="@style/Boton.Texto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="¿Olvidaste tu contraseña?" />
-
-        <Button
-            android:id="@+id/btnEntrar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Iniciar sesión" />
-
-        <Button
-            android:id="@+id/btnGoogle"
-            style="@style/Boton.Secundario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="54dp"
-            android:text="Continuar con Google" />
-
-        <ProgressBar
-            android:id="@+id/progreso"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone" />
-
-        <Space
+        <!-- ===== Hoja blanca con el formulario ===== -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/bg_hoja"
+            android:divider="@drawable/espacio"
+            android:orientation="vertical"
+            android:paddingStart="28dp"
+            android:paddingTop="32dp"
+            android:paddingEnd="28dp"
+            android:paddingBottom="24dp"
+            android:showDividers="middle">
 
-        <!-- Tarjeta blanca para dueños y personal invitado -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp">
+            <TextView
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Iniciar sesión" />
+
+            <EditText
+                android:id="@+id/etCorreo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="emailAddress"
+                android:drawableStart="@drawable/ic_correo"
+                android:drawablePadding="12dp"
+                android:drawableTint="@color/texto_secundario"
+                android:hint="Correo electrónico"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/etContrasena"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="password"
+                android:drawableStart="@drawable/ic_candado"
+                android:drawablePadding="12dp"
+                android:drawableTint="@color/texto_secundario"
+                android:hint="Contraseña"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/btnOlvide"
+                style="@style/Boton.Texto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="¿Olvidaste tu contraseña?" />
+
+            <Button
+                android:id="@+id/btnEntrar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Entrar" />
+
+            <Button
+                android:id="@+id/btnGoogle"
+                style="@style/Boton.Secundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Continuar con Google" />
+
+            <ProgressBar
+                android:id="@+id/progreso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:indeterminateTint="@color/cielo"
+                android:visibility="gone" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Dueños y personal invitado, como las pestañas "Lens" del diseño -->
+            <TextView
+                style="@style/Texto.Categoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:text="¿Eres dueño o te invitaron?" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="horizontal">
 
-                <TextView
-                    style="@style/Texto.Secundario"
-                    android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/btnRegistrar"
+                    style="@style/Boton.Secundario"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="¿Eres dueño de una óptica o te invitaron?" />
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Registrar óptica" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/btnUnirme"
+                    style="@style/Boton.Secundario"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btnRegistrar"
-                        style="@style/Boton.Secundario"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:text="Registrar óptica" />
-
-                    <Button
-                        android:id="@+id/btnUnirme"
-                        style="@style/Boton.Secundario"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Unirme con código" />
-                </LinearLayout>
+                    android:layout_weight="1"
+                    android:text="Unirme con código" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

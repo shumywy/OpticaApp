@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.google.firebase.firestore.ListenerRegistration;
 
@@ -46,8 +46,9 @@ public class InventarioFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         if (!Sesion.estaActiva()) return;
 
-        adaptador = new ProductosAdapter(producto -> abrirFormulario(producto.id));
-        binding.rvProductos.setLayoutManager(new LinearLayoutManager(requireContext()));
+        // Catálogo en cuadrícula de 2 columnas; al tocar un producto se abre su detalle
+        adaptador = new ProductosAdapter(producto -> abrirDetalle(producto.id));
+        binding.rvProductos.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         binding.rvProductos.setAdapter(adaptador);
 
         // Chips de categoría: al elegir uno se vuelve a filtrar la lista
@@ -103,6 +104,8 @@ public class InventarioFragment extends Fragment {
         }
         adaptador.mostrar(visibles);
         binding.tvVacio.setVisibility(visibles.isEmpty() ? View.VISIBLE : View.GONE);
+        // Contador "08/24": productos que se ven / total, como el "01/20" del diseño
+        binding.tvContador.setText(String.format(Locale.US, "%02d/%02d", visibles.size(), todos.size()));
     }
 
     /** Texto de la categoría del chip elegido, o null si está elegido "Todas". */
@@ -117,6 +120,13 @@ public class InventarioFragment extends Fragment {
     }
 
     /** Abre el formulario: con id edita un producto, sin id crea uno nuevo. */
+    /** Abre la pantalla de detalle del producto (estilo "Aqua #004"). */
+    private void abrirDetalle(String productoId) {
+        Bundle args = new Bundle();
+        args.putString(ProductoDetalleFragment.ARG_PRODUCTO_ID, productoId);
+        NavHostFragment.findNavController(this).navigate(R.id.action_inventario_to_detalle, args);
+    }
+
     private void abrirFormulario(@Nullable String productoId) {
         Bundle args = new Bundle();
         args.putString(ProductoFormFragment.ARG_PRODUCTO_ID, productoId);

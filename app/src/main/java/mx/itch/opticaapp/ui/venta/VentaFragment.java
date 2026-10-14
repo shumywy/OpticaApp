@@ -47,7 +47,13 @@ import mx.itch.opticaapp.util.Pdf;
  */
 public class VentaFragment extends Fragment {
 
+    /** Si llega este argumento (desde el detalle de producto), ese producto se agrega solo al carrito. */
+    public static final String ARG_PRODUCTO_ID = "productoId";
+
     private static final String PUBLICO_GENERAL = "Público general";
+
+    /** Producto que hay que agregar en cuanto llegue la lista de productos de Firestore. */
+    private String productoPorAgregar;
 
     private FragmentVentaBinding binding;
     private ListenerRegistration escuchaPacientes;
@@ -94,6 +100,12 @@ public class VentaFragment extends Fragment {
                 binding.etOrdenDescripcion.setVisibility(marcado ? View.VISIBLE : View.GONE));
         binding.btnConfirmar.setOnClickListener(v -> confirmarVenta());
         actualizarTotales();
+
+        // Se lee una sola vez: se borra del Bundle para no agregarlo de nuevo al regresar a esta pantalla
+        if (getArguments() != null && getArguments().containsKey(ARG_PRODUCTO_ID)) {
+            productoPorAgregar = getArguments().getString(ARG_PRODUCTO_ID);
+            getArguments().remove(ARG_PRODUCTO_ID);
+        }
     }
 
     @Override
@@ -123,6 +135,7 @@ public class VentaFragment extends Fragment {
             }
             Collections.sort(productosDisponibles, (a, b) -> texto(a.nombre).compareTo(texto(b.nombre)));
             adaptadorProductos.notifyDataSetChanged();
+            agregarProductoPendiente();
         });
     }
 
@@ -152,6 +165,26 @@ public class VentaFragment extends Fragment {
             binding.etCantidad.setError("Cantidad no válida");
             return;
         }
+        agregar(p, cantidad);
+    }
+
+    /** Agrega el producto que se eligió en el detalle de producto ("Vender"). */
+    private void agregarProductoPendiente() {
+        if (productoPorAgregar == null) return;
+        String id = productoPorAgregar;
+        productoPorAgregar = null;   // solo una vez
+        for (int i = 0; i < productosDisponibles.size(); i++) {
+            Producto p = productosDisponibles.get(i);
+            if (id.equals(p.id)) {
+                binding.spProducto.setSelection(i);
+                agregar(p, 1);
+                return;
+            }
+        }
+        mensaje("Ese producto ya no tiene existencias");
+    }
+
+    private void agregar(Producto p, int cantidad) {
         // Revisa que no se vendan más piezas de las que hay
         ItemVenta existente = null;
         for (ItemVenta i : carrito) {

@@ -45,6 +45,28 @@
         <action
             android:id="@+id/action_inventario_to_productoForm"
             app:destination="@id/productoFormFragment" />
+        <action
+            android:id="@+id/action_inventario_to_detalle"
+            app:destination="@id/productoDetalleFragment" />
+    </fragment>
+
+    <!-- Detalle de producto: "Editar" abre el formulario y "Vender" abre Punto de venta -->
+    <fragment
+        android:id="@+id/productoDetalleFragment"
+        android:name="mx.itch.opticaapp.ui.inventario.ProductoDetalleFragment"
+        android:label="@string/titulo_producto">
+        <action
+            android:id="@+id/action_detalle_to_productoForm"
+            app:destination="@id/productoFormFragment" />
+        <!--
+            Va a Ventas como si se tocara su botón de la barra inferior: deja guardado
+            Inventario → Detalle para cuando el usuario regrese a esa sección.
+        -->
+        <action
+            android:id="@+id/action_detalle_to_venta"
+            app:destination="@id/ventaFragment"
+            app:popUpTo="@id/panelFragment"
+            app:popUpToSaveState="true" />
     </fragment>
 
     <fragment

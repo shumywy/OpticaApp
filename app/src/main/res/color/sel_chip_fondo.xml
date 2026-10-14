@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo de los filtros: marino el elegido, lila claro los demás -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/azul" android:state_checked="true" />
-    <item android:color="@color/superficie" />
+    <item android:color="@color/seleccion" android:state_checked="true" />
+    <item android:color="@color/lavanda_suave" />
 </selector>

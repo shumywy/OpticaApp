@@ -64,9 +64,10 @@ public class PanelFragment extends Fragment {
         binding.tvSaludo.setText(saludo());
         binding.tvNombre.setText(u.nombre);
         binding.tvOptica.setText(o.nombre + " · " + Usuario.nombreRol(u.rol));
-        Imagenes.mostrar(binding.ivAvatar, u.fotoUrl);
+        Imagenes.mostrar(binding.ivAvatar, u.fotoUrl, R.drawable.ic_perfil);
 
         MainActivity actividad = (MainActivity) requireActivity();
+        binding.tarjetaMenu.setOnClickListener(v -> actividad.abrirMenu());
         binding.tarjetaPerfil.setOnClickListener(v -> actividad.abrirPerfil());
         binding.tarjetaAvisos.setOnClickListener(v -> mostrarAvisos());
 

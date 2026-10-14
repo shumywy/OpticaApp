@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.widget.ImageView;
 
+import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.widget.ImageViewCompat;
@@ -64,14 +65,19 @@ public final class Imagenes {
      * muestra un ícono gris centrado en su lugar.
      */
     public static void mostrar(ImageView vista, String url) {
+        mostrar(vista, url, R.drawable.ic_imagen);
+    }
+
+    /** Igual que mostrar(), pero eligiendo el ícono para cuando no hay foto (por ejemplo, ic_perfil). */
+    public static void mostrar(ImageView vista, String url, @DrawableRes int iconoSinFoto) {
         Context c = vista.getContext();
         if (url == null || url.isEmpty() || Preferencias.sinImagenes(c)) {
             Glide.with(vista).clear(vista);
-            mostrarIcono(vista);
+            mostrarIcono(vista, iconoSinFoto);
             return;
         }
         prepararParaFoto(vista);
-        Glide.with(vista).load(url).error(R.drawable.ic_imagen).into(vista);
+        Glide.with(vista).load(url).error(iconoSinFoto).into(vista);
     }
 
     /** Muestra una foto recién tomada o elegida de la galería (todavía no subida). */
@@ -80,19 +86,34 @@ public final class Imagenes {
         Glide.with(vista).load(uri).into(vista);
     }
 
-    /** Ícono gris con margen interno, para cuando no hay foto. */
-    private static void mostrarIcono(ImageView vista) {
-        int margen = vista.getLayoutParams() != null && vista.getLayoutParams().width > 0
-                ? vista.getLayoutParams().width / 4 : 24;
-        vista.setPadding(margen, margen, margen, margen);
+    /** Ícono gris centrado que ocupa cerca del 40 % del lado más corto, para cuando no hay foto. */
+    private static void mostrarIcono(ImageView vista, @DrawableRes int icono) {
+        vista.setTag(R.id.imagen_es_icono, Boolean.TRUE);
         vista.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        vista.setImageResource(R.drawable.ic_imagen);
+        vista.setImageResource(icono);
         ImageViewCompat.setImageTintList(vista,
-                ColorStateList.valueOf(ContextCompat.getColor(vista.getContext(), R.color.texto_secundario)));
+                ColorStateList.valueOf(ContextCompat.getColor(vista.getContext(), R.color.texto_tenue)));
+        Runnable ajustar = () -> {
+            // Si mientras tanto ya se puso una foto (listas que reciclan renglones), no se toca
+            if (!Boolean.TRUE.equals(vista.getTag(R.id.imagen_es_icono))) return;
+            int ancho = vista.getWidth();
+            int alto = vista.getHeight();
+            int lado = Math.min(ancho, alto) * 2 / 5;
+            if (lado <= 0) return;
+            int margenX = (ancho - lado) / 2;
+            int margenY = (alto - lado) / 2;
+            vista.setPadding(margenX, margenY, margenX, margenY);
+        };
+        if (vista.getWidth() > 0) {
+            ajustar.run();
+        } else {
+            vista.post(ajustar);   // todavía no se mide: se ajusta en cuanto tenga tamaño
+        }
     }
 
     /** Quita el margen y el color del ícono para que la foto ocupe todo el espacio. */
     private static void prepararParaFoto(ImageView vista) {
+        vista.setTag(R.id.imagen_es_icono, Boolean.FALSE);
         vista.setPadding(0, 0, 0, 0);
         vista.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ImageViewCompat.setImageTintList(vista, null);

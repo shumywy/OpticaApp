@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Círculo blanco detrás de un ícono (mosaicos del panel) -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-    <solid android:color="@color/icono_fondo" />
+    <solid android:color="@color/superficie" />
 </shape>

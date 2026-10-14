@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Opción elegida: rectángulo blanco; las demás, transparentes -->
+<!--
+    Pestaña subrayada como "BLACK LENS · CLEAR LENS · MIRROR LENS":
+    todas llevan una línea delgada debajo del texto y la elegida además un punto.
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/superficie" />
-            <corners android:radius="11dp" />
-        </shape>
+        <layer-list>
+            <item
+                android:height="1dp"
+                android:bottom="11dp"
+                android:gravity="bottom|fill_horizontal">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/texto" />
+                </shape>
+            </item>
+            <item
+                android:width="5dp"
+                android:height="5dp"
+                android:bottom="1dp"
+                android:gravity="bottom|center_horizontal">
+                <shape android:shape="oval">
+                    <solid android:color="@color/texto_secundario" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
     <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@android:color/transparent" />
-            <corners android:radius="11dp" />
-        </shape>
+        <layer-list>
+            <item
+                android:height="1dp"
+                android:bottom="11dp"
+                android:gravity="bottom|fill_horizontal">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/texto_tenue" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
 </selector>

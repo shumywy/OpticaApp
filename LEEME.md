@@ -1,15 +1,28 @@
 # Óptica App — proyecto de Android Studio
 
-App en Java + XML. Usa una sola Activity, 10 Fragments y Firebase (Auth, Firestore, Storage).
+App en Java + XML. Usa una sola Activity, 11 Fragments y Firebase (Auth, Firestore, Storage).
 
-## Diseño
+## Diseño (estilo "catálogo")
 
-Sigue el estilo de referencia: fondo gris muy claro, tarjetas blancas con esquinas redondeadas, acento azul,
-íconos dentro de círculos o cuadros grises, controles segmentados, switches azules y barra inferior sin fondo
-detrás del ícono activo.
+Basado en la referencia de la tienda de lentes:
 
-- Colores: `res/values/colors.xml` (claro) y `res/values-night/colors.xml` (oscuro). Cambiar `azul` cambia el acento en toda la app.
-- Estilos reutilizables: `res/values/styles.xml` (Campo, Selector, Boton, Segmento, Filtro, Tarjeta, Fila, IconoPanel…).
+- **Fondo en degradado lila → rosa** detrás de todo. Arriba de cada pantalla va un texto chico en negritas y un **título enorme y delgado** (como "Chimi Eyewear / Collection").
+- **Hoja blanca** con las esquinas de arriba muy redondeadas, donde va el contenido (`bg_hoja`).
+- **Textos azul marino**, **botón principal azul cielo** con sombra azul, **etiquetas color vino** en mayúsculas (como "CORE COLLECTION").
+- **Mosaicos lila** para productos e indicadores, **pestañas subrayadas** con un punto bajo la elegida (como "BLACK LENS · CLEAR LENS") y un **contador con línea** ("08/24").
+- **Íconos de línea delgada**. La barra superior es transparente y solo lleva íconos: ⁘ abre el menú lateral y ‹ regresa.
+
+Dónde se cambia:
+
+- Colores: `res/values/colors.xml` (claro) y `res/values-night/colors.xml` (oscuro). Por ejemplo, `cielo` es el botón principal y `degradado_*` el fondo.
+- Fuentes (en `res/font`, licencia libre OFL, ver carpeta `licencias/`):
+  - **Lexend Exa** (ancha) para títulos, precios y nombres.
+  - **Barlow Condensed** (angosta) para títulos de sección.
+  - **Lexend** para el texto normal.
+- Estilos reutilizables: `res/values/styles.xml`.
+  - Textos: `Texto.Hero`, `Texto.Eyebrow`, `Texto.Categoria`, `Texto.Titulo`, `Texto.Seccion`, `Texto.Precio`.
+  - Campos y botones: `Campo`, `Campo.Busqueda`, `Boton`.
+  - Contenedores y controles: `Tarjeta.Mosaico`, `Tarjeta.Cristal`, `Segmento`, `Filtro`.
 - Tema: `res/values/themes.xml`.
 - Para ver cada pantalla sin ejecutar la app, abre su layout y elige la pestaña **Design** o **Split**: los textos de ejemplo vienen de `tools:text`.
 
@@ -52,14 +65,33 @@ detrás del ícono activo.
 | 3 | Panel principal (avance semanal) | `ui/panel/PanelFragment` | `fragment_panel.xml` |
 | 4 | Pacientes | `ui/pacientes/PacientesFragment` | `fragment_pacientes.xml` |
 | 5 | Expediente y graduación | `ui/expediente/ExpedienteFragment` | `fragment_expediente.xml` |
-| 6 | Inventario (+ formulario de producto) | `ui/inventario/InventarioFragment`, `ProductoFormFragment` | `fragment_inventario.xml`, `fragment_producto_form.xml` |
+| 6 | Inventario en catálogo (+ formulario de producto) | `ui/inventario/InventarioFragment`, `ProductoFormFragment` | `fragment_inventario.xml`, `item_producto.xml`, `fragment_producto_form.xml` |
+| 6b | Detalle de producto (botón **Vender**) | `ui/inventario/ProductoDetalleFragment` | `fragment_producto_detalle.xml` |
 | 7 | Punto de venta | `ui/venta/VentaFragment` | `fragment_venta.xml` |
 | 8 | Órdenes de laboratorio | `ui/laboratorio/LaboratorioFragment` | `fragment_laboratorio.xml` |
 | 9 | Perfil y ajustes | `ui/ajustes/AjustesFragment` | `fragment_ajustes.xml` |
 
 Otros archivos importantes:
 
-- `MainActivity` — barra superior, barra inferior y navegación (`res/navigation/nav_graph.xml`).
+- `MainActivity` — barra superior, barra inferior, menú lateral y navegación (`res/navigation/nav_graph.xml`).
+
+### Detalle de producto
+
+Al tocar un mosaico del inventario se abre el detalle: foto grande, categoría, nombre, descripción y existencias, que se actualizan en tiempo real.
+
+- **Vender** abre Punto de venta con ese producto ya agregado al carrito (argumento `productoId` de `VentaFragment`).
+- El lápiz abre el formulario para editarlo. Si el producto se elimina, el detalle se cierra solo.
+
+### Menú lateral (Navigation Drawer)
+
+Se abre deslizando desde la orilla izquierda, con el botón ☰ de la barra superior o con el botón ☰ del panel.
+
+- `activity_main.xml` — el `DrawerLayout` contiene el contenido normal y el `NavigationView` (el panel que sale).
+- `nav_header.xml` — encabezado con foto, nombre, correo y "Óptica · Rol". `MainActivity.escucharUsuario()` lo llena con un listener en tiempo real sobre `users/{uid}` en Firestore: si cambias la foto en Ajustes, el menú se actualiza solo.
+- `menu/menu_lateral.xml` — las secciones. Sus `id` son los mismos que los destinos del `nav_graph`, así `NavigationUI` navega y marca la sección actual. "Configuración" lleva `menuCategory="secondary"` para que "atrás" regrese a donde estabas.
+- Por rol: el optometrista no ve Inventario ni Ventas (igual que en la barra inferior).
+- Está bloqueado en el inicio de sesión y el registro. "Atrás" con el menú abierto lo cierra.
+- "Cerrar sesión" pide confirmación y usa `MainActivity.cerrarSesion()`, que también usa la pantalla de Ajustes.
 - `data/Sesion` — usuario y óptica que iniciaron sesión, y las colecciones de esa óptica.
 - `data/Preferencias` — tema, modo sin imágenes, texto grande y fondo de pantalla (SharedPreferences).
 - `model/` — clases que Firestore convierte en documentos (Usuario, Optica, Paciente, Consulta, Producto, Venta, Orden).

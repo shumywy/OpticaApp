@@ -55,8 +55,8 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Fila
         fila.itemView.setOnClickListener(v -> alTocar.alTocar(p));
     }
 
-    /** Píldora de color: verde = en stock, naranja = stock bajo, rojo = agotado. */
-    private void mostrarEstado(TextView vista, Producto p) {
+    /** Píldora de color: verde = en stock, naranja = stock bajo, rojo = agotado. También la usa el detalle. */
+    public static void mostrarEstado(TextView vista, Producto p) {
         Context c = vista.getContext();
         String estado = p.estadoStock();
         int fondo;
@@ -66,7 +66,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Fila
             fondo = R.drawable.bg_pildora_rojo;
             color = R.color.rojo;
         } else if ("Stock bajo".equals(estado)) {
-            vista.setText("Stock bajo · " + p.stock);
+            vista.setText("Quedan " + p.stock);
             fondo = R.drawable.bg_pildora_naranja;
             color = R.color.naranja;
         } else {

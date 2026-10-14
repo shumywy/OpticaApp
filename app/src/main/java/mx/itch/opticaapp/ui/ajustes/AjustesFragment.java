@@ -20,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -82,7 +81,7 @@ public class AjustesFragment extends Fragment {
         binding.tvNombre.setText(u.nombre);
         binding.tvRol.setText(o.nombre + " · " + Usuario.nombreRol(u.rol));
         binding.tvCorreo.setText(u.email);
-        Imagenes.mostrar(binding.ivFoto, u.fotoUrl);
+        Imagenes.mostrar(binding.ivFoto, u.fotoUrl, R.drawable.ic_perfil);
         binding.btnFoto.setOnClickListener(v -> {
             uriCamara = Imagenes.nuevaUriParaFoto(requireContext());
             tomarFoto.launch(uriCamara);
@@ -122,7 +121,7 @@ public class AjustesFragment extends Fragment {
         binding.swSinImagenes.setChecked(Preferencias.sinImagenes(ctx));
         binding.swSinImagenes.setOnCheckedChangeListener((boton, activo) -> {
             Preferencias.setSinImagenes(ctx, activo);
-            Imagenes.mostrar(binding.ivFoto, Sesion.getUsuario().fotoUrl);
+            Imagenes.mostrar(binding.ivFoto, Sesion.getUsuario().fotoUrl, R.drawable.ic_perfil);
         });
 
         binding.swTextoGrande.setChecked(Preferencias.textoGrande(ctx));
@@ -190,7 +189,7 @@ public class AjustesFragment extends Fragment {
                         .addOnSuccessListener(x -> {
                             Sesion.getUsuario().fotoUrl = url;
                             mostrarCargando(false);
-                            if (binding != null) Imagenes.mostrar(binding.ivFoto, url);
+                            if (binding != null) Imagenes.mostrar(binding.ivFoto, url, R.drawable.ic_perfil);
                             mensaje("Foto actualizada");
                         })
                         .addOnFailureListener(e -> {
@@ -318,9 +317,8 @@ public class AjustesFragment extends Fragment {
     // ---------------- Sesión ----------------
 
     private void cerrarSesion() {
-        FirebaseAuth.getInstance().signOut();
-        Sesion.cerrar();
-        ((MainActivity) requireActivity()).irAInicio(false);
+        // MainActivity también quita el listener del menú lateral antes de salir
+        ((MainActivity) requireActivity()).cerrarSesion();
     }
 
     private void mostrarCargando(boolean cargando) {

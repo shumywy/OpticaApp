@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Tema de la app. Cambiar un color aquí lo cambia en todas las pantallas. -->
+    <!-- Tema de la app. Cambiar un color o una fuente aquí lo cambia en todas las pantallas. -->
     <style name="Theme.OpticaApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/azul</item>
+        <!-- Botones y switches en azul cielo -->
+        <item name="colorPrimary">@color/cielo</item>
         <item name="colorOnPrimary">@color/blanco</item>
-        <item name="colorPrimaryContainer">@color/azul_claro</item>
-        <item name="colorOnPrimaryContainer">@color/azul</item>
-        <item name="colorSecondary">@color/azul</item>
-        <item name="colorSecondaryContainer">@color/azul_claro</item>
-        <item name="colorOnSecondaryContainer">@color/azul</item>
+        <item name="colorPrimaryContainer">@color/lavanda</item>
+        <item name="colorOnPrimaryContainer">@color/texto</item>
+        <item name="colorSecondary">@color/cielo</item>
+        <item name="colorOnSecondary">@color/blanco</item>
+        <item name="colorSecondaryContainer">@color/lavanda</item>
+        <item name="colorOnSecondaryContainer">@color/texto</item>
+        <item name="colorTertiary">@color/vino</item>
         <item name="colorError">@color/rojo</item>
 
+        <!-- Fondo en degradado lila → rosa; las hojas y tarjetas son blancas -->
+        <item name="android:windowBackground">@drawable/bg_degradado</item>
         <item name="android:colorBackground">@color/fondo</item>
         <item name="colorSurface">@color/superficie</item>
         <item name="colorOnSurface">@color/texto</item>
@@ -22,11 +27,21 @@
         <item name="colorSurfaceContainerLow">@color/superficie</item>
         <item name="colorSurfaceContainer">@color/superficie</item>
         <item name="colorSurfaceContainerHigh">@color/superficie</item>
-        <item name="colorSurfaceContainerHighest">@color/icono_fondo</item>
+        <item name="colorSurfaceContainerHighest">@color/lavanda_suave</item>
+        <item name="colorControlNormal">@color/texto_secundario</item>
 
         <item name="android:textColorPrimary">@color/texto</item>
         <item name="android:textColorSecondary">@color/texto_secundario</item>
-        <item name="android:textColorHint">@color/texto_secundario</item>
+        <item name="android:textColorHint">@color/texto_tenue</item>
+
+        <!-- Fuente de todos los textos (los títulos usan Lexend Exa desde styles.xml) -->
+        <item name="android:fontFamily">@font/lexend_regular</item>
+        <item name="fontFamily">@font/lexend_regular</item>
+
+        <!-- Títulos, textos y botones de los cuadros de diálogo -->
+        <item name="textAppearanceHeadlineSmall">@style/TextoDialogoTitulo</item>
+        <item name="textAppearanceBodyMedium">@style/TextoDialogoCuerpo</item>
+        <item name="textAppearanceLabelLarge">@style/TextoBoton</item>
 
         <!-- Estilos por defecto de los controles -->
         <item name="editTextStyle">@style/Campo</item>

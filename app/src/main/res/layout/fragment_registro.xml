@@ -3,183 +3,208 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/espacio"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:showDividers="middle">
+        android:orientation="vertical">
 
-        <!-- Control segmentado: qué quiere hacer el usuario -->
-        <RadioGroup
-            android:id="@+id/rgModo"
-            style="@style/Segmentos"
+        <!-- ===== Encabezado sobre el degradado ===== -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="28dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="28dp"
+            android:paddingBottom="28dp">
 
-            <RadioButton
-                android:id="@+id/rbNueva"
-                style="@style/Segmento"
-                android:layout_width="0dp"
+            <TextView
+                style="@style/Texto.Eyebrow"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Registrar mi óptica" />
+                android:text="Óptica App" />
 
-            <RadioButton
-                android:id="@+id/rbUnirme"
-                style="@style/Segmento"
-                android:layout_width="0dp"
+            <TextView
+                style="@style/Texto.Hero"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Unirme con código" />
-        </RadioGroup>
+                android:layout_marginTop="6dp"
+                android:text="Crear cuenta" />
+        </LinearLayout>
 
-        <!-- Tarjeta: datos de la cuenta -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- ===== Hoja blanca ===== -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_hoja"
+            android:divider="@drawable/espacio"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="26dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="24dp"
+            android:showDividers="middle">
 
+            <!-- Pestañas: qué quiere hacer el usuario -->
+            <RadioGroup
+                android:id="@+id/rgModo"
+                style="@style/Segmentos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/rbNueva"
+                    style="@style/Segmento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Registrar mi óptica" />
+
+                <RadioButton
+                    android:id="@+id/rbUnirme"
+                    style="@style/Segmento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unirme con código" />
+            </RadioGroup>
+
+            <!-- Datos de la cuenta -->
+            <TextView
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Tu cuenta" />
+
+            <EditText
+                android:id="@+id/etNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="name"
+                android:hint="Nombre completo"
+                android:inputType="textPersonName|textCapWords" />
+
+            <!-- Se oculta cuando el usuario ya entró con Google y solo completa sus datos -->
             <LinearLayout
+                android:id="@+id/layoutCuenta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@drawable/espacio"
                 android:orientation="vertical"
-                android:padding="16dp"
                 android:showDividers="middle">
-
-                <TextView
-                    style="@style/Texto.Seccion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tu cuenta" />
 
                 <EditText
-                    android:id="@+id/etNombre"
+                    android:id="@+id/etCorreo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints="name"
-                    android:hint="Nombre completo"
-                    android:inputType="textPersonName|textCapWords" />
+                    android:autofillHints="emailAddress"
+                    android:hint="Correo electrónico"
+                    android:inputType="textEmailAddress" />
 
-                <!-- Se oculta cuando el usuario ya entró con Google y solo completa sus datos -->
-                <LinearLayout
-                    android:id="@+id/layoutCuenta"
+                <EditText
+                    android:id="@+id/etContrasena"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:divider="@drawable/espacio"
-                    android:orientation="vertical"
-                    android:showDividers="middle">
+                    android:autofillHints="newPassword"
+                    android:hint="Contraseña"
+                    android:inputType="textPassword" />
 
-                    <EditText
-                        android:id="@+id/etCorreo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autofillHints="emailAddress"
-                        android:hint="Correo electrónico"
-                        android:inputType="textEmailAddress" />
+                <TextView
+                    android:id="@+id/tvReglas"
+                    style="@style/Texto.Secundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="4dp" />
 
-                    <EditText
-                        android:id="@+id/etContrasena"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autofillHints="newPassword"
-                        android:hint="Contraseña"
-                        android:inputType="textPassword" />
-
-                    <TextView
-                        android:id="@+id/tvReglas"
-                        style="@style/Texto.Secundario"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="2dp"
-                        android:paddingStart="4dp" />
-
-                    <EditText
-                        android:id="@+id/etConfirmar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autofillHints="newPassword"
-                        android:hint="Confirmar contraseña"
-                        android:inputType="textPassword" />
-                </LinearLayout>
+                <EditText
+                    android:id="@+id/etConfirmar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="newPassword"
+                    android:hint="Confirmar contraseña"
+                    android:inputType="textPassword" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <!-- Tarjeta: datos de una óptica nueva -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/layoutNueva"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            <!-- Datos de una óptica nueva -->
             <LinearLayout
+                android:id="@+id/layoutNueva"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@drawable/espacio"
                 android:orientation="vertical"
-                android:padding="16dp"
                 android:showDividers="middle">
 
                 <TextView
                     style="@style/Texto.Seccion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="Datos de la óptica" />
 
-                <LinearLayout
+                <!-- Logotipo en un mosaico lila, como los productos del diseño -->
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Tarjeta.Mosaico"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/ivLogo"
-                        android:layout_width="76dp"
-                        android:layout_height="76dp"
-                        android:background="@color/icono_fondo"
-                        android:contentDescription="Logotipo de la óptica"
-                        android:padding="20dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_camara"
-                        app:shapeAppearanceOverlay="@style/Forma.Circulo"
-                        app:tint="@color/texto_secundario" />
+                    android:layout_height="wrap_content">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="14dp">
 
-                        <TextView
-                            style="@style/Texto.Fila"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Logotipo" />
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/ivLogo"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:background="@color/superficie"
+                            android:contentDescription="Logotipo de la óptica"
+                            android:padding="20dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_camara"
+                            app:shapeAppearanceOverlay="@style/Forma.Circulo"
+                            app:tint="@color/texto_secundario" />
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                            <Button
-                                android:id="@+id/btnLogoCamara"
-                                style="@style/Boton.Texto"
+                            <TextView
+                                style="@style/Texto.Categoria"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Tomar foto" />
+                                android:layout_marginStart="12dp"
+                                android:text="Logotipo" />
 
-                            <Button
-                                android:id="@+id/btnLogoGaleria"
-                                style="@style/Boton.Texto"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Galería" />
+                                android:orientation="horizontal">
+
+                                <Button
+                                    android:id="@+id/btnLogoCamara"
+                                    style="@style/Boton.Texto"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Tomar foto" />
+
+                                <Button
+                                    android:id="@+id/btnLogoGaleria"
+                                    style="@style/Boton.Texto"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Galería" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <EditText
                     android:id="@+id/etOpticaNombre"
@@ -224,27 +249,22 @@
                     android:layout_height="wrap_content"
                     android:text="Al terminar se generará un código de invitación para que tu personal se una a esta óptica." />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <!-- Tarjeta: unirse a una óptica existente -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/layoutUnirme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
+            <!-- Unirse a una óptica existente -->
             <LinearLayout
+                android:id="@+id/layoutUnirme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@drawable/espacio"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:showDividers="middle">
+                android:showDividers="middle"
+                android:visibility="gone">
 
                 <TextView
                     style="@style/Texto.Seccion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="Código de invitación" />
 
                 <EditText
@@ -259,9 +279,10 @@
                     android:inputType="textCapCharacters" />
 
                 <TextView
-                    style="@style/Texto.Secundario"
+                    style="@style/Texto.Categoria"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:text="Tu puesto en la óptica" />
 
                 <Spinner
@@ -269,20 +290,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <Button
-            android:id="@+id/btnContinuar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Continuar" />
+            <Button
+                android:id="@+id/btnContinuar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Continuar" />
 
-        <ProgressBar
-            android:id="@+id/progreso"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone" />
+            <ProgressBar
+                android:id="@+id/progreso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:indeterminateTint="@color/cielo"
+                android:visibility="gone" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

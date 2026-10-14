@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Renglón de un paciente: tarjeta lila clara con iniciales, nombre y última graduación -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    app:cardCornerRadius="18dp">
+    android:layout_marginTop="10dp">
 
     <LinearLayout
         style="@style/Fila"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:minHeight="76dp"
+        android:paddingStart="14dp">
 
-        <!-- Iniciales del paciente en un círculo azul claro -->
+        <!-- Iniciales del paciente en un círculo lila -->
         <TextView
             android:id="@+id/tvIniciales"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="14dp"
             android:background="@drawable/bg_avatar"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/lexend_exa_medium"
             android:gravity="center"
-            android:textColor="@color/azul"
-            android:textSize="15sp"
+            android:textColor="@color/texto"
+            android:textSize="14sp"
             tools:text="MF" />
 
         <LinearLayout
@@ -36,6 +37,8 @@
                 style="@style/Texto.Fila"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 tools:text="María Fernanda López" />
 
             <TextView
@@ -45,12 +48,13 @@
                 android:layout_height="wrap_content"
                 tools:text="Última consulta: 07/10/2026" />
 
+            <!-- Graduación en la etiqueta color vino, como "CORE COLLECTION" -->
             <TextView
                 android:id="@+id/tvGraduacion"
-                style="@style/Texto.Etiqueta"
+                style="@style/Texto.Categoria"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 tools:text="OD -1.25 / OI -1.50" />
         </LinearLayout>
 

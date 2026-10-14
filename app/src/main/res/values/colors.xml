@@ -1,25 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Paleta tomada del diseño de referencia: gris muy claro, tarjetas blancas y acento azul -->
-    <color name="azul">#3D6EF0</color>
-    <color name="azul_claro">#E9EFFE</color>
-    <color name="fondo">#F2F3F7</color>
+    <!--
+        Paleta del estilo "catálogo": fondo en degradado lila → rosa, hojas blancas,
+        textos azul marino, botón principal azul cielo y etiquetas en color vino.
+        values-night/colors.xml tiene los mismos nombres para el tema oscuro.
+    -->
+
+    <!-- Degradado del fondo (de arriba-izquierda a abajo-derecha) -->
+    <color name="degradado_inicio">#C9CEF7</color>
+    <color name="degradado_centro">#E1D6F8</color>
+    <color name="degradado_fin">#F8CFEA</color>
+
+    <!-- Superficies -->
+    <color name="fondo">#EEF0FB</color>
     <color name="superficie">#FFFFFF</color>
-    <color name="texto">#1B1C1F</color>
-    <color name="texto_secundario">#8A8D94</color>
-    <color name="borde">#E4E6EB</color>
-    <color name="icono_fondo">#EFF0F4</color>
+    <color name="lavanda">#DFE3F8</color>
+    <color name="lavanda_suave">#F2F3FC</color>
+    <color name="blanco_translucido">#D9FFFFFF</color>
+    <color name="borde">#E4E6F2</color>
+    <color name="icono_fondo">#F2F3FC</color>
+
+    <!-- Textos -->
+    <color name="texto">#1E2A52</color>
+    <color name="texto_secundario">#666D8A</color>
+    <color name="texto_tenue">#A3A8BF</color>
+
+    <!-- Marca -->
+    <color name="marino">#1E2A52</color>
+    <color name="cielo">#3BB4F2</color>
+    <color name="cielo_claro">#E2F3FD</color>
+    <color name="vino">#8C1D33</color>
+
+    <!-- Selección (chips y filtros elegidos): fondo marino con texto blanco -->
+    <color name="seleccion">#1E2A52</color>
+    <color name="seleccion_texto">#FFFFFF</color>
+
+    <!-- Se conserva "azul" porque el código Java lo usa para la orden "En proceso" -->
+    <color name="azul">#2A86D1</color>
+    <color name="azul_claro">#E2F1FC</color>
 
     <!-- Indicadores de estado -->
-    <color name="verde">#23A15C</color>
-    <color name="verde_claro">#E3F6EB</color>
-    <color name="naranja">#E07B12</color>
-    <color name="naranja_claro">#FDF0E1</color>
-    <color name="rojo">#E5484D</color>
-    <color name="rojo_claro">#FDE8E9</color>
+    <color name="verde">#1F9A57</color>
+    <color name="verde_claro">#E1F5EA</color>
+    <color name="naranja">#D9730D</color>
+    <color name="naranja_claro">#FDEFDF</color>
+    <color name="rojo">#E5383B</color>
+    <color name="rojo_claro">#FDE7E8</color>
     <color name="morado">#7B55D6</color>
     <color name="morado_claro">#EFE9FC</color>
 
     <color name="blanco">#FFFFFF</color>
-    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="ic_launcher_background">#E1D6F8</color>
 </resources>

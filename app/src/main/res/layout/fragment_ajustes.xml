@@ -1,353 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Pantalla 9: Perfil y ajustes -->
+<!-- Pantalla 9: Perfil y ajustes. El perfil va sobre el degradado y las opciones en la hoja blanca. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="24dp">
+        android:orientation="vertical">
 
-        <!-- ===== Perfil: foto, nombre, correo y botón ===== -->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivFoto"
-            android:layout_width="104dp"
-            android:layout_height="104dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:background="@color/superficie"
-            android:contentDescription="Foto de perfil"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/Forma.Circulo" />
-
-        <TextView
-            android:id="@+id/tvNombre"
-            style="@style/Texto.Titulo"
-            android:layout_width="wrap_content"
+        <!-- ===== Perfil: nombre grande, correo, botón y foto ===== -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="14dp"
-            tools:text="Laura Martínez" />
-
-        <TextView
-            android:id="@+id/tvCorreo"
-            style="@style/Texto.Secundario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="2dp"
-            tools:text="laura@correo.com" />
-
-        <Button
-            android:id="@+id/btnFoto"
-            style="@style/Boton.Secundario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingStart="24dp"
+            android:paddingTop="4dp"
             android:paddingEnd="24dp"
-            android:text="Cambiar foto" />
+            android:paddingBottom="28dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Texto.Eyebrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Perfil y ajustes" />
+
+                <TextView
+                    android:id="@+id/tvNombre"
+                    style="@style/Texto.Hero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textSize="26sp"
+                    tools:text="Laura Martínez" />
+
+                <TextView
+                    android:id="@+id/tvCorreo"
+                    style="@style/Texto.Secundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    tools:text="laura@correo.com" />
+
+                <Button
+                    android:id="@+id/btnFoto"
+                    style="@style/Boton.Secundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:minHeight="44dp"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="20dp"
+                    android:text="Cambiar foto"
+                    app:backgroundTint="@color/blanco_translucido"
+                    app:icon="@drawable/ic_camara" />
+            </LinearLayout>
+
+            <!-- Foto redonda con borde blanco -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivFoto"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_marginStart="12dp"
+                android:background="@color/superficie"
+                android:contentDescription="Foto de perfil"
+                android:padding="2dp"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/Forma.Circulo"
+                app:strokeColor="@color/superficie"
+                app:strokeWidth="4dp" />
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progreso"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
+            android:indeterminateTint="@color/cielo"
             android:visibility="gone" />
 
-        <!-- ===== Mi cuenta ===== -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
-
-            <LinearLayout
-                style="@style/Fila"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null">
-
-                <ImageView
-                    style="@style/IconoFila"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_tienda" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/Texto.Fila"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Mi óptica" />
-
-                    <TextView
-                        android:id="@+id/tvRol"
-                        style="@style/Texto.Secundario"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Óptica Vista Clara · Administrador" />
-                </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- ===== Apariencia ===== -->
-        <TextView
-            style="@style/Texto.Seccion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="10dp"
-            android:text="Apariencia" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!-- Tema -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            style="@style/IconoFila"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_paleta" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                style="@style/Texto.Fila"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Tema" />
-
-                            <TextView
-                                style="@style/Texto.Secundario"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Claro, oscuro o el del teléfono" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <RadioGroup
-                        android:id="@+id/rgTema"
-                        style="@style/Segmentos"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp">
-
-                        <RadioButton
-                            android:id="@+id/rbTemaSistema"
-                            style="@style/Segmento"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Sistema" />
-
-                        <RadioButton
-                            android:id="@+id/rbTemaClaro"
-                            style="@style/Segmento"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Claro" />
-
-                        <RadioButton
-                            android:id="@+id/rbTemaOscuro"
-                            style="@style/Segmento"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Oscuro" />
-                    </RadioGroup>
-                </LinearLayout>
-
-                <View
-                    style="@style/Divisor"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <!-- Modo sin imágenes -->
-                <LinearLayout
-                    style="@style/Fila"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null">
-
-                    <ImageView
-                        style="@style/IconoFila"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_sin_imagenes" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/Texto.Fila"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Modo sin imágenes" />
-
-                        <TextView
-                            style="@style/Texto.Secundario"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Ahorra datos móviles" />
-                    </LinearLayout>
-
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/swSinImagenes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="Modo sin imágenes" />
-                </LinearLayout>
-
-                <View
-                    style="@style/Divisor"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <!-- Texto grande -->
-                <LinearLayout
-                    style="@style/Fila"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null">
-
-                    <ImageView
-                        style="@style/IconoFila"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_texto" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/Texto.Fila"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Texto grande" />
-
-                        <TextView
-                            style="@style/Texto.Secundario"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Mejora la legibilidad" />
-                    </LinearLayout>
-
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/swTextoGrande"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="Texto grande" />
-                </LinearLayout>
-
-                <View
-                    style="@style/Divisor"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <!-- Fondo de pantalla -->
-                <LinearLayout
-                    android:id="@+id/filaFondo"
-                    style="@style/Fila"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        style="@style/IconoFila"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_imagen" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/Texto.Fila"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Fondo de pantalla" />
-
-                        <TextView
-                            android:id="@+id/tvFondo"
-                            style="@style/Texto.Secundario"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:text="Imagen personalizada" />
-                    </LinearLayout>
-
-                    <Button
-                        android:id="@+id/btnQuitarFondo"
-                        style="@style/Boton.Texto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Quitar" />
-
-                    <ImageView
-                        style="@style/FlechaFila"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp" />
-                </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- ===== Opciones del administrador ===== -->
+        <!-- ===== Hoja blanca con las opciones ===== -->
         <LinearLayout
-            android:id="@+id/layoutAdmin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_hoja"
             android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:paddingStart="20dp"
+            android:paddingTop="26dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp">
 
+            <!-- ===== Mi cuenta ===== -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    style="@style/Fila"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null">
+
+                    <ImageView
+                        style="@style/IconoFila"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_tienda" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/Texto.Fila"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mi óptica" />
+
+                        <TextView
+                            android:id="@+id/tvRol"
+                            style="@style/Texto.Secundario"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="Óptica Vista Clara · Administrador" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ===== Apariencia ===== -->
             <TextView
                 style="@style/Texto.Seccion"
                 android:layout_width="wrap_content"
@@ -355,7 +152,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="10dp"
-                android:text="Mi óptica" />
+                android:text="Apariencia" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -366,47 +163,74 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <!-- Tema -->
                     <LinearLayout
-                        android:id="@+id/filaCodigo"
-                        style="@style/Fila"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            style="@style/IconoFila"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_llave" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-                            <TextView
-                                style="@style/Texto.Fila"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Código de invitación" />
+                            <ImageView
+                                style="@style/IconoFila"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_paleta" />
 
-                            <TextView
-                                android:id="@+id/tvCodigo"
-                                style="@style/Texto.Secundario"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="monospace"
-                                android:textColor="@color/azul"
-                                tools:text="OPT-7K2Q9X" />
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/Texto.Fila"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Tema" />
+
+                                <TextView
+                                    style="@style/Texto.Secundario"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Claro, oscuro o el del teléfono" />
+                            </LinearLayout>
                         </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:contentDescription="Copiar"
-                            android:src="@drawable/ic_copiar"
-                            app:tint="@color/texto_secundario" />
+                        <RadioGroup
+                            android:id="@+id/rgTema"
+                            style="@style/Segmentos"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp">
+
+                            <RadioButton
+                                android:id="@+id/rbTemaSistema"
+                                style="@style/Segmento"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sistema" />
+
+                            <RadioButton
+                                android:id="@+id/rbTemaClaro"
+                                style="@style/Segmento"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Claro" />
+
+                            <RadioButton
+                                android:id="@+id/rbTemaOscuro"
+                                style="@style/Segmento"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Oscuro" />
+                        </RadioGroup>
                     </LinearLayout>
 
                     <View
@@ -414,18 +238,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
 
+                    <!-- Modo sin imágenes -->
                     <LinearLayout
-                        android:id="@+id/filaPersonal"
                         style="@style/Fila"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:background="@null">
 
                         <ImageView
                             style="@style/IconoFila"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_pacientes" />
+                            android:src="@drawable/ic_sin_imagenes" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -437,19 +262,20 @@
                                 style="@style/Texto.Fila"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Personal y roles" />
+                                android:text="Modo sin imágenes" />
 
                             <TextView
                                 style="@style/Texto.Secundario"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Cambia el puesto de tu equipo" />
+                                android:text="Ahorra datos móviles" />
                         </LinearLayout>
 
-                        <ImageView
-                            style="@style/FlechaFila"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp" />
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/swSinImagenes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="Modo sin imágenes" />
                     </LinearLayout>
 
                     <View
@@ -457,18 +283,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
 
+                    <!-- Texto grande -->
                     <LinearLayout
-                        android:id="@+id/filaCorte"
                         style="@style/Fila"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:background="@null">
 
                         <ImageView
                             style="@style/IconoFila"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_recibo" />
+                            android:src="@drawable/ic_texto" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -480,19 +307,20 @@
                                 style="@style/Texto.Fila"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Corte de caja del día" />
+                                android:text="Texto grande" />
 
                             <TextView
                                 style="@style/Texto.Secundario"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Ventas y dinero cobrado hoy" />
+                                android:text="Mejora la legibilidad" />
                         </LinearLayout>
 
-                        <ImageView
-                            style="@style/FlechaFila"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp" />
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/swTextoGrande"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="Texto grande" />
                     </LinearLayout>
 
                     <View
@@ -500,8 +328,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
 
+                    <!-- Fondo de pantalla -->
                     <LinearLayout
-                        android:id="@+id/filaMeta"
+                        android:id="@+id/filaFondo"
                         style="@style/Fila"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -511,7 +340,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_meta" />
+                            android:src="@drawable/ic_imagen" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -523,15 +352,22 @@
                                 style="@style/Texto.Fila"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Meta de ventas semanal" />
+                                android:text="Fondo de pantalla" />
 
                             <TextView
-                                android:id="@+id/tvMetaActual"
+                                android:id="@+id/tvFondo"
                                 style="@style/Texto.Secundario"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                tools:text="$30,000.00" />
+                                tools:text="Imagen personalizada" />
                         </LinearLayout>
+
+                        <Button
+                            android:id="@+id/btnQuitarFondo"
+                            style="@style/Boton.Texto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Quitar" />
 
                         <ImageView
                             style="@style/FlechaFila"
@@ -540,36 +376,239 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
 
-        <!-- ===== Cerrar sesión ===== -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp">
-
+            <!-- ===== Opciones del administrador ===== -->
             <LinearLayout
-                android:id="@+id/filaCerrarSesion"
-                style="@style/Fila"
+                android:id="@+id/layoutAdmin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    style="@style/IconoFila"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_salir"
-                    app:tint="@color/rojo" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <TextView
-                    style="@style/Texto.Fila"
-                    android:layout_width="0dp"
+                    style="@style/Texto.Seccion"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Cerrar sesión"
-                    android:textColor="@color/rojo" />
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Mi óptica" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/filaCodigo"
+                            style="@style/Fila"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                style="@style/IconoFila"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_llave" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/Texto.Fila"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Código de invitación" />
+
+                                <TextView
+                                    android:id="@+id/tvCodigo"
+                                    style="@style/Texto.Secundario"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/lexend_exa_medium"
+                                    android:textColor="@color/texto"
+                                    tools:text="OPT-7K2Q9X" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:contentDescription="Copiar"
+                                android:src="@drawable/ic_copiar"
+                                app:tint="@color/texto_secundario" />
+                        </LinearLayout>
+
+                        <View
+                            style="@style/Divisor"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+
+                        <LinearLayout
+                            android:id="@+id/filaPersonal"
+                            style="@style/Fila"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                style="@style/IconoFila"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_pacientes" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/Texto.Fila"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Personal y roles" />
+
+                                <TextView
+                                    style="@style/Texto.Secundario"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Cambia el puesto de tu equipo" />
+                            </LinearLayout>
+
+                            <ImageView
+                                style="@style/FlechaFila"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp" />
+                        </LinearLayout>
+
+                        <View
+                            style="@style/Divisor"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+
+                        <LinearLayout
+                            android:id="@+id/filaCorte"
+                            style="@style/Fila"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                style="@style/IconoFila"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_recibo" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/Texto.Fila"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Corte de caja del día" />
+
+                                <TextView
+                                    style="@style/Texto.Secundario"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Ventas y dinero cobrado hoy" />
+                            </LinearLayout>
+
+                            <ImageView
+                                style="@style/FlechaFila"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp" />
+                        </LinearLayout>
+
+                        <View
+                            style="@style/Divisor"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+
+                        <LinearLayout
+                            android:id="@+id/filaMeta"
+                            style="@style/Fila"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                style="@style/IconoFila"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_meta" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/Texto.Fila"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Meta de ventas semanal" />
+
+                                <TextView
+                                    android:id="@+id/tvMetaActual"
+                                    style="@style/Texto.Secundario"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    tools:text="$30,000.00" />
+                            </LinearLayout>
+
+                            <ImageView
+                                style="@style/FlechaFila"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+
+            <!-- ===== Cerrar sesión ===== -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp">
+
+                <LinearLayout
+                    android:id="@+id/filaCerrarSesion"
+                    style="@style/Fila"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        style="@style/IconoFila"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_salir"
+                        app:tint="@color/rojo" />
+
+                    <TextView
+                        style="@style/Texto.Fila"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Cerrar sesión"
+                        android:textColor="@color/rojo" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

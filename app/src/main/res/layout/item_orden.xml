@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Orden de laboratorio: título, píldora de estatus y barra de avance por etapas -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    app:cardCornerRadius="18dp">
+    android:layout_marginTop="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="18dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,15 +55,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:max="100"
-            app:indicatorColor="@color/azul"
-            app:trackColor="@color/borde"
+            app:indicatorColor="@color/cielo"
+            app:trackColor="@color/lavanda"
             app:trackCornerRadius="3dp"
             app:trackThickness="6dp"
             tools:progress="75" />
 
         <TextView
             android:id="@+id/tvEtapas"
-            style="@style/Texto.Etiqueta"
+            style="@style/Texto.Categoria"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"

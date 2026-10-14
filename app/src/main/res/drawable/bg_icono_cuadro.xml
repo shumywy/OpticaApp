@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Cuadro blanco redondeado detrás del ícono de cada renglón -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="@color/icono_fondo" />
+    <solid android:color="@color/superficie" />
     <corners android:radius="12dp" />
 </shape>
