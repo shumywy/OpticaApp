@@ -51,4 +51,17 @@
 
     <color name="blanco">#FFFFFF</color>
     <color name="ic_launcher_background">#E1D6F8</color>
+
+    <!-- Panel de vidrio (Inicio): tarjetas translúcidas y resplandor morado detrás de los lentes -->
+    <color name="vidrio_inicio">#A6FFFFFF</color>
+    <color name="vidrio_fin">#52FFFFFF</color>
+    <color name="vidrio_borde">#C7FFFFFF</color>
+    <color name="hoja_vidrio_inicio">#4DFFFFFF</color>
+    <color name="hoja_vidrio_centro">#8CFFFFFF</color>
+    <color name="hoja_vidrio_fin">#F2FFFFFF</color>
+    <color name="vidrio_mosaico_inicio">#E6FFFFFF</color>
+    <color name="vidrio_mosaico_fin">#99F2F0FF</color>
+    <color name="pildora_vidrio">#EBFFFFFF</color>
+    <color name="aurora_morado">#8C7862E8</color>
+    <color name="aurora_azul">#595E80F0</color>
 </resources>

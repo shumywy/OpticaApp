@@ -118,4 +118,33 @@
         android:name="mx.itch.opticaapp.ui.ajustes.AjustesFragment"
         android:label="@string/titulo_ajustes" />
 
+    <!-- ===== Menú lateral · Mi cuenta y Administración ===== -->
+    <fragment
+        android:id="@+id/perfilFragment"
+        android:name="mx.itch.opticaapp.ui.administracion.PerfilFragment"
+        android:label="@string/titulo_perfil" />
+
+    <fragment
+        android:id="@+id/opticaFragment"
+        android:name="mx.itch.opticaapp.ui.administracion.OpticaFragment"
+        android:label="@string/titulo_optica" />
+
+    <fragment
+        android:id="@+id/personalFragment"
+        android:name="mx.itch.opticaapp.ui.administracion.PersonalFragment"
+        android:label="@string/titulo_personal">
+        <action
+            android:id="@+id/action_personal_to_nuevaCuenta"
+            app:destination="@id/nuevaCuentaFragment"
+            app:enterAnim="@anim/nav_entrar"
+            app:exitAnim="@anim/nav_salir"
+            app:popEnterAnim="@anim/nav_regresar_entrar"
+            app:popExitAnim="@anim/nav_regresar_salir" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nuevaCuentaFragment"
+        android:name="mx.itch.opticaapp.ui.administracion.NuevaCuentaFragment"
+        android:label="@string/titulo_nueva_cuenta" />
+
 </navigation>

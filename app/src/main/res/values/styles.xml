@@ -39,6 +39,16 @@
         <item name="android:letterSpacing">0.04</item>
     </style>
 
+    <!-- La misma etiqueta dentro de una píldora de vidrio, para cuando va sobre el degradado -->
+    <style name="Texto.Categoria.Pildora">
+        <item name="android:textSize">11sp</item>
+        <item name="android:background">@drawable/bg_pildora_vidrio</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
     <!-- Nombre grande de un producto o persona ("Aqua #004") -->
     <style name="Texto.Titulo">
         <item name="android:textSize">22sp</item>
@@ -380,6 +390,12 @@
         <item name="itemIconTint">@color/sel_menu_icono</item>
         <item name="itemShapeFillColor">@color/sel_menu_fondo</item>
         <item name="itemTextAppearance">@style/TextoMenuLateral</item>
+        <!-- Título "ADMINISTRACIÓN" en vino y mayúsculas, como las etiquetas del catálogo -->
+        <item name="subheaderColor">@color/vino</item>
+        <item name="subheaderTextAppearance">@style/TextoSubtituloMenu</item>
+        <item name="subheaderInsetStart">28dp</item>
+        <item name="dividerInsetStart">28dp</item>
+        <item name="dividerInsetEnd">28dp</item>
         <!-- Sin la franja oscura arriba y abajo: el encabezado llega hasta la barra de estado -->
         <item name="topInsetScrimEnabled">false</item>
         <item name="bottomInsetScrimEnabled">false</item>
@@ -389,6 +405,14 @@
         <item name="android:textSize">13sp</item>
         <item name="android:fontFamily">@font/lexend_exa_medium</item>
         <item name="fontFamily">@font/lexend_exa_medium</item>
+    </style>
+
+    <style name="TextoSubtituloMenu" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.14</item>
+        <item name="android:fontFamily">@font/lexend_exa_semibold</item>
+        <item name="fontFamily">@font/lexend_exa_semibold</item>
     </style>
 
     <!-- ===================== Formas ===================== -->

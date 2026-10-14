@@ -34,7 +34,8 @@ import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Imagenes;
 
 /**
- * Pantalla 3: resumen del negocio. Los datos se actualizan solos (listeners en tiempo real).
+ * Pantalla 3: resumen del negocio con efecto de vidrio (ver FondoLentes).
+ * Los datos se actualizan solos (listeners en tiempo real).
  * Avance semanal = ventas de lunes a hoy ÷ meta semanal × 100.
  */
 public class PanelFragment extends Fragment {
@@ -86,7 +87,14 @@ public class PanelFragment extends Fragment {
         binding.tilePacientes.setOnClickListener(v -> actividad.irASeccion(R.id.pacientesFragment));
         binding.tileOrdenes.setOnClickListener(v -> actividad.irASeccion(R.id.laboratorioFragment));
         binding.tileStock.setOnClickListener(v -> actividad.irASeccion(R.id.inventarioFragment));
-        binding.tileMeta.setOnClickListener(v -> actividad.abrirPerfil());
+        // La meta se cambia en Administración · Datos de la óptica (solo el administrador)
+        binding.tileMeta.setOnClickListener(v -> {
+            if (Sesion.esAdmin()) {
+                actividad.abrirPantallaDelMenu(R.id.opticaFragment);
+            } else {
+                actividad.irASeccion(R.id.ventaFragment);
+            }
+        });
 
         // Acción rápida (círculo azul): nueva venta, o pacientes para el optometrista
         if (venta) {
@@ -102,9 +110,13 @@ public class PanelFragment extends Fragment {
         }
         binding.tvMeta.setText(o.metaSemanal > 0 ? Formato.moneda(o.metaSemanal) : "Sin meta");
 
-        // Animación de entrada: íconos y saludo en cascada, la tarjeta de avance crece,
-        // la hoja sube y los mosaicos aparecen uno tras otro
+        // Lentes de fondo con efecto de vidrio: nítidos sobre el degradado y borrosos detrás de la hoja
+        binding.fondoLentes.configurar(binding.espacioLentes, binding.hoja);
+
+        // Animación de entrada: íconos y saludo en cascada, los lentes llegan desde la derecha,
+        // la tarjeta de avance crece, la hoja sube y los mosaicos aparecen uno tras otro
         if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            binding.fondoLentes.entrar(250);
             float dp = getResources().getDisplayMetrics().density;
             Animaciones.cascada(binding.barraIconos, -12 * dp, 0);
             Animaciones.aparecer(binding.layoutAvance, 180);

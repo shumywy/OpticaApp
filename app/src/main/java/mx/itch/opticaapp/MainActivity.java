@@ -41,6 +41,7 @@ import mx.itch.opticaapp.databinding.ActivityMainBinding;
 import mx.itch.opticaapp.databinding.NavHeaderBinding;
 import mx.itch.opticaapp.model.Optica;
 import mx.itch.opticaapp.model.Usuario;
+import mx.itch.opticaapp.ui.administracion.CorteDeCaja;
 import mx.itch.opticaapp.util.Imagenes;
 
 /**
@@ -113,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     && destino.getId() != R.id.registroFragment;
             binding.drawer.setDrawerLockMode(conMenu
                     ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            marcarMenuLateral(destino.getId());
             invalidateOptionsMenu();
         });
 
@@ -207,11 +209,19 @@ public class MainActivity extends AppCompatActivity {
         binding.bottomNav.setSelectedItemId(idDestino);
     }
 
-    /** Abre Perfil y ajustes (lo usa la tarjeta de perfil del panel y el encabezado del menú). */
+    /** Abre Mi perfil (lo usan el panel, el botón de la barra superior y el encabezado del menú). */
     public void abrirPerfil() {
+        abrirPantallaDelMenu(R.id.perfilFragment);
+    }
+
+    /** Abre una pantalla del menú lateral (Mi perfil, Datos de la óptica…) encima de la actual. */
+    public void abrirPantallaDelMenu(int idDestino) {
         NavDestination actual = navController.getCurrentDestination();
-        if (actual != null && actual.getId() == R.id.ajustesFragment) return;   // ya está abierta
-        navController.navigate(R.id.ajustesFragment, null, opcionesDetalle().build());
+        if (actual != null && actual.getId() == idDestino) return;   // ya está abierta
+        NavOptions.Builder opciones = opcionesDetalle().setLaunchSingleTop(true);
+        // Desde otra pantalla del menú lateral la reemplaza, para que no se amontonen
+        if (actual != null && esPantallaDelMenu(actual)) opciones.setPopUpTo(actual.getId(), true);
+        navController.navigate(idDestino, null, opciones.build());
     }
 
     // ---------------- Animaciones entre pantallas ----------------
@@ -238,17 +248,21 @@ public class MainActivity extends AppCompatActivity {
      * Navega a la sección de un botón de la barra inferior o del menú lateral.
      * Hace lo mismo que NavigationUI.onNavDestinationSelected (guardar y restaurar el historial
      * de cada sección), pero con nuestras animaciones. Las opciones marcadas como
-     * menuCategory="secondary" (Configuración) se abren encima de la pantalla actual.
+     * menuCategory="secondary" (todas las del menú lateral) se abren encima de la pantalla actual;
+     * si ya estás en otra pantalla del menú lateral, la reemplazan para que "atrás" regrese
+     * directo a la sección de trabajo.
      */
     private boolean navegarSeccion(MenuItem item) {
         boolean secundaria = (item.getOrder() & Menu.CATEGORY_SECONDARY) != 0;
+        NavDestination actual = navController.getCurrentDestination();
+        if (actual != null && actual.getId() == item.getItemId()) return true;   // ya estamos ahí
         NavOptions.Builder opciones = secundaria ? opcionesDetalle() : opcionesSeccion();
         opciones.setLaunchSingleTop(true).setRestoreState(true);
         if (!secundaria) {
             opciones.setPopUpTo(navController.getGraph().getStartDestinationId(), false, true);
+        } else if (actual != null && esPantallaDelMenu(actual)) {
+            opciones.setPopUpTo(actual.getId(), true);
         }
-        NavDestination actual = navController.getCurrentDestination();
-        if (actual != null && actual.getId() == item.getItemId()) return true;   // ya estamos ahí
         try {
             navController.navigate(item.getItemId(), null, opciones.build());
         } catch (IllegalArgumentException e) {
@@ -263,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
         binding.drawer.openDrawer(GravityCompat.START);
     }
 
-    /** Sale de la cuenta y regresa al inicio de sesión (la usan el menú lateral y Ajustes). */
+    /** Sale de la cuenta y regresa al inicio de sesión (la usan el menú lateral y Configuración). */
     public void cerrarSesion() {
         // Primero se quita el listener: sin sesión, las reglas de Firestore rechazarían la lectura
         dejarDeEscucharUsuario();
@@ -275,21 +289,22 @@ public class MainActivity extends AppCompatActivity {
     // ---------------- Menú lateral ----------------
 
     private void configurarMenuLateral() {
-        // NavigationUI marca la sección actual y navega al tocar una opción
-        NavigationUI.setupWithNavController(binding.navView, navController);
-
-        // Se reemplaza el listener de NavigationUI para atender también "Cerrar sesión",
-        // que no es una pantalla del nav_graph
+        // Cada opción es una pantalla del nav_graph, salvo "Corte de caja" (diálogo) y "Cerrar sesión".
+        // La opción marcada la pone marcarMenuLateral() cada vez que cambia la pantalla.
         binding.navView.setNavigationItemSelectedListener(item -> {
             binding.drawer.closeDrawer(GravityCompat.START);
             if (item.getItemId() == R.id.accionCerrarSesion) {
                 confirmarCierreDeSesion();
                 return false;
             }
+            if (item.getItemId() == R.id.accionCorteCaja) {
+                CorteDeCaja.mostrar(this);
+                return false;
+            }
             return navegarSeccion(item);
         });
 
-        // Tocar la foto o el nombre abre Perfil y ajustes
+        // Tocar la foto o el nombre abre Mi perfil
         encabezado.encabezadoMenu.setOnClickListener(v -> {
             binding.drawer.closeDrawer(GravityCompat.START);
             abrirPerfil();
@@ -316,6 +331,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Marca en el menú lateral la pantalla actual (o ninguna, si es una sección de la barra inferior).
+     * Recorre también el submenú de Administración, que NavigationUI no revisa.
+     */
+    private void marcarMenuLateral(int idDestino) {
+        marcar(binding.navView.getMenu(), idDestino);
+    }
+
+    private static void marcar(Menu menu, int idDestino) {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            if (item.hasSubMenu()) {
+                marcar(item.getSubMenu(), idDestino);
+            } else if (item.isCheckable()) {
+                item.setChecked(item.getItemId() == idDestino);
+            }
+        }
+    }
+
     private void confirmarCierreDeSesion() {
         new MaterialAlertDialogBuilder(this)
                 .setTitle("Cerrar sesión")
@@ -327,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Lee /users/{uid} de Firestore y llena el encabezado del menú. Es un listener en tiempo real:
-     * si el usuario cambia su foto en Ajustes (o desde otro teléfono), el menú se actualiza solo.
+     * si el usuario cambia su foto en Mi perfil (o desde otro teléfono), el menú se actualiza solo.
      */
     private void escucharUsuario() {
         dejarDeEscucharUsuario();
@@ -386,15 +420,25 @@ public class MainActivity extends AppCompatActivity {
         Imagenes.mostrar(encabezado.ivFotoMenu, null, R.drawable.ic_perfil);
     }
 
-    /** Oculta del menú lateral y de la barra inferior los módulos que el rol no usa. */
+    /** Oculta de la barra inferior y del menú lateral lo que el rol no usa. */
     private void configurarMenuPorRol() {
         // El optometrista no usa inventario ni ventas. El vendedor sí ve Pacientes,
         // pero solo para consultar (eso lo controla PacientesFragment).
         boolean optometrista = Sesion.esOptometrista();
-        for (Menu menu : new Menu[]{binding.bottomNav.getMenu(), binding.navView.getMenu()}) {
-            menu.findItem(R.id.inventarioFragment).setVisible(!optometrista);
-            menu.findItem(R.id.ventaFragment).setVisible(!optometrista);
-        }
+        Menu barra = binding.bottomNav.getMenu();
+        barra.findItem(R.id.inventarioFragment).setVisible(!optometrista);
+        barra.findItem(R.id.ventaFragment).setVisible(!optometrista);
+
+        // Administración (óptica, personal, cuentas nuevas y corte de caja) solo para el administrador;
+        // las reglas de Firestore también lo revisan
+        binding.navView.getMenu().findItem(R.id.seccionAdministracion).setVisible(Sesion.esAdmin());
+    }
+
+    /** Pantallas que se abren desde el menú lateral (se reemplazan entre sí al navegar). */
+    private boolean esPantallaDelMenu(NavDestination destino) {
+        int id = destino.getId();
+        return id == R.id.perfilFragment || id == R.id.ajustesFragment || id == R.id.opticaFragment
+                || id == R.id.personalFragment || id == R.id.nuevaCuentaFragment;
     }
 
     private boolean esPantallaPrincipal(NavDestination destino) {
@@ -403,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
                 || id == R.id.ventaFragment || id == R.id.laboratorioFragment;
     }
 
-    /** Muestra el fondo de pantalla elegido en Ajustes (si hay uno). */
+    /** Muestra el fondo de pantalla elegido en Configuración (si hay uno). */
     public void aplicarFondo() {
         File fondo = Preferencias.archivoFondo(this);
         if (fondo.exists()) {
@@ -427,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         NavDestination actual = navController != null ? navController.getCurrentDestination() : null;
-        boolean visible = Sesion.estaActiva() && actual != null && actual.getId() != R.id.ajustesFragment
+        boolean visible = Sesion.estaActiva() && actual != null && actual.getId() != R.id.perfilFragment
                 && actual.getId() != R.id.loginFragment && actual.getId() != R.id.registroFragment;
         menu.findItem(R.id.accionPerfil).setVisible(visible);
         return super.onPrepareOptionsMenu(menu);

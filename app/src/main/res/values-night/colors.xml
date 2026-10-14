@@ -37,4 +37,16 @@
     <color name="rojo_claro">#3A1A1C</color>
     <color name="morado">#A88BF0</color>
     <color name="morado_claro">#2A2240</color>
+
+    <color name="vidrio_inicio">#2EFFFFFF</color>
+    <color name="vidrio_fin">#0FFFFFFF</color>
+    <color name="vidrio_borde">#38FFFFFF</color>
+    <color name="hoja_vidrio_inicio">#59181B2E</color>
+    <color name="hoja_vidrio_centro">#D9181B2E</color>
+    <color name="hoja_vidrio_fin">#FF181B2E</color>
+    <color name="vidrio_mosaico_inicio">#2EFFFFFF</color>
+    <color name="vidrio_mosaico_fin">#0FFFFFFF</color>
+    <color name="pildora_vidrio">#40FFFFFF</color>
+    <color name="aurora_morado">#806650E0</color>
+    <color name="aurora_azul">#4D3F5BD6</color>
 </resources>
