@@ -2,10 +2,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--
-        Estilo "catálogo":
-        - Lexend Exa (ancha) para títulos grandes, precios y nombres.
-        - Barlow Condensed (angosta) para los títulos de sección ("Más vendidos", "Color").
-        - Lexend para el texto normal.
+        Una sola familia tipográfica: Lexend (res/font), en cuatro grosores:
+        light para los títulos grandes, regular para el texto, medium para nombres y etiquetas,
+        semibold para títulos de sección y precios.
+        Textos principales en índigo oscuro (@color/texto) y etiquetas de apoyo en gris (@color/texto_secundario),
+        siempre en formato normal: sin MAYÚSCULAS ni espaciado extra entre letras.
     -->
 
     <!-- ===================== Textos ===================== -->
@@ -19,47 +20,35 @@
     <!-- Título enorme y delgado de cada pantalla ("Collection") -->
     <style name="Texto.Hero">
         <item name="android:textSize">32sp</item>
-        <item name="android:fontFamily">@font/lexend_exa_light</item>
+        <item name="android:fontFamily">@font/lexend_light</item>
         <item name="android:lineSpacingMultiplier">0.95</item>
         <item name="android:letterSpacing">-0.02</item>
     </style>
 
-    <!-- Texto chico en negritas arriba del título enorme ("Chimi Eyewear") -->
+    <!-- Texto chico arriba del título grande ("¡Buenos días!", "Administración") -->
     <style name="Texto.Eyebrow">
         <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">@font/lexend_exa_semibold</item>
+        <item name="android:fontFamily">@font/lexend_semibold</item>
     </style>
 
-    <!-- Etiqueta color vino en mayúsculas ("CORE COLLECTION") -->
+    <!-- Etiqueta o instrucción de apoyo en gris ("Avance semanal", "Toca a alguien para cambiar su rol") -->
     <style name="Texto.Categoria">
-        <item name="android:textColor">@color/vino</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:fontFamily">@font/lexend_exa_semibold</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:letterSpacing">0.04</item>
+        <item name="android:textColor">@color/texto_secundario</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
     </style>
 
-    <!-- La misma etiqueta dentro de una píldora de vidrio, para cuando va sobre el degradado -->
-    <style name="Texto.Categoria.Pildora">
-        <item name="android:textSize">11sp</item>
-        <item name="android:background">@drawable/bg_pildora_vidrio</item>
-        <item name="android:paddingStart">12dp</item>
-        <item name="android:paddingEnd">12dp</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-    </style>
-
-    <!-- Nombre grande de un producto o persona ("Aqua #004") -->
+    <!-- Nombre grande de un producto o persona -->
     <style name="Texto.Titulo">
         <item name="android:textSize">22sp</item>
-        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
         <item name="android:letterSpacing">-0.01</item>
     </style>
 
-    <!-- Título de sección en letra angosta ("Best Selling", "Color", "Lens") -->
+    <!-- Título de sección ("Resumen de hoy", "Equipo") -->
     <style name="Texto.Seccion">
-        <item name="android:textSize">22sp</item>
-        <item name="android:fontFamily">@font/barlow_condensed_semibold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/lexend_semibold</item>
     </style>
 
     <!-- Título de un renglón de lista -->
@@ -81,22 +70,23 @@
         <item name="android:textSize">11sp</item>
     </style>
 
-    <!-- Valor o precio dentro de un mosaico ("€99.00") -->
+    <!-- Valor o precio dentro de un mosaico ("$99.00") -->
     <style name="Texto.Valor">
-        <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/lexend_semibold</item>
     </style>
 
     <!-- Precio grande al pie de la pantalla -->
     <style name="Texto.Precio">
         <item name="android:textSize">24sp</item>
-        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+        <item name="android:fontFamily">@font/lexend_semibold</item>
     </style>
 
-    <!-- Contador "01/20" -->
+    <!-- Contador "01/20" y la etiqueta "Hoy" -->
     <style name="Texto.Contador">
+        <item name="android:textColor">@color/texto_secundario</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:fontFamily">@font/lexend_exa_semibold</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
     </style>
 
     <!-- Píldora de estado ("En stock", "Enviado") -->
@@ -109,11 +99,21 @@
         <item name="android:paddingBottom">4dp</item>
     </style>
 
+    <!--
+        Píldora de rol ("Twins · Administrador"): la misma del badge "Administrador" en Personal,
+        fondo violeta suave con texto violeta, en formato normal. Se usa en el panel, el menú lateral,
+        Mi perfil y el resumen de Personal.
+    -->
+    <style name="Texto.Pildora.Rol">
+        <item name="android:background">@drawable/bg_pildora_morado</item>
+        <item name="android:textColor">@color/morado</item>
+    </style>
+
     <!-- Apariencias de texto que usa el tema (diálogos y botones) -->
     <style name="TextoDialogoTitulo" parent="TextAppearance.Material3.HeadlineSmall">
         <item name="android:textSize">18sp</item>
-        <item name="android:fontFamily">@font/lexend_exa_medium</item>
-        <item name="fontFamily">@font/lexend_exa_medium</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
+        <item name="fontFamily">@font/lexend_medium</item>
     </style>
 
     <style name="TextoDialogoCuerpo" parent="TextAppearance.Material3.BodyMedium">
@@ -245,7 +245,7 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <!-- Cada pestaña: texto en mayúsculas subrayado y un punto debajo de la elegida -->
+    <!-- Cada pestaña: texto subrayado y un punto debajo de la elegida -->
     <style name="Segmento">
         <item name="android:button">@null</item>
         <!-- AppCompat dibuja el círculo con buttonCompat; también se quita -->
@@ -258,10 +258,8 @@
         <item name="android:paddingBottom">16dp</item>
         <item name="android:layout_marginEnd">22dp</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:fontFamily">@font/lexend_exa_medium</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:letterSpacing">0.03</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
         <item name="android:textColor">@color/sel_segmento_texto</item>
     </style>
 
@@ -355,7 +353,7 @@
     </style>
 
     <style name="TextoBarraSuperior" parent="TextAppearance.Material3.TitleLarge">
-        <item name="android:fontFamily">@font/lexend_exa_medium</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/texto</item>
     </style>
@@ -390,8 +388,8 @@
         <item name="itemIconTint">@color/sel_menu_icono</item>
         <item name="itemShapeFillColor">@color/sel_menu_fondo</item>
         <item name="itemTextAppearance">@style/TextoMenuLateral</item>
-        <!-- Título "ADMINISTRACIÓN" en vino y mayúsculas, como las etiquetas del catálogo -->
-        <item name="subheaderColor">@color/vino</item>
+        <!-- Título "Administración" en gris, como las demás etiquetas de apoyo -->
+        <item name="subheaderColor">@color/texto_secundario</item>
         <item name="subheaderTextAppearance">@style/TextoSubtituloMenu</item>
         <item name="subheaderInsetStart">28dp</item>
         <item name="dividerInsetStart">28dp</item>
@@ -402,17 +400,17 @@
     </style>
 
     <style name="TextoMenuLateral" parent="TextAppearance.Material3.LabelLarge">
-        <item name="android:textSize">13sp</item>
-        <item name="android:fontFamily">@font/lexend_exa_medium</item>
-        <item name="fontFamily">@font/lexend_exa_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
+        <item name="fontFamily">@font/lexend_medium</item>
     </style>
 
     <style name="TextoSubtituloMenu" parent="TextAppearance.Material3.TitleSmall">
-        <item name="android:textSize">11sp</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:letterSpacing">0.14</item>
-        <item name="android:fontFamily">@font/lexend_exa_semibold</item>
-        <item name="fontFamily">@font/lexend_exa_semibold</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
+        <item name="fontFamily">@font/lexend_medium</item>
     </style>
 
     <!-- ===================== Formas ===================== -->

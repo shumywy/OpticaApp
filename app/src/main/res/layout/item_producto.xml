@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Mosaico de producto, como los de "Best Selling":
-    foto dentro de un cuadro lila, precio abajo y el nombre en letra ancha debajo del cuadro.
+    foto dentro de un cuadro lila, precio abajo y el nombre debajo del cuadro.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

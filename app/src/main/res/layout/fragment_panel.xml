@@ -135,7 +135,7 @@
 
                 <TextView
                     android:id="@+id/tvOptica"
-                    style="@style/Texto.Categoria.Pildora"
+                    style="@style/Texto.Pildora.Rol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -265,7 +265,7 @@
                             style="@style/Texto.Contador"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="HOY" />
+                            android:text="Hoy" />
 
                         <View
                             android:layout_width="96dp"

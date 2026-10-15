@@ -20,7 +20,7 @@
             android:layout_height="48dp"
             android:layout_marginEnd="14dp"
             android:background="@drawable/bg_avatar"
-            android:fontFamily="@font/lexend_exa_medium"
+            android:fontFamily="@font/lexend_medium"
             android:gravity="center"
             android:textColor="@color/texto"
             android:textSize="14sp"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 tools:text="Última consulta: 07/10/2026" />
 
-            <!-- Graduación en la etiqueta color vino, como "CORE COLLECTION" -->
+            <!-- Graduación en la etiqueta gris de apoyo -->
             <TextView
                 android:id="@+id/tvGraduacion"
                 style="@style/Texto.Categoria"

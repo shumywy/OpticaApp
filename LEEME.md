@@ -1,6 +1,6 @@
 # Óptica App — proyecto de Android Studio
 
-App en Java + XML. Usa una sola Activity, 11 Fragments y Firebase (Auth, Firestore, Storage).
+App en Java + XML. Usa una sola Activity, 15 Fragments y Firebase (Auth, Firestore, Storage).
 
 ## Diseño (estilo "catálogo")
 
@@ -8,17 +8,19 @@ Basado en la referencia de la tienda de lentes:
 
 - **Fondo en degradado lila → rosa** detrás de todo. Arriba de cada pantalla va un texto chico en negritas y un **título enorme y delgado** (como "Chimi Eyewear / Collection").
 - **Hoja blanca** con las esquinas de arriba muy redondeadas, donde va el contenido (`bg_hoja`).
-- **Textos azul marino**, **botón principal azul cielo** con sombra azul, **etiquetas color vino** en mayúsculas (como "CORE COLLECTION").
+- **Textos principales en índigo oscuro** (`#1E1B4B`), **etiquetas e instrucciones en gris neutro** (`#64748B`) y en formato normal (sin mayúsculas ni espaciado extra), **botón principal azul cielo** con sombra azul.
+- **Píldoras de rol** en violeta suave (fondo `#EDE9FE`, texto `#5B21B6`), iguales en el panel, el menú lateral, Mi perfil y Personal (`Texto.Pildora.Rol`).
 - **Mosaicos lila** para productos e indicadores, **pestañas subrayadas** con un punto bajo la elegida (como "BLACK LENS · CLEAR LENS") y un **contador con línea** ("08/24").
 - **Íconos de línea delgada**. La barra superior es transparente y solo lleva íconos: ⁘ abre el menú lateral y ‹ regresa.
 
 Dónde se cambia:
 
 - Colores: `res/values/colors.xml` (claro) y `res/values-night/colors.xml` (oscuro). Por ejemplo, `cielo` es el botón principal y `degradado_*` el fondo.
-- Fuentes (en `res/font`, licencia libre OFL, ver carpeta `licencias/`):
-  - **Lexend Exa** (ancha) para títulos, precios y nombres.
-  - **Barlow Condensed** (angosta) para títulos de sección.
-  - **Lexend** para el texto normal.
+- Fuente: una sola familia, **Lexend** (en `res/font`, licencia libre OFL, ver `licencias/OFL_Lexend.txt`), en cuatro grosores:
+  - `lexend_light` para los títulos grandes.
+  - `lexend_regular` para el texto normal.
+  - `lexend_medium` para nombres, etiquetas, botones y menús.
+  - `lexend_semibold` para títulos de sección ("Resumen de hoy", "Equipo") y precios.
 - Estilos reutilizables: `res/values/styles.xml`.
   - Textos: `Texto.Hero`, `Texto.Eyebrow`, `Texto.Categoria`, `Texto.Titulo`, `Texto.Seccion`, `Texto.Precio`.
   - Campos y botones: `Campo`, `Campo.Busqueda`, `Boton`.
@@ -167,18 +169,94 @@ Se abre deslizando desde la orilla izquierda, con el botón ☰ de la barra supe
 - `util/Imagenes` — cámara, subida a Storage y carga con Glide.
 - `util/Pdf` — receta y nota de venta en PDF con la clase `PdfDocument` de Android.
 
-## Estructura en Firestore
+## Qué se sube a Firebase
+
+Todo sale del código de la app; no hay Cloud Functions ni otro servidor.
+
+### Authentication
+
+| Cuándo | Qué se crea o usa |
+|--------|-------------------|
+| Registro con correo | Cuenta con **correo y contraseña** (`createUserWithEmailAndPassword`). La contraseña la guarda Firebase cifrada; la app nunca la escribe en Firestore. |
+| Entrar con Google | Cuenta de Google ligada al proyecto (nombre, correo y foto que da Google se quedan en Auth, no en Firestore). |
+| Administración · Nueva cuenta | Cuenta con correo y contraseña creada por el administrador desde la instancia secundaria `"altas"`. |
+| "Olvidé mi contraseña", Mi perfil, Personal | Solo piden a Firebase que **mande un correo** para crear otra contraseña. |
+
+### Firestore
+
+Los documentos se guardan con todos los campos de su clase en `model/` (los que no se llenan van como `null`). El `id` no se guarda como campo: es el nombre del documento.
 
 ```
-users/{uid}                         nombre, email, rol, opticaId, fotoUrl, codigoUsado
-codigos/{codigo}                    opticaId
-opticas/{opticaId}                  nombre, telefono, estado, direccion, metaSemanal, codigoInvitacion, logoUrl, ownerId
-opticas/{opticaId}/pacientes/{id}   nombre, telefono, edad, fechaRegistro, ultimaConsulta, resumenGraduacion
-   └─ consultas/{id}                graduación de cada ojo, DIP, agudeza, tipo de lente, observaciones
-opticas/{opticaId}/productos/{id}   nombre, categoria, descripcion, precio, stock, stockMinimo, fotoUrl
-opticas/{opticaId}/ventas/{id}      cliente, items, total, anticipo, saldo, metodoPago, vendedor, fecha
-opticas/{opticaId}/ordenes/{id}     venta, paciente, descripcion, estatus y fecha de cada etapa
+users/{uid}                            ← model/Usuario
+  nombre, email (texto)
+  rol: "ADMIN" | "OPTOMETRISTA" | "VENDEDOR"
+  opticaId, codigoUsado (texto; codigoUsado vacío para el dueño)
+  fotoUrl (URL de Storage o vacío)
+
+codigos/{OPT-XXXXXX}
+  opticaId                              ← lo crea el dueño al registrar su óptica
+
+opticas/{opticaId}                     ← model/Optica
+  nombre, telefono, estado, direccion (texto)
+  metaSemanal (número)
+  codigoInvitacion ("OPT-" + 6 letras/números), ownerId (uid del dueño)
+  logoUrl (URL de Storage o vacío)
+
+opticas/{opticaId}/pacientes/{id}      ← model/Paciente
+  nombre, telefono (texto), edad (entero)
+  fechaRegistro (fecha)
+  ultimaConsulta (fecha), resumenGraduacion ("OD -1.25 / OI -1.50")   ← null hasta la primera consulta
+
+opticas/{opticaId}/pacientes/{id}/consultas/{id}   ← model/Consulta
+  fecha
+  odEsfera, odCilindro, odAdicion, oiEsfera, oiCilindro, oiAdicion, distanciaPupilar (número)
+  odEje, oiEje (entero)
+  agudezaVisual, tipoLente, observaciones (texto)
+  optometristaId, optometristaNombre
+
+opticas/{opticaId}/productos/{id}      ← model/Producto
+  nombre, categoria, descripcion (texto)
+  precio (número), stock, stockMinimo (entero)
+  fotoUrl (URL de Storage o vacío)
+
+opticas/{opticaId}/ventas/{id}         ← model/Venta
+  pacienteId ("" si es público en general), pacienteNombre
+  items: lista de { productoId, nombre, categoria, precio, cantidad }
+  total, anticipo, saldo (número), metodoPago ("Efectivo" | "Tarjeta" | "Transferencia")
+  vendedorId, vendedorNombre, fecha
+
+opticas/{opticaId}/ordenes/{id}        ← model/Orden
+  ventaId ("" si se creó a mano), pacienteId, pacienteNombre, descripcion
+  estatus: "ENVIADO" | "EN_PROCESO" | "RECIBIDO" | "ENTREGADO"
+  fechaCreacion, fechaEnvio, fechaEnProceso, fechaRecibido, fechaEntregado
 ```
+
+Escrituras que cambian solo algunos campos:
+
+| Pantalla | Qué cambia |
+|----------|------------|
+| Punto de venta | En una sola escritura: crea la venta, resta `stock` a cada producto vendido (`FieldValue.increment`) y, si se pidió, crea la orden. |
+| Expediente | En una sola escritura: crea la consulta y actualiza `ultimaConsulta` y `resumenGraduacion` del paciente. |
+| Laboratorio | `estatus` y la fecha de esa etapa (`fechaEnProceso`, etc.). |
+| Mi perfil | `nombre` y `fotoUrl` del propio usuario. |
+| Datos de la óptica | `nombre`, `telefono`, `estado`, `direccion`, `metaSemanal` y `logoUrl`. |
+| Personal | `rol` de otra persona (solo administrador). |
+| Inventario | Crear, editar (documento completo) o **borrar** un producto. Es lo único que la app borra en Firestore. |
+
+### Storage
+
+| Ruta | Qué es | Quién la sube |
+|------|--------|---------------|
+| `users/{uid}/perfil.jpg` | Foto de perfil | Cada usuario, desde Mi perfil |
+| `opticas/{opticaId}/logo.jpg` | Logotipo | El dueño al registrarse o el administrador en Datos de la óptica |
+| `opticas/{opticaId}/productos/{productoId}.jpg` | Foto del producto | Quien edita el inventario |
+
+- Antes de subirla, la app convierte cualquier foto (cámara o galería, JPEG, PNG, WebP o HEIC) en un **JPEG de máximo 1600 px y calidad 85** (`util/Imagenes.subir`), normalmente de unos cientos de KB. El original del teléfono no se sube.
+- Cada archivo nuevo **reemplaza** al anterior en la misma ruta. Al borrar un producto, su foto se queda en Storage.
+
+### Lo que no se sube
+
+Las preferencias (tema, texto grande, modo sin imágenes), el fondo de pantalla elegido y los PDF de recetas y notas de venta se quedan solo en el teléfono. Los PDF se comparten con el menú de Android, no pasan por Firebase.
 
 ## Pendientes conocidos
 

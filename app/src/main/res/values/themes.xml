@@ -12,7 +12,7 @@
         <item name="colorOnSecondary">@color/blanco</item>
         <item name="colorSecondaryContainer">@color/lavanda</item>
         <item name="colorOnSecondaryContainer">@color/texto</item>
-        <item name="colorTertiary">@color/vino</item>
+        <item name="colorTertiary">@color/morado</item>
         <item name="colorError">@color/rojo</item>
 
         <!-- Fondo en degradado lila → rosa; las hojas y tarjetas son blancas -->
@@ -34,7 +34,7 @@
         <item name="android:textColorSecondary">@color/texto_secundario</item>
         <item name="android:textColorHint">@color/texto_tenue</item>
 
-        <!-- Fuente de todos los textos (los títulos usan Lexend Exa desde styles.xml) -->
+        <!-- Fuente de todos los textos: Lexend (styles.xml solo cambia el grosor y el tamaño) -->
         <item name="android:fontFamily">@font/lexend_regular</item>
         <item name="fontFamily">@font/lexend_regular</item>
 

@@ -15,13 +15,12 @@
     <color name="icono_fondo">#20243D</color>
 
     <color name="texto">#EEF0FA</color>
-    <color name="texto_secundario">#A6ACC8</color>
+    <color name="texto_secundario">#94A3B8</color>
     <color name="texto_tenue">#6E7494</color>
 
-    <color name="marino">#1E2A52</color>
+    <color name="marino">#1E1B4B</color>
     <color name="cielo">#4CBEF5</color>
     <color name="cielo_claro">#173247</color>
-    <color name="vino">#F28AA0</color>
 
     <color name="seleccion">#4CBEF5</color>
     <color name="seleccion_texto">#0E1222</color>
@@ -35,8 +34,8 @@
     <color name="naranja_claro">#33240F</color>
     <color name="rojo">#FF6B70</color>
     <color name="rojo_claro">#3A1A1C</color>
-    <color name="morado">#A88BF0</color>
-    <color name="morado_claro">#2A2240</color>
+    <color name="morado">#C4B5FD</color>
+    <color name="morado_claro">#2E2458</color>
 
     <color name="vidrio_inicio">#2EFFFFFF</color>
     <color name="vidrio_fin">#0FFFFFFF</color>
@@ -46,7 +45,6 @@
     <color name="hoja_vidrio_fin">#FF181B2E</color>
     <color name="vidrio_mosaico_inicio">#2EFFFFFF</color>
     <color name="vidrio_mosaico_fin">#0FFFFFFF</color>
-    <color name="pildora_vidrio">#40FFFFFF</color>
     <color name="aurora_morado">#806650E0</color>
     <color name="aurora_azul">#4D3F5BD6</color>
 </resources>

@@ -64,7 +64,7 @@
                 android:layout_height="60dp"
                 android:layout_marginStart="12dp"
                 android:background="@drawable/bg_icono_circulo"
-                android:fontFamily="@font/lexend_exa_medium"
+                android:fontFamily="@font/lexend_medium"
                 android:gravity="center"
                 android:textColor="@color/texto"
                 android:textSize="17sp"
