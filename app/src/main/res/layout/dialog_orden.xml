@@ -11,6 +11,7 @@
 
     <EditText
         android:id="@+id/etPaciente"
+        android:maxLength="60"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nombre del paciente"
@@ -19,6 +20,7 @@
 
     <EditText
         android:id="@+id/etDescripcion"
+        android:maxLength="200"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Trabajo (ej. Mica monofocal AR)"

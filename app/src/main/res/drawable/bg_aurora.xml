@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resplandor morado a la derecha y azul a la izquierda, encima del degradado (solo en el panel) -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="0.95"
+                android:centerY="0.30"
+                android:endColor="#00000000"
+                android:gradientRadius="75%p"
+                android:startColor="@color/aurora_morado"
+                android:type="radial" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="0.0"
+                android:centerY="0.50"
+                android:endColor="#00000000"
+                android:gradientRadius="60%p"
+                android:startColor="@color/aurora_azul"
+                android:type="radial" />
+        </shape>
+    </item>
+</layer-list>

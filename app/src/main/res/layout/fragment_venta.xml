@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Pantalla 7: Punto de venta. El formulario se desplaza; abajo queda fijo
-    el total con el botón azul, como "€99.00  [+ Add to bag]" del diseño.
+    el total con el botón principal para confirmar la venta.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -94,6 +94,7 @@
 
                     <EditText
                         android:id="@+id/etCantidad"
+                        android:maxLength="3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
@@ -172,7 +173,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Pago" />
 
-                <!-- Método de pago con pestañas subrayadas, como "BLACK LENS · CLEAR LENS" -->
+                <!-- Método de pago con pestañas subrayadas -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -211,6 +212,7 @@
 
                 <EditText
                     android:id="@+id/etAnticipo"
+                    android:maxLength="10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Anticipo ($). Vacío = paga todo"
@@ -257,6 +259,7 @@
 
                 <EditText
                     android:id="@+id/etOrdenDescripcion"
+                    android:maxLength="200"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Trabajo (ej. Mica progresiva AR)"

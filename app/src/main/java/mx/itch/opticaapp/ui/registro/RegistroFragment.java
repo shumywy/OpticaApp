@@ -151,54 +151,43 @@ public class RegistroFragment extends Fragment {
         }
     }
 
+    /** Texto del campo sin espacios al inicio o al final, ni espacios dobles en medio. */
     private String texto(android.widget.EditText campo) {
-        return campo.getText().toString().trim();
+        return campo.getText().toString().trim().replaceAll("\\s+", " ");
     }
 
     // ---------------- Validación ----------------
 
+    /** Revisa todos los campos visibles y marca cada error en su campo. Devuelve true si todo es correcto. */
     private boolean validar() {
-        boolean ok = true;
-        String error = Validaciones.requerido(texto(binding.etNombre), "tu nombre");
-        if (error != null) {
-            binding.etNombre.setError(error);
-            ok = false;
-        }
+        boolean ok = marcar(binding.etNombre, Validaciones.nombrePersona(texto(binding.etNombre)));
         if (!completar) {
-            error = Validaciones.correo(texto(binding.etCorreo));
-            if (error != null) {
-                binding.etCorreo.setError(error);
-                ok = false;
-            }
+            ok &= marcar(binding.etCorreo, Validaciones.correo(texto(binding.etCorreo)));
             String contrasena = binding.etContrasena.getText().toString();
-            error = Validaciones.contrasena(contrasena);
-            if (error != null) {
-                binding.etContrasena.setError(error);
-                ok = false;
-            } else if (!contrasena.equals(binding.etConfirmar.getText().toString())) {
-                binding.etConfirmar.setError("Las contraseñas no coinciden");
-                ok = false;
+            String error = Validaciones.contrasena(contrasena);
+            if (error == null && !contrasena.equals(binding.etConfirmar.getText().toString())) {
+                ok &= marcar(binding.etConfirmar, "Las contraseñas no coinciden");
+            } else {
+                binding.etConfirmar.setError(null);
             }
+            ok &= marcar(binding.etContrasena, error);
         }
         if (esNueva()) {
-            error = Validaciones.requerido(texto(binding.etOpticaNombre), "el nombre de la óptica");
-            if (error != null) {
-                binding.etOpticaNombre.setError(error);
-                ok = false;
-            }
-            String meta = texto(binding.etMeta);
-            if (!meta.isEmpty() && Formato.leerNumero(meta) == null) {
-                binding.etMeta.setError("Escribe solo números");
-                ok = false;
-            }
+            ok &= marcar(binding.etOpticaNombre,
+                    Validaciones.nombreComercial(texto(binding.etOpticaNombre), "el nombre de la óptica"));
+            ok &= marcar(binding.etTelefono, Validaciones.telefono(texto(binding.etTelefono), true));
+            ok &= marcar(binding.etDireccion, Validaciones.direccion(texto(binding.etDireccion), true));
+            ok &= marcar(binding.etMeta, Validaciones.importe(texto(binding.etMeta), 9_999_999.99));
         } else {
-            String codigo = texto(binding.etCodigo).toUpperCase(Locale.ROOT);
-            if (!codigo.matches("[A-Z0-9-]{4,20}")) {
-                binding.etCodigo.setError("Escribe el código que te dio el administrador");
-                ok = false;
-            }
+            ok &= marcar(binding.etCodigo, Validaciones.codigoInvitacion(texto(binding.etCodigo)));
         }
         return ok;
+    }
+
+    /** Pone o quita el error de un campo. Devuelve true si no hay error. */
+    private static boolean marcar(android.widget.EditText campo, String error) {
+        campo.setError(error);
+        return error == null;
     }
 
     // ---------------- Guardado ----------------
@@ -238,7 +227,7 @@ public class RegistroFragment extends Fragment {
 
         Optica optica = new Optica();
         optica.nombre = texto(binding.etOpticaNombre);
-        optica.telefono = texto(binding.etTelefono);
+        optica.telefono = Validaciones.soloDigitos(texto(binding.etTelefono));   // se guardan solo los 10 dígitos
         optica.estado = binding.spEstado.getSelectedItem().toString();
         optica.direccion = texto(binding.etDireccion);
         Double meta = Formato.leerNumero(texto(binding.etMeta));
@@ -266,15 +255,16 @@ public class RegistroFragment extends Fragment {
                         terminar(usuario, optica);
                         return;
                     }
-                    // El logo se sube después, cuando el usuario ya pertenece a la óptica
-                    Imagenes.subir(logoUri, "opticas/" + optica.id + "/logo.jpg",
-                            url -> {
-                                optica.logoUrl = url;
-                                opticaRef.update("logoUrl", url);
+                    // El logo se guarda después, cuando el usuario ya pertenece a la óptica
+                    // (se reduce a 400 px y va como texto en el campo logoUrl)
+                    Imagenes.convertir(logoUri, Imagenes.LADO_LOGO,
+                            datos -> {
+                                optica.logoUrl = datos;
+                                opticaRef.update("logoUrl", datos);
                                 terminar(usuario, optica);
                             },
                             e -> {
-                                mensaje("La óptica se creó, pero no se pudo subir el logo: " + e.getMessage());
+                                mensaje("La óptica se creó, pero no se pudo guardar el logo: " + e.getMessage());
                                 terminar(usuario, optica);
                             });
                 })

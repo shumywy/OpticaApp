@@ -1,17 +1,22 @@
 package mx.itch.opticaapp;
 
 import android.content.Context;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
@@ -30,6 +35,7 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
@@ -105,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         // Muestra u oculta las barras según la pantalla
         navController.addOnDestinationChangedListener((controller, destino, argumentos) -> {
             binding.bottomNav.setVisibility(esPantallaPrincipal(destino) ? View.VISIBLE : View.GONE);
-            // El login y el panel tienen su propio encabezado, como en el diseño
+            // El login y el panel tienen su propio encabezado
             boolean sinBarraSuperior = destino.getId() == R.id.loginFragment || destino.getId() == R.id.panelFragment;
             binding.toolbar.setVisibility(sinBarraSuperior ? View.GONE : View.VISIBLE);
             ponerIconoDeNavegacion(destino);
@@ -168,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Ícono de la izquierda de la barra superior, como en el diseño:
+     * Ícono de la izquierda de la barra superior:
      * cuatro puntos (abre el menú lateral) en las secciones principales y "‹" en las demás.
      * Se llama después del listener de NavigationUI, así que reemplaza su ícono de hamburguesa.
      */
@@ -200,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             dejarDeEscucharUsuario();
             limpiarEncabezado();
+            actualizarInsigniaPersonal();   // sin sesión: la oculta
         }
         invalidateOptionsMenu();
     }
@@ -289,6 +296,11 @@ public class MainActivity extends AppCompatActivity {
     // ---------------- Menú lateral ----------------
 
     private void configurarMenuLateral() {
+        // Apariencia de vidrio: sin tinte general de íconos (cada opción trae su app:iconTint en menu_lateral.xml)
+        // y un velo índigo suave en lugar del negro sobre el contenido
+        binding.navView.setItemIconTintList(null);
+        binding.drawer.setScrimColor(ContextCompat.getColor(this, R.color.menu_velo));
+
         // Cada opción es una pantalla del nav_graph, salvo "Corte de caja" (diálogo) y "Cerrar sesión".
         // La opción marcada la pone marcarMenuLateral() cada vez que cambia la pantalla.
         binding.navView.setNavigationItemSelectedListener(item -> {
@@ -320,15 +332,58 @@ public class MainActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, cerrarMenuConAtras);
         binding.drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
+            public void onDrawerSlide(@NonNull View menu, float avance) {
+                desenfocarContenido(avance);
+            }
+
+            @Override
             public void onDrawerOpened(@NonNull View menu) {
                 cerrarMenuConAtras.setEnabled(true);
+                actualizarInsigniaPersonal();
             }
 
             @Override
             public void onDrawerClosed(@NonNull View menu) {
                 cerrarMenuConAtras.setEnabled(false);
+                desenfocarContenido(0f);
             }
         });
+    }
+
+    /**
+     * Efecto de vidrio esmerilado: mientras el menú se abre, el contenido de atrás se desenfoca
+     * (hasta 12 dp). RenderEffect existe desde Android 12; en versiones anteriores solo se ve el velo.
+     */
+    private void desenfocarContenido(float avance) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return;
+        float radio = 12f * getResources().getDisplayMetrics().density * avance;
+        binding.main.setRenderEffect(radio < 1f ? null
+                : RenderEffect.createBlurEffect(radio, radio, Shader.TileMode.CLAMP));
+    }
+
+    /**
+     * Insignia "N personas" junto a "Personal" (solo administrador). Usa una consulta de conteo
+     * de Firestore, que no descarga los documentos, y se actualiza cada vez que se abre el menú.
+     */
+    private void actualizarInsigniaPersonal() {
+        MenuItem personal = binding.navView.getMenu().findItem(R.id.personalFragment);
+        View vista = personal != null ? personal.getActionView() : null;
+        TextView insignia = vista != null ? vista.findViewById(R.id.tvInsigniaPersonal) : null;
+        if (insignia == null) return;
+        if (!Sesion.estaActiva() || !Sesion.esAdmin()) {
+            insignia.setVisibility(View.GONE);
+            return;
+        }
+        FirebaseFirestore.getInstance().collection("users")
+                .whereEqualTo("opticaId", Sesion.getOptica().id)
+                .count()
+                .get(AggregateSource.SERVER)
+                .addOnSuccessListener(resultado -> {
+                    long total = resultado.getCount();
+                    insignia.setText(total + (total == 1 ? " persona" : " personas"));
+                    insignia.setVisibility(View.VISIBLE);
+                })
+                .addOnFailureListener(e -> insignia.setVisibility(View.GONE));   // sin conexión: no se muestra
     }
 
     /**
@@ -432,6 +487,7 @@ public class MainActivity extends AppCompatActivity {
         // Administración (óptica, personal, cuentas nuevas y corte de caja) solo para el administrador;
         // las reglas de Firestore también lo revisan
         binding.navView.getMenu().findItem(R.id.seccionAdministracion).setVisible(Sesion.esAdmin());
+        actualizarInsigniaPersonal();
     }
 
     /** Pantallas que se abren desde el menú lateral (se reemplazan entre sí al navegar). */

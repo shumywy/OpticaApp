@@ -97,6 +97,7 @@
 
             <EditText
                 android:id="@+id/etNombre"
+                android:maxLength="60"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombre o modelo"
@@ -110,6 +111,7 @@
 
             <EditText
                 android:id="@+id/etDescripcion"
+                android:maxLength="300"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top"
@@ -118,8 +120,19 @@
                 android:inputType="textMultiLine|textCapSentences"
                 android:minLines="2" />
 
+            <!-- Se muestran como etiquetas en el detalle del producto -->
+            <EditText
+                android:id="@+id/etEtiquetas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Características, separadas por coma (ej. Microfibra, Suave, 15x15 cm)"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:maxLength="110" />
+
             <EditText
                 android:id="@+id/etPrecio"
+                android:maxLength="9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Precio ($)"
@@ -133,6 +146,7 @@
 
                 <EditText
                     android:id="@+id/etStock"
+                    android:maxLength="5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -143,6 +157,7 @@
 
                 <EditText
                     android:id="@+id/etStockMinimo"
+                    android:maxLength="4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -150,6 +165,38 @@
                     android:importantForAutofill="no"
                     android:inputType="number" />
             </LinearLayout>
+
+            <!-- Personalización: estampar el logotipo de la óptica con un costo adicional -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="4dp">
+
+                <TextView
+                    style="@style/Texto.Fila"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Se puede estampar el logo de la óptica" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/swPersonalizable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="Se puede estampar el logo de la óptica" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/etCostoPersonalizacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Costo del estampado ($)"
+                android:importantForAutofill="no"
+                android:inputType="numberDecimal"
+                android:maxLength="7"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/btnGuardar"

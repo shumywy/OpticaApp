@@ -111,7 +111,7 @@ public class InventarioFragment extends Fragment {
         adaptador.mostrar(visibles);
         Animaciones.listaUnaVez(this, binding.rvProductos);   // los mosaicos entran uno tras otro
         binding.tvVacio.setVisibility(visibles.isEmpty() ? View.VISIBLE : View.GONE);
-        // Contador "08/24": productos que se ven / total, como el "01/20" del diseño
+        // Contador "08/24": productos que se ven / total
         binding.tvContador.setText(String.format(Locale.US, "%02d/%02d", visibles.size(), todos.size()));
     }
 
@@ -127,7 +127,7 @@ public class InventarioFragment extends Fragment {
     }
 
     /** Abre el formulario: con id edita un producto, sin id crea uno nuevo. */
-    /** Abre la pantalla de detalle del producto (estilo "Aqua #004"). */
+    /** Abre la pantalla de detalle del producto. */
     private void abrirDetalle(String productoId) {
         Bundle args = new Bundle();
         args.putString(ProductoDetalleFragment.ARG_PRODUCTO_ID, productoId);

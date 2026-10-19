@@ -106,7 +106,7 @@
                 </FrameLayout>
             </LinearLayout>
 
-            <!-- ===== Saludo y nombre (como "Chimi Eyewear / Collection") ===== -->
+            <!-- ===== Saludo y nombre ===== -->
             <LinearLayout
                 android:id="@+id/encabezado"
                 android:layout_width="match_parent"
@@ -239,7 +239,7 @@
                 android:paddingBottom="20dp"
                 android:showDividers="middle">
 
-                <!-- Título de sección con el contador "HOY ━──" a la derecha, como "Best Selling 01/20" -->
+                <!-- Título de sección con la etiqueta "Hoy" y una línea a la derecha -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

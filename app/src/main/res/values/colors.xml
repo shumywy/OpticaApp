@@ -48,6 +48,24 @@
     <!-- Píldora de rol / Administrador: fondo violeta suave y texto violeta -->
     <color name="morado">#5B21B6</color>
     <color name="morado_claro">#EDE9FE</color>
+    <!-- Menú lateral de vidrio (textos: @color/texto y @color/texto_secundario) -->
+    <color name="menu_vidrio_inicio">#F2F1EDFA</color>
+    <color name="menu_vidrio_fin">#EDE4DBF7</color>
+    <color name="menu_vidrio_borde">#33FFFFFF</color>
+    <color name="menu_icono">#4C1D95</color>
+    <color name="menu_salir">#BE123C</color>
+    <color name="menu_seleccion">#B3FFFFFF</color>
+    <color name="menu_divisor">#1A64748B</color>
+    <color name="menu_foto_borde">#B3FFFFFF</color>
+    <color name="menu_velo">#591E1B4B</color>
+    <color name="insignia_conteo_fondo">#E9D5FF</color>
+    <color name="insignia_conteo_texto">#6B21A8</color>
+
+    <!-- Aviso flotante de confirmación (util/Aviso) -->
+    <color name="aviso_fondo">#1F2937</color>
+
+    <!-- Insignia neutra ("Sin graduación") -->
+    <color name="gris_claro">#F1F5F9</color>
 
     <color name="blanco">#FFFFFF</color>
     <color name="ic_launcher_background">#E1D6F8</color>

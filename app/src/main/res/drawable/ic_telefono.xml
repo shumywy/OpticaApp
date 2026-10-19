@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ícono de línea delgada: Teléfono -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:tint="?attr/colorControlNormal"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M7.5,3.5h2.2l1.3,4l-2,1.5a11,11 0 0,0 6,6l1.5,-2l4,1.3v2.2a2,2 0 0,1 -2.2,2A15.5,15.5 0 0,1 5.5,5.7a2,2 0 0,1 2,-2.2Z"
+        android:strokeWidth="1.6"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

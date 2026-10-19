@@ -57,18 +57,34 @@
                     tools:text="34 años · Paciente desde 12/03/2024" />
             </LinearLayout>
 
-            <!-- Iniciales en un círculo blanco -->
-            <TextView
-                android:id="@+id/tvIniciales"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="12dp"
-                android:background="@drawable/bg_icono_circulo"
-                android:fontFamily="@font/lexend_medium"
-                android:gravity="center"
-                android:textColor="@color/texto"
-                android:textSize="17sp"
-                tools:text="MF" />
+            <!-- Iniciales en un círculo blanco; el lápiz abre "Editar paciente" -->
+            <FrameLayout
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:id="@+id/tvIniciales"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_icono_circulo"
+                    android:fontFamily="@font/lexend_medium"
+                    android:gravity="center"
+                    android:textColor="@color/texto"
+                    android:textSize="17sp"
+                    tools:text="MF" />
+
+                <ImageView
+                    android:id="@+id/btnEditarPaciente"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/bg_circulo_cielo"
+                    android:contentDescription="Editar datos del paciente"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_editar"
+                    app:tint="@color/blanco" />
+            </FrameLayout>
         </LinearLayout>
 
         <!-- ===== Hoja blanca: graduación e historial ===== -->
@@ -163,6 +179,7 @@
 
                     <EditText
                         android:id="@+id/etOdEsfera"
+                        android:maxLength="6"
                         style="@style/Campo.Compacto"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -174,6 +191,7 @@
 
                     <EditText
                         android:id="@+id/etOdCilindro"
+                        android:maxLength="6"
                         style="@style/Campo.Compacto"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -185,6 +203,7 @@
 
                     <EditText
                         android:id="@+id/etOdEje"
+                        android:maxLength="3"
                         style="@style/Campo.Compacto"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -196,6 +215,7 @@
 
                     <EditText
                         android:id="@+id/etOdAdicion"
+                        android:maxLength="5"
                         style="@style/Campo.Compacto"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -218,6 +238,7 @@
 
                     <EditText
                         android:id="@+id/etOiEsfera"
+                        android:maxLength="6"
                         style="@style/Campo.Compacto"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -229,6 +250,7 @@
 
                     <EditText
                         android:id="@+id/etOiCilindro"
+                        android:maxLength="6"
                         style="@style/Campo.Compacto"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -240,6 +262,7 @@
 
                     <EditText
                         android:id="@+id/etOiEje"
+                        android:maxLength="3"
                         style="@style/Campo.Compacto"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -251,6 +274,7 @@
 
                     <EditText
                         android:id="@+id/etOiAdicion"
+                        android:maxLength="5"
                         style="@style/Campo.Compacto"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -268,6 +292,7 @@
 
                 <EditText
                     android:id="@+id/etDistanciaPupilar"
+                    android:maxLength="4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -278,6 +303,8 @@
 
                 <EditText
                     android:id="@+id/etAgudezaVisual"
+                    android:maxLength="6"
+                    android:digits="0123456789/"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -301,6 +328,7 @@
 
             <EditText
                 android:id="@+id/etObservaciones"
+                android:maxLength="500"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top"

@@ -36,6 +36,20 @@
     <color name="rojo_claro">#3A1A1C</color>
     <color name="morado">#C4B5FD</color>
     <color name="morado_claro">#2E2458</color>
+    <color name="gris_claro">#262A3E</color>
+    <color name="aviso_fondo">#374151</color>
+
+    <color name="menu_vidrio_inicio">#F21C1A33</color>
+    <color name="menu_vidrio_fin">#ED2A2148</color>
+    <color name="menu_vidrio_borde">#1FFFFFFF</color>
+    <color name="menu_icono">#C4B5FD</color>
+    <color name="menu_salir">#FB7185</color>
+    <color name="menu_seleccion">#1FFFFFFF</color>
+    <color name="menu_divisor">#1AFFFFFF</color>
+    <color name="menu_foto_borde">#4DFFFFFF</color>
+    <color name="menu_velo">#99000000</color>
+    <color name="insignia_conteo_fondo">#3B2A5C</color>
+    <color name="insignia_conteo_texto">#E9D5FF</color>
 
     <color name="vidrio_inicio">#2EFFFFFF</color>
     <color name="vidrio_fin">#0FFFFFFF</color>

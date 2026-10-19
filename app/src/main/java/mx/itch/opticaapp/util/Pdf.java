@@ -2,12 +2,15 @@ package mx.itch.opticaapp.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
@@ -69,7 +72,7 @@ public final class Pdf {
         l.add(new Linea("", false, 12));
         l.add(new Linea("______________________________", false, 12));
         l.add(new Linea("Optometrista: " + (vacio(c.optometristaNombre) ? "" : c.optometristaNombre), false, 12));
-        return escribir(context, "receta_" + System.currentTimeMillis() + ".pdf", l);
+        return escribir(context, "receta_" + System.currentTimeMillis() + ".pdf", l, Imagenes.decodificar(optica.logoUrl));
     }
 
     public static File notaVenta(Context context, Optica optica, Venta v) throws IOException {
@@ -87,7 +90,7 @@ public final class Pdf {
         l.add(new Linea("Total: " + Formato.moneda(v.total), true, 13));
         l.add(new Linea("Anticipo (" + v.metodoPago + "): " + Formato.moneda(v.anticipo), false, 12));
         l.add(new Linea("Saldo pendiente: " + Formato.moneda(v.saldo), true, 12));
-        return escribir(context, "nota_" + System.currentTimeMillis() + ".pdf", l);
+        return escribir(context, "nota_" + System.currentTimeMillis() + ".pdf", l, Imagenes.decodificar(optica.logoUrl));
     }
 
     private static void encabezado(List<Linea> l, Optica optica, String titulo) {
@@ -110,14 +113,26 @@ public final class Pdf {
         return s == null || s.trim().isEmpty();
     }
 
-    /** Dibuja las líneas en una hoja y guarda el PDF en la caché de la app. */
-    private static File escribir(Context context, String nombreArchivo, List<Linea> lineas) throws IOException {
+    /**
+     * Dibuja las líneas en una hoja y guarda el PDF en la caché de la app.
+     * Si la óptica tiene logotipo, lo pone arriba a la derecha (máximo 120 × 64 puntos).
+     */
+    private static File escribir(Context context, String nombreArchivo, List<Linea> lineas,
+                                 @Nullable Bitmap logo) throws IOException {
         PdfDocument documento = new PdfDocument();
         PdfDocument.PageInfo info = new PdfDocument.PageInfo.Builder(ANCHO, ALTO, 1).create();
         PdfDocument.Page pagina = documento.startPage(info);
         Canvas canvas = pagina.getCanvas();
         Paint pincel = new Paint();
         pincel.setAntiAlias(true);
+
+        if (logo != null) {
+            float escala = Math.min(120f / logo.getWidth(), 64f / logo.getHeight());
+            float ancho = logo.getWidth() * escala;
+            float alto = logo.getHeight() * escala;
+            RectF lugar = new RectF(ANCHO - MARGEN - ancho, MARGEN, ANCHO - MARGEN, MARGEN + alto);
+            canvas.drawBitmap(logo, null, lugar, new Paint(Paint.FILTER_BITMAP_FLAG));
+        }
 
         float y = MARGEN;
         for (Linea linea : lineas) {

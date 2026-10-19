@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo de toda la app: degradado lila → rosa (en modo oscuro, azul noche → morado) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="315"
+        android:centerColor="@color/degradado_centro"
+        android:endColor="@color/degradado_fin"
+        android:startColor="@color/degradado_inicio"
+        android:type="linear" />
+</shape>

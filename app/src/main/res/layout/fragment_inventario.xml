@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Pantalla 6: Inventario como catálogo, al estilo "Chimi Eyewear / Collection":
-    buscador y título sobre el degradado; mosaicos lila de 2 columnas en la hoja blanca.
+    Pantalla 6: Inventario en forma de catálogo.
+    Buscador y título sobre el degradado; mosaicos lila de 2 columnas en la hoja blanca.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,6 +22,7 @@
 
         <EditText
             android:id="@+id/etBuscar"
+            android:maxLength="60"
             style="@style/Campo.Busqueda"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,7 +58,7 @@
             android:orientation="vertical"
             android:paddingTop="24dp">
 
-            <!-- "Productos" con el contador a la derecha, como "Best Selling   01/20" -->
+            <!-- Título "Productos" con el contador de piezas a la derecha -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

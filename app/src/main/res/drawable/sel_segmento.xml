@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Pestaña subrayada como "BLACK LENS · CLEAR LENS · MIRROR LENS":
+    Pestaña subrayada (Segmento):
     todas llevan una línea delgada debajo del texto y la elegida además un punto.
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">

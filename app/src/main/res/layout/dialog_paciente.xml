@@ -11,6 +11,7 @@
 
     <EditText
         android:id="@+id/etNombre"
+        android:maxLength="60"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nombre completo"
@@ -19,17 +20,20 @@
 
     <EditText
         android:id="@+id/etTelefono"
+        android:maxLength="10"
+        android:digits="0123456789"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Teléfono"
+        android:hint="Teléfono (10 dígitos)"
         android:importantForAutofill="no"
         android:inputType="phone" />
 
     <EditText
         android:id="@+id/etEdad"
+        android:maxLength="3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Edad"
+        android:hint="Edad (años)"
         android:importantForAutofill="no"
         android:inputType="number" />
 </LinearLayout>

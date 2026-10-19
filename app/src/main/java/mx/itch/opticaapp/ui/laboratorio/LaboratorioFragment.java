@@ -26,6 +26,7 @@ import mx.itch.opticaapp.databinding.DialogOrdenBinding;
 import mx.itch.opticaapp.databinding.FragmentLaboratorioBinding;
 import mx.itch.opticaapp.model.Orden;
 import mx.itch.opticaapp.util.Animaciones;
+import mx.itch.opticaapp.util.Validaciones;
 
 /**
  * Pantalla 8: seguimiento de órdenes de laboratorio en tiempo real.
@@ -156,16 +157,13 @@ public class LaboratorioFragment extends Fragment {
                 .setNegativeButton("Cancelar", null)
                 .create();
         dialogo.setOnShowListener(x -> dialogo.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-            String paciente = d.etPaciente.getText().toString().trim();
-            String trabajo = d.etDescripcion.getText().toString().trim();
-            if (paciente.isEmpty()) {
-                d.etPaciente.setError("Escribe el nombre");
-                return;
-            }
-            if (trabajo.isEmpty()) {
-                d.etDescripcion.setError("Describe el trabajo");
-                return;
-            }
+            String paciente = d.etPaciente.getText().toString().trim().replaceAll("\\s+", " ");
+            String trabajo = d.etDescripcion.getText().toString().trim().replaceAll("\\s+", " ");
+            String errorPaciente = Validaciones.nombrePersona(paciente);
+            String errorTrabajo = Validaciones.textoLibre(trabajo, true, 5, Validaciones.LARGO_TRABAJO, "el trabajo");
+            d.etPaciente.setError(errorPaciente);
+            d.etDescripcion.setError(errorTrabajo);
+            if (errorPaciente != null || errorTrabajo != null) return;
             Orden o = new Orden();
             o.pacienteId = "";
             o.pacienteNombre = paciente;

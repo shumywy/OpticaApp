@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Marca que usa util/Imagenes para saber si un ImageView muestra el ícono de "sin foto" -->
+    <item name="imagen_es_icono" type="id" />
+</resources>

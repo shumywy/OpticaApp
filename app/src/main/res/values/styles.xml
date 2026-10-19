@@ -17,7 +17,7 @@
         <item name="android:fontFamily">@font/lexend_regular</item>
     </style>
 
-    <!-- Título enorme y delgado de cada pantalla ("Collection") -->
+    <!-- Título grande y delgado de cada pantalla -->
     <style name="Texto.Hero">
         <item name="android:textSize">32sp</item>
         <item name="android:fontFamily">@font/lexend_light</item>
@@ -109,6 +109,22 @@
         <item name="android:textColor">@color/morado</item>
     </style>
 
+    <!-- Etiqueta de característica de un producto ("Microfibra"): cápsula violeta pálida, no se puede tocar -->
+    <style name="Etiqueta" parent="Widget.Material3.Chip.Assist">
+        <item name="chipBackgroundColor">@color/morado_claro</item>
+        <item name="android:textColor">@color/morado</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/lexend_medium</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="chipCornerRadius">14dp</item>
+        <item name="chipMinHeight">28dp</item>
+        <item name="chipStartPadding">4dp</item>
+        <item name="chipEndPadding">4dp</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+    </style>
+
     <!-- Apariencias de texto que usa el tema (diálogos y botones) -->
     <style name="TextoDialogoTitulo" parent="TextAppearance.Material3.HeadlineSmall">
         <item name="android:textSize">18sp</item>
@@ -150,7 +166,7 @@
         <item name="android:fontFamily">@font/lexend_regular</item>
     </style>
 
-    <!-- Buscador blanco translúcido que va sobre el degradado ("Search") -->
+    <!-- Buscador blanco translúcido que va sobre el degradado -->
     <style name="Campo.Busqueda">
         <item name="android:background">@drawable/bg_busqueda</item>
         <item name="android:minHeight">52dp</item>
@@ -183,7 +199,7 @@
 
     <!-- ===================== Botones ===================== -->
 
-    <!-- Botón principal azul cielo con sombra azul ("Add to bag") -->
+    <!-- Botón principal azul cielo con sombra azul -->
     <style name="Boton" parent="Widget.Material3.Button">
         <item name="android:minHeight">56dp</item>
         <item name="android:textAllCaps">false</item>
@@ -237,7 +253,7 @@
         <item name="tint">@color/texto</item>
     </style>
 
-    <!-- ===================== Pestañas subrayadas ("BLACK LENS · CLEAR LENS") ===================== -->
+    <!-- ===================== Pestañas subrayadas ===================== -->
 
     <!-- Contenedor de las pestañas (es un RadioGroup) -->
     <style name="Segmentos">
@@ -286,7 +302,7 @@
         <item name="strokeWidth">0dp</item>
     </style>
 
-    <!-- Mosaico lila de producto o indicador ("€99.00 ♥") -->
+    <!-- Mosaico lila de producto o indicador -->
     <style name="Tarjeta.Mosaico">
         <item name="cardBackgroundColor">@color/lavanda</item>
         <item name="cardCornerRadius">20dp</item>
@@ -382,13 +398,20 @@
     </style>
 
     <!-- Menú lateral: fondo blanco y la sección actual en una píldora lila -->
+    <!--
+        Menú lateral de vidrio: degradado lila translúcido (bg_menu_vidrio), textos índigo e íconos violeta.
+        MainActivity quita el tinte general de íconos para que cada opción use su app:iconTint
+        (violeta, y tono cálido en "Cerrar sesión").
+    -->
     <style name="MenuLateral" parent="Widget.Material3.NavigationView">
-        <item name="android:background">@color/superficie</item>
-        <item name="itemTextColor">@color/sel_menu_texto</item>
-        <item name="itemIconTint">@color/sel_menu_icono</item>
+        <item name="android:background">@drawable/bg_menu_vidrio</item>
+        <item name="materialThemeOverlay">@style/TemaMenuLateral</item>
+        <item name="itemTextColor">@color/texto</item>
+        <item name="itemIconTint">@color/menu_icono</item>
+        <item name="itemIconSize">22dp</item>
         <item name="itemShapeFillColor">@color/sel_menu_fondo</item>
         <item name="itemTextAppearance">@style/TextoMenuLateral</item>
-        <!-- Título "Administración" en gris, como las demás etiquetas de apoyo -->
+        <!-- Título "Administración" en gris, en formato normal -->
         <item name="subheaderColor">@color/texto_secundario</item>
         <item name="subheaderTextAppearance">@style/TextoSubtituloMenu</item>
         <item name="subheaderInsetStart">28dp</item>
@@ -406,11 +429,17 @@
     </style>
 
     <style name="TextoSubtituloMenu" parent="TextAppearance.Material3.TitleSmall">
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
-        <item name="android:fontFamily">@font/lexend_medium</item>
-        <item name="fontFamily">@font/lexend_medium</item>
+        <item name="android:fontFamily">@font/lexend_semibold</item>
+        <item name="fontFamily">@font/lexend_semibold</item>
+    </style>
+
+    <!-- Solo dentro del menú lateral: divisores casi transparentes -->
+    <style name="TemaMenuLateral" parent="">
+        <item name="colorOutlineVariant">@color/menu_divisor</item>
+        <item name="android:listDivider">@drawable/divisor_menu</item>
     </style>
 
     <!-- ===================== Formas ===================== -->

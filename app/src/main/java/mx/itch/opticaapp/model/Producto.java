@@ -2,6 +2,8 @@ package mx.itch.opticaapp.model;
 
 import com.google.firebase.firestore.DocumentId;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /** Documento /opticas/{opticaId}/productos/{productoId}. */
@@ -17,7 +19,16 @@ public class Producto {
     public double precio;
     public int stock;
     public int stockMinimo;
+    /** Foto como texto "data:image/jpeg;base64,..." (máx. 640 px), o vacío. Ver util/Imagenes. */
     public String fotoUrl;
+    /** Características cortas que se muestran como etiquetas ("Microfibra", "Suave", "15x15 cm"). */
+    public List<String> etiquetas = new ArrayList<>();
+    /** Variantes de color disponibles. Se agregan desde el detalle del producto. */
+    public List<VarianteColor> colores = new ArrayList<>();
+    /** true si se le puede estampar el logotipo de la óptica. */
+    public boolean personalizable;
+    /** Costo adicional del estampado del logotipo. */
+    public double costoPersonalizacion;
 
     public Producto() {
     }

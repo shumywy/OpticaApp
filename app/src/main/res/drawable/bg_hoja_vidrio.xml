@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Hoja de vidrio del panel: arriba deja ver los lentes desenfocados y hacia abajo
+    se vuelve blanca para unirse con la barra inferior.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:centerColor="@color/hoja_vidrio_centro"
+        android:centerY="0.6"
+        android:endColor="@color/hoja_vidrio_fin"
+        android:startColor="@color/hoja_vidrio_inicio"
+        android:type="linear" />
+    <stroke
+        android:width="1dp"
+        android:color="@color/vidrio_borde" />
+    <corners
+        android:topLeftRadius="36dp"
+        android:topRightRadius="36dp" />
+</shape>

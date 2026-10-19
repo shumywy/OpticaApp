@@ -18,6 +18,19 @@ public final class Fechas {
         return new SimpleDateFormat("dd/MM/yyyy", MX).format(fecha);
     }
 
+    private static final String[] MESES = {"ene", "feb", "mar", "abr", "may", "jun",
+            "jul", "ago", "sep", "oct", "nov", "dic"};
+
+    /** Fecha corta para listas: "7 oct" este año, "7 oct 2025" si es de otro año. */
+    public static String diaMes(Date fecha) {
+        if (fecha == null) return "—";
+        Calendar c = Calendar.getInstance();
+        int anioActual = c.get(Calendar.YEAR);
+        c.setTime(fecha);
+        String texto = c.get(Calendar.DAY_OF_MONTH) + " " + MESES[c.get(Calendar.MONTH)];
+        return c.get(Calendar.YEAR) == anioActual ? texto : texto + " " + c.get(Calendar.YEAR);
+    }
+
     public static String conHora(Date fecha) {
         if (fecha == null) return "—";
         return new SimpleDateFormat("dd/MM/yyyy HH:mm", MX).format(fecha);

@@ -31,6 +31,7 @@ import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentExpedienteBinding;
 import mx.itch.opticaapp.model.Consulta;
 import mx.itch.opticaapp.model.Paciente;
+import mx.itch.opticaapp.ui.pacientes.DialogoPaciente;
 import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Fechas;
 import mx.itch.opticaapp.util.Formato;
@@ -84,6 +85,12 @@ public class ExpedienteFragment extends Fragment {
         binding.spTipoLente.setEnabled(puedeEditar);
         binding.btnGuardar.setVisibility(puedeEditar ? View.VISIBLE : View.GONE);
 
+        // Editar nombre, teléfono y edad del paciente (mismo diálogo que el alta)
+        binding.btnEditarPaciente.setVisibility(puedeEditar ? View.VISIBLE : View.GONE);
+        binding.btnEditarPaciente.setOnClickListener(v -> {
+            if (paciente != null) DialogoPaciente.mostrar(this, paciente);
+        });
+
         binding.btnGuardar.setOnClickListener(v -> guardar());
         binding.btnPdf.setOnClickListener(v -> generarReceta());
 
@@ -106,7 +113,8 @@ public class ExpedienteFragment extends Fragment {
             binding.tvIniciales.setText(Formato.iniciales(paciente.nombre));
             binding.tvPaciente.setText(paciente.nombre);
             String edad = paciente.edad > 0 ? paciente.edad + " años · " : "";
-            String telefono = paciente.telefono == null || paciente.telefono.isEmpty() ? "" : "Tel. " + paciente.telefono + " · ";
+            String telefono = paciente.telefono == null || paciente.telefono.isEmpty()
+                    ? "" : "Tel. " + Formato.telefono(paciente.telefono) + " · ";
             binding.tvDatosPaciente.setText(edad + telefono + "Paciente desde " + Fechas.corta(paciente.fechaRegistro));
         });
 
@@ -161,15 +169,25 @@ public class ExpedienteFragment extends Fragment {
         Double oiAdd = Formato.leerNumero(binding.etOiAdicion.getText().toString());
         Double dip = Formato.leerNumero(binding.etDistanciaPupilar.getText().toString());
 
-        boolean ok = marcar(binding.etOdEsfera, Validaciones.esfera(odEsf));
-        ok &= marcar(binding.etOdCilindro, Validaciones.cilindro(odCil));
-        ok &= marcar(binding.etOdEje, Validaciones.eje(odEje, odCil));
-        ok &= marcar(binding.etOdAdicion, Validaciones.adicion(odAdd));
-        ok &= marcar(binding.etOiEsfera, Validaciones.esfera(oiEsf));
-        ok &= marcar(binding.etOiCilindro, Validaciones.cilindro(oiCil));
-        ok &= marcar(binding.etOiEje, Validaciones.eje(oiEje, oiCil));
-        ok &= marcar(binding.etOiAdicion, Validaciones.adicion(oiAdd));
-        ok &= marcar(binding.etDistanciaPupilar, Validaciones.distanciaPupilar(dip));
+        boolean ok = revisar(binding.etOdEsfera, Validaciones.esfera(odEsf));
+        ok &= revisar(binding.etOdCilindro, Validaciones.cilindro(odCil));
+        ok &= revisar(binding.etOdEje, Validaciones.eje(odEje, odCil));
+        ok &= revisar(binding.etOdAdicion, Validaciones.adicion(odAdd));
+        ok &= revisar(binding.etOiEsfera, Validaciones.esfera(oiEsf));
+        ok &= revisar(binding.etOiCilindro, Validaciones.cilindro(oiCil));
+        ok &= revisar(binding.etOiEje, Validaciones.eje(oiEje, oiCil));
+        ok &= revisar(binding.etOiAdicion, Validaciones.adicion(oiAdd));
+        ok &= revisar(binding.etDistanciaPupilar, Validaciones.distanciaPupilar(dip));
+        ok &= marcar(binding.etAgudezaVisual, Validaciones.agudezaVisual(binding.etAgudezaVisual.getText().toString()));
+        ok &= marcar(binding.etObservaciones, Validaciones.textoLibre(binding.etObservaciones.getText().toString(),
+                false, 0, Validaciones.LARGO_OBSERVACIONES, "observaciones"));
+
+        // Bifocal y progresivo necesitan adición en al menos un ojo
+        String tipo = binding.spTipoLente.getSelectedItem().toString();
+        boolean sinAdicion = (odAdd == null || odAdd == 0) && (oiAdd == null || oiAdd == 0);
+        if (ok && sinAdicion && (tipo.equals("Bifocal") || tipo.equals("Progresivo"))) {
+            ok = marcar(binding.etOdAdicion, "Un lente " + tipo.toLowerCase(Locale.ROOT) + " necesita adición");
+        }
         if (!ok) {
             mensaje("Revisa los campos marcados");
             return null;
@@ -192,6 +210,20 @@ public class ExpedienteFragment extends Fragment {
         c.optometristaId = Sesion.getUsuario().id;
         c.optometristaNombre = Sesion.getUsuario().nombre;
         return c;
+    }
+
+    /**
+     * Como marcar(), pero si el campo tiene algo escrito que no es un número (por ejemplo "1..5"),
+     * muestra "Número no válido" en lugar del error de rango.
+     */
+    private boolean revisar(EditText campo, String errorDeRango) {
+        String texto = campo.getText().toString();
+        boolean malEscrito = !texto.trim().isEmpty() && Formato.leerNumero(texto) == null;
+        boolean esEje = campo == binding.etOdEje || campo == binding.etOiEje;
+        if (!malEscrito && esEje && !texto.trim().isEmpty() && Formato.leerEntero(texto) == null) {
+            return marcar(campo, "Solo números enteros");
+        }
+        return marcar(campo, malEscrito ? "Número no válido" : errorDeRango);
     }
 
     /** Pone o quita el error de un campo. Devuelve true si no hay error. */

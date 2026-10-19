@@ -83,6 +83,7 @@
 
             <EditText
                 android:id="@+id/etNombre"
+                android:maxLength="60"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autofillHints="name"
@@ -100,6 +101,7 @@
 
                 <EditText
                     android:id="@+id/etCorreo"
+                    android:maxLength="100"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="emailAddress"
@@ -108,6 +110,7 @@
 
                 <EditText
                     android:id="@+id/etContrasena"
+                    android:maxLength="64"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="newPassword"
@@ -123,6 +126,7 @@
 
                 <EditText
                     android:id="@+id/etConfirmar"
+                    android:maxLength="64"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="newPassword"
@@ -146,7 +150,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Datos de la óptica" />
 
-                <!-- Logotipo en un mosaico lila, como los productos del diseño -->
+                <!-- Logotipo en un mosaico lila, igual que las fotos de productos -->
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Tarjeta.Mosaico"
                     android:layout_width="match_parent"
@@ -210,6 +214,7 @@
 
                 <EditText
                     android:id="@+id/etOpticaNombre"
+                    android:maxLength="60"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nombre comercial"
@@ -218,10 +223,12 @@
 
                 <EditText
                     android:id="@+id/etTelefono"
+                    android:maxLength="10"
+                    android:digits="0123456789"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="phone"
-                    android:hint="Teléfono"
+                    android:hint="Teléfono (10 dígitos)"
                     android:inputType="phone" />
 
                 <Spinner
@@ -231,6 +238,7 @@
 
                 <EditText
                     android:id="@+id/etDireccion"
+                    android:maxLength="150"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="postalAddress"
@@ -239,6 +247,7 @@
 
                 <EditText
                     android:id="@+id/etMeta"
+                    android:maxLength="10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Meta de ventas semanal ($)"
@@ -271,6 +280,8 @@
 
                 <EditText
                     android:id="@+id/etCodigo"
+                    android:maxLength="10"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_llave"

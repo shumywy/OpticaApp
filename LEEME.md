@@ -1,266 +1,325 @@
-# Óptica App — proyecto de Android Studio
+# Óptica App
 
-App en Java + XML. Usa una sola Activity, 15 Fragments y Firebase (Auth, Firestore, Storage).
+Aplicación móvil para Android orientada a la gestión de ópticas. Integra expedientes clínicos con graduación, inventario, punto de venta, órdenes de laboratorio y administración del personal, con sincronización en tiempo real mediante Firebase.
 
-## Diseño (estilo "catálogo")
+| | |
+|---|---|
+| **Asignatura** | Taller de Desarrollo de Aplicaciones Móviles |
+| **Integrantes** | Gilberto Navarrete García · Luisa Fernanda Mancilla Portillo |
+| **Plataforma** | Android 8.0 (API 26) o superior · `compileSdk` 36 |
+| **Lenguaje** | Java 11 y XML |
+| **Bibliotecas** | Material Components 3, Navigation Component 2.9, ViewBinding, Glide 4.16, Credential Manager |
+| **Servicios** | Firebase Authentication y Cloud Firestore (plan gratuito Spark) |
+| **Paquete** | `mx.itch.opticaapp` |
 
-Basado en la referencia de la tienda de lentes:
+---
 
-- **Fondo en degradado lila → rosa** detrás de todo. Arriba de cada pantalla va un texto chico en negritas y un **título enorme y delgado** (como "Chimi Eyewear / Collection").
-- **Hoja blanca** con las esquinas de arriba muy redondeadas, donde va el contenido (`bg_hoja`).
-- **Textos principales en índigo oscuro** (`#1E1B4B`), **etiquetas e instrucciones en gris neutro** (`#64748B`) y en formato normal (sin mayúsculas ni espaciado extra), **botón principal azul cielo** con sombra azul.
-- **Píldoras de rol** en violeta suave (fondo `#EDE9FE`, texto `#5B21B6`), iguales en el panel, el menú lateral, Mi perfil y Personal (`Texto.Pildora.Rol`).
-- **Mosaicos lila** para productos e indicadores, **pestañas subrayadas** con un punto bajo la elegida (como "BLACK LENS · CLEAR LENS") y un **contador con línea** ("08/24").
-- **Íconos de línea delgada**. La barra superior es transparente y solo lleva íconos: ⁘ abre el menú lateral y ‹ regresa.
+## Contenido
 
-Dónde se cambia:
+1. [Funcionalidades](#1-funcionalidades)
+2. [Roles y permisos](#2-roles-y-permisos)
+3. [Instalación y configuración](#3-instalación-y-configuración)
+4. [Arquitectura](#4-arquitectura)
+5. [Validación de datos](#5-validación-de-datos)
+6. [Datos almacenados en Firebase](#6-datos-almacenados-en-firebase)
+7. [Seguridad](#7-seguridad)
+8. [Interfaz de usuario](#8-interfaz-de-usuario)
+9. [Limitaciones conocidas](#9-limitaciones-conocidas)
+10. [Licencias](#10-licencias)
 
-- Colores: `res/values/colors.xml` (claro) y `res/values-night/colors.xml` (oscuro). Por ejemplo, `cielo` es el botón principal y `degradado_*` el fondo.
-- Fuente: una sola familia, **Lexend** (en `res/font`, licencia libre OFL, ver `licencias/OFL_Lexend.txt`), en cuatro grosores:
-  - `lexend_light` para los títulos grandes.
-  - `lexend_regular` para el texto normal.
-  - `lexend_medium` para nombres, etiquetas, botones y menús.
-  - `lexend_semibold` para títulos de sección ("Resumen de hoy", "Equipo") y precios.
-- Estilos reutilizables: `res/values/styles.xml`.
-  - Textos: `Texto.Hero`, `Texto.Eyebrow`, `Texto.Categoria`, `Texto.Titulo`, `Texto.Seccion`, `Texto.Precio`.
-  - Campos y botones: `Campo`, `Campo.Busqueda`, `Boton`.
-  - Contenedores y controles: `Tarjeta.Mosaico`, `Tarjeta.Cristal`, `Segmento`, `Filtro`.
-- Tema: `res/values/themes.xml`.
-- Para ver cada pantalla sin ejecutar la app, abre su layout y elige la pestaña **Design** o **Split**: los textos de ejemplo vienen de `tools:text`.
+---
 
-## 1. Abrir el proyecto
+## 1. Funcionalidades
 
-1. Android Studio > **File > Open** > elige la carpeta `OpticaApp`.
-2. Espera a que termine el **Gradle Sync**. Si Android Studio ofrece actualizar el plugin de Android (AGP), puedes aceptar.
+| Módulo | Descripción |
+|--------|-------------|
+| **Acceso** | Inicio de sesión con correo y contraseña o con cuenta de Google; recuperación de contraseña por correo. |
+| **Registro** | Alta de una óptica nueva (el usuario queda como administrador) o incorporación a una existente mediante código de invitación. |
+| **Panel** | Avance de la meta semanal de ventas, ventas y pacientes del día, órdenes pendientes y productos con existencias bajas. |
+| **Pacientes** | Alta y edición de datos (nombre, teléfono y edad), búsqueda por nombre o teléfono, orden por fecha o alfabético y fichas con la última consulta y la graduación vigente. |
+| **Expediente clínico** | Registro de consultas (esfera, cilindro, eje, adición, distancia pupilar, agudeza visual, tipo de lente), historial y receta en PDF. |
+| **Inventario** | Catálogo con fotografía, búsqueda, alta, edición y baja de productos, y alerta de existencias mínimas. El detalle de cada producto muestra sus características, variantes de color (con alta de colores exactos) y la opción de estampar el logotipo de la óptica con un costo adicional. |
+| **Punto de venta** | Carrito, anticipo y saldo, método de pago, descuento automático de existencias, nota de venta en PDF y orden de laboratorio opcional. |
+| **Laboratorio** | Seguimiento de órdenes en cuatro etapas: Enviado, En proceso, Recibido y Entregado, con la fecha de cada una. |
+| **Administración** | Datos y logotipo de la óptica, personal y roles, creación de cuentas para el equipo y corte de caja del día. El logotipo aparece en el detalle de los productos y en las recetas y notas de venta en PDF. |
+| **Configuración** | Tema claro, oscuro o del sistema, texto grande, modo sin imágenes y fondo de pantalla. |
 
-> **Antes de compilar se necesita `app/google-services.json`.** Sin ese archivo, la compilación falla con el error
-> *"File google-services.json is missing"*. Ese archivo es de tu proyecto de Firebase y no viene incluido (paso 2).
+## 2. Roles y permisos
 
-## 2. Configurar Firebase (una sola vez)
+| Función | Administrador | Optometrista | Vendedor |
+|---------|:---:|:---:|:---:|
+| Panel | ✓ | ✓ (indicadores clínicos) | ✓ (indicadores de venta) |
+| Pacientes: consultar | ✓ | ✓ | ✓ |
+| Pacientes: registrar, editar datos y capturar graduación | ✓ | ✓ | — |
+| Inventario y punto de venta | ✓ | — | ✓ |
+| Agregar o quitar variantes de color | ✓ | — | ✓ |
+| Eliminar productos | ✓ | — | — |
+| Subir o cambiar el logotipo de la óptica | ✓ | — | — |
+| Laboratorio: consultar y actualizar estatus | ✓ | ✓ | ✓ |
+| Laboratorio: crear órdenes manuales | ✓ | — | ✓ |
+| Menú **Administración** | ✓ | — | — |
+| Mi perfil y Configuración | ✓ | ✓ | ✓ |
 
-1. Entra a <https://console.firebase.google.com> y crea un proyecto.
-2. Agrega una app **Android** con el paquete `mx.itch.opticaapp`.
-3. Descarga `google-services.json` y cópialo dentro de la carpeta `app/`.
-4. **Authentication > Sign-in method**: activa **Correo electrónico/contraseña** y **Google**.
-   - Para Google también debes registrar la huella **SHA-1** de tu computadora: en Android Studio abre la terminal y ejecuta
-     `./gradlew signingReport` (en Windows: `gradlew signingReport`). Copia el SHA-1 de *debug* en
-     **Configuración del proyecto > Tus apps > Agregar huella digital**.
-   - Después vuelve a descargar `google-services.json` y reemplaza el anterior.
-5. **Firestore Database**: créala (modo producción) y en la pestaña **Reglas** pega el contenido de `firebase/firestore.rules`.
-6. **Storage**: créalo y en **Reglas** pega `firebase/storage.rules`.
-   - Desde febrero de 2026, Firebase solo da Storage a proyectos con **plan Blaze** (pide tarjeta, pero tiene una capa gratuita:
-     5 GB guardados y 100 GB de descarga al mes). Sin Storage la app funciona, pero no se suben las fotos de perfil, logotipos ni productos.
+El dueño de la óptica (quien la registró) siempre conserva el rol de administrador.
 
-## 3. Probar
+## 3. Instalación y configuración
 
-1. Ejecuta la app en un emulador o teléfono (Android 8.0 o superior).
-2. **Registrar mi óptica**: crea la cuenta del dueño (queda como Administrador).
-3. Para dar de alta a tu equipo tienes dos caminos (menú lateral → **Administración**):
-   - **Nueva cuenta**: escribes nombre, correo, contraseña temporal y puesto, y la cuenta queda lista sin que tú salgas de la tuya.
-   - **Datos de la óptica** → copia o comparte el **código de invitación**; en otro teléfono la persona elige **Unirme con código**, lo pega y elige su puesto.
+### 3.1 Requisitos
 
-## Pantallas y dónde está su código
+- Android Studio (versión reciente compatible con AGP 8.13).
+- Un proyecto de Firebase con acceso a la consola.
+- Emulador o dispositivo con Android 8.0 o superior. El inicio de sesión con Google requiere Google Play Services.
 
-| # | Pantalla | Archivo Java | Layout |
-|---|----------|--------------|--------|
-| 1 | Inicio de sesión | `ui/login/LoginFragment` | `fragment_login.xml` |
-| 2 | Registro de óptica / unirse con código | `ui/registro/RegistroFragment` | `fragment_registro.xml` |
-| 3 | Panel principal (avance semanal) | `ui/panel/PanelFragment` | `fragment_panel.xml` |
-| 4 | Pacientes | `ui/pacientes/PacientesFragment` | `fragment_pacientes.xml` |
-| 5 | Expediente y graduación | `ui/expediente/ExpedienteFragment` | `fragment_expediente.xml` |
-| 6 | Inventario en catálogo (+ formulario de producto) | `ui/inventario/InventarioFragment`, `ProductoFormFragment` | `fragment_inventario.xml`, `item_producto.xml`, `fragment_producto_form.xml` |
-| 6b | Detalle de producto (botón **Vender**) | `ui/inventario/ProductoDetalleFragment` | `fragment_producto_detalle.xml` |
-| 7 | Punto de venta | `ui/venta/VentaFragment` | `fragment_venta.xml` |
-| 8 | Órdenes de laboratorio | `ui/laboratorio/LaboratorioFragment` | `fragment_laboratorio.xml` |
-| 9 | Configuración (tema, texto grande, fondo, cerrar sesión) | `ui/ajustes/AjustesFragment` | `fragment_ajustes.xml` |
-| 10 | Mi perfil (foto, nombre, contraseña) | `ui/administracion/PerfilFragment` | `fragment_perfil.xml` |
-| 11 | Datos de la óptica (datos, meta, logotipo, código) | `ui/administracion/OpticaFragment` | `fragment_optica.xml` |
-| 12 | Personal (equipo y roles) | `ui/administracion/PersonalFragment`, `PersonalAdapter` | `fragment_personal.xml`, `item_persona.xml` |
-| 13 | Nueva cuenta | `ui/administracion/NuevaCuentaFragment` | `fragment_nueva_cuenta.xml` |
-| — | Corte de caja (diálogo) | `ui/administracion/CorteDeCaja` | — |
+### 3.2 Configuración de Firebase
 
-Otros archivos importantes:
+1. En <https://console.firebase.google.com>, crear un proyecto y registrar una aplicación **Android** con el paquete `mx.itch.opticaapp`.
+2. Descargar `google-services.json` y colocarlo en la carpeta `app/`. Sin este archivo la compilación falla con el mensaje *"File google-services.json is missing"*.
+3. En **Authentication › Método de acceso**, habilitar **Correo electrónico/contraseña** y **Google**.
+   - Para Google es necesario registrar la huella SHA-1 del equipo de desarrollo. Se obtiene con `./gradlew signingReport` (en Windows, `gradlew signingReport`) y se agrega en **Configuración del proyecto › Tus apps › Agregar huella digital**. Después se vuelve a descargar `google-services.json`.
+4. En **Firestore Database**, crear la base de datos en modo producción y publicar en la pestaña **Reglas** el contenido de `firebase/firestore.rules`.
 
-- `MainActivity` — barra superior, barra inferior, menú lateral y navegación (`res/navigation/nav_graph.xml`).
+No es necesario habilitar Cloud Storage ni contratar el plan Blaze: las fotografías se almacenan comprimidas dentro de Firestore (sección 6.3).
 
-### Panel con efecto de vidrio
+### 3.3 Compilación y primer uso
 
-El Inicio (`fragment_panel.xml`) lleva unos lentes grandes que flotan detrás del contenido. La tarjeta de avance y los mosaicos son de "vidrio": blanco translúcido con borde fino, así que se ven los lentes a través.
+1. Abrir la carpeta `OpticaApp` en Android Studio (**File › Open**) y esperar la sincronización de Gradle.
+2. Ejecutar la aplicación en el emulador o dispositivo.
+3. Seleccionar **Registrar mi óptica** para crear la cuenta del dueño, que queda como administrador.
+4. Incorporar al personal por cualquiera de estas vías, ambas en el menú lateral › **Administración**:
+   - **Nueva cuenta**: el administrador captura nombre, correo, contraseña temporal y puesto, sin cerrar su propia sesión.
+   - **Datos de la óptica**: se comparte el código de invitación; la persona elige **Unirme con código** en su dispositivo.
 
-- `ui/panel/FondoLentes.java` dibuja la imagen dos veces en el mismo lugar:
-  - `drawable-nodpi/lentes_hero.webp` (nítida) **fuera** de la hoja.
-  - `drawable-nodpi/lentes_hero_difuso.webp` (desenfocada) **dentro** de la hoja.
+## 4. Arquitectura
 
-  Así parece vidrio esmerilado en cualquier versión de Android, sin librerías.
-- Los lentes nunca se quedan quietos (`FondoLentes`):
-  - **Entrada**: llegan desde la derecha con un pequeño rebote.
-  - **Balanceo**: flotan arriba y abajo y se ladean apenas (±2.5°) en un ciclo de 6 s.
-  - **Destello**: una vez por ciclo pasa un brillo diagonal por los cristales, como luz sobre el acetato.
-  - **Inclinación**: con el acelerómetro se mueven unos 16 dp hacia donde inclinas el teléfono (efecto de profundidad).
-  - **Toque**: al tocarlos dan una vuelta completa y un saltito.
+La aplicación usa una sola `Activity` (`MainActivity`) con 15 `Fragment` conectados por Navigation Component (`res/navigation/nav_graph.xml`). Las vistas se enlazan con ViewBinding y los datos se leen con *listeners* de Firestore en tiempo real.
 
-  Todo se pausa al salir de la pantalla y se apaga si el teléfono tiene las animaciones desactivadas. Las constantes (`CICLO_MS`, `GIRO_GRADOS`, `INCLINACION_DP`…) están al principio de la clase.
-- La etiqueta "Óptica · Rol" va en una píldora de vidrio blanca (`Texto.Categoria.Pildora`) para que se lea encima de los lentes.
-- Fondos: `bg_vidrio`, `bg_vidrio_mosaico`, `bg_hoja_vidrio` y `bg_aurora` (resplandor morado). Sus colores (`vidrio_*`, `hoja_vidrio_*`, `aurora_*`) tienen versión para modo oscuro.
-- Para cambiar la imagen, reemplaza los dos `.webp` por otra imagen con fondo transparente (y una copia borrosa). El tamaño se ajusta con `ESCALA` y la altura con `SOBRE_EL_ANCLA` en `FondoLentes`.
-
-### Animaciones
-
-**Entre pantallas** (`res/anim`, usadas en `nav_graph.xml` y en `MainActivity.navegarSeccion()`):
-
-| Cuándo | Animación |
-|--------|-----------|
-| Cambiar de sección (barra inferior, menú lateral, mosaicos del panel) | La pantalla anterior se desvanece y la nueva aparece creciendo un poco (`nav_seccion_entrar` / `nav_seccion_salir`) |
-| Abrir un detalle o formulario (expediente, producto, registro, pantallas del menú lateral) | Entra desde la derecha; al regresar sale hacia la derecha (`nav_entrar`, `nav_salir`, `nav_regresar_*`) |
-
-**Dentro de cada fragmento** (`util/Animaciones.java`, se llama al final de `onViewCreated`):
-
-- Todas: el título sobre el degradado baja en cascada y la hoja blanca sube.
-- Además, cada pantalla anima sus propias piezas:
-
-| Pantalla | Además… |
-|----------|---------|
-| Inicio de sesión / Registro | Solo título en cascada y hoja |
-| Panel | Íconos de arriba en cascada, tarjeta de avance crece, mosaicos uno tras otro y la barra de avance se llena |
-| Pacientes / Laboratorio | Renglones uno tras otro (`anim/lista_entrada`) y el botón + con rebote |
-| Inventario | Mosaicos del catálogo uno tras otro y el botón + |
-| Expediente | Iniciales con rebote e historial uno tras otro |
-| Detalle de producto | La foto crece y el pie con el precio sube al final |
-| Punto de venta | El pie con el total sube; los productos del carrito aparecen y se desvanecen al agregar o quitar |
-| Formulario de producto | Foto, botones y título en cascada |
-| Mi perfil / Datos de la óptica | La foto o el logotipo crece y el botón de cámara aparece después |
-| Personal | Renglones uno tras otro y el botón + con rebote |
-| Configuración / Nueva cuenta | Solo título en cascada y hoja |
-
-- La entrada se hace solo la primera vez: al volver con "atrás" no se repite.
-- Si el teléfono tiene las animaciones desactivadas (Opciones de desarrollador → Escala de animación), todo aparece al instante.
-
-### Detalle de producto
-
-Al tocar un mosaico del inventario se abre el detalle: foto grande, categoría, nombre, descripción y existencias, que se actualizan en tiempo real.
-
-- **Vender** abre Punto de venta con ese producto ya agregado al carrito (argumento `productoId` de `VentaFragment`).
-- El lápiz abre el formulario para editarlo. Si el producto se elimina, el detalle se cierra solo.
-
-### Menú lateral (Navigation Drawer)
-
-Se abre deslizando desde la orilla izquierda, con el botón ☰ de la barra superior o con el botón ☰ del panel.
-
-- `activity_main.xml` — el `DrawerLayout` contiene el contenido normal y el `NavigationView` (el panel que sale).
-- `nav_header.xml` — encabezado con foto, nombre, correo y "Óptica · Rol". `MainActivity.escucharUsuario()` lo llena con un listener en tiempo real sobre `users/{uid}` en Firestore: si cambias la foto en Mi perfil, el menú se actualiza solo. Tocar el encabezado abre Mi perfil.
-- `menu/menu_lateral.xml` — el menú lateral es para **cuenta y administración**; las secciones de trabajo (Inicio, Pacientes, Inventario, Ventas, Laboratorio) se quedan en la barra inferior:
-
-  | Grupo | Opciones | Quién lo ve |
-  |-------|----------|-------------|
-  | Mi cuenta | Mi perfil · Configuración | Todos |
-  | **Administración** | Datos de la óptica · Personal · Nueva cuenta · Corte de caja | Solo administrador |
-  | — | Cerrar sesión | Todos |
-
-- Sus `id` son los destinos del `nav_graph`. Todas llevan `menuCategory="secondary"`: se abren encima de la sección donde estabas y "atrás" regresa a ella; si pasas de una pantalla del menú a otra, la nueva reemplaza a la anterior para que no se amontonen. `MainActivity.marcarMenuLateral()` marca la opción de la pantalla actual (incluido el submenú de Administración).
-- **Nueva cuenta** crea la cuenta en una segunda instancia de Firebase (`"altas"`), así el administrador no pierde su sesión. Esa instancia guarda `users/{uid}` con el código de invitación de la óptica, igual que si la persona se uniera sola, por eso las reglas de Firestore no cambian. Si el documento no se puede guardar, la cuenta se borra para poder intentarlo de nuevo.
-- **Personal** escucha en tiempo real a la gente de la óptica. Al tocar a alguien: cambiar su rol o mandarle el correo para crear otra contraseña. Nadie puede cambiar su propio rol.
-- **Corte de caja** suma las ventas del día y el dinero cobrado por método de pago.
-- Está bloqueado en el inicio de sesión y el registro. "Atrás" con el menú abierto lo cierra.
-- "Cerrar sesión" pide confirmación y usa `MainActivity.cerrarSesion()`, que también usa Configuración.
-- `data/Sesion` — usuario y óptica que iniciaron sesión, y las colecciones de esa óptica.
-- `data/Preferencias` — tema, modo sin imágenes, texto grande y fondo de pantalla (SharedPreferences).
-- `model/` — clases que Firestore convierte en documentos (Usuario, Optica, Paciente, Consulta, Producto, Venta, Orden).
-- `util/Validaciones` — reglas de contraseña segura y rangos de la graduación.
-- `util/Imagenes` — cámara, subida a Storage y carga con Glide.
-- `util/Pdf` — receta y nota de venta en PDF con la clase `PdfDocument` de Android.
-
-## Qué se sube a Firebase
-
-Todo sale del código de la app; no hay Cloud Functions ni otro servidor.
-
-### Authentication
-
-| Cuándo | Qué se crea o usa |
-|--------|-------------------|
-| Registro con correo | Cuenta con **correo y contraseña** (`createUserWithEmailAndPassword`). La contraseña la guarda Firebase cifrada; la app nunca la escribe en Firestore. |
-| Entrar con Google | Cuenta de Google ligada al proyecto (nombre, correo y foto que da Google se quedan en Auth, no en Firestore). |
-| Administración · Nueva cuenta | Cuenta con correo y contraseña creada por el administrador desde la instancia secundaria `"altas"`. |
-| "Olvidé mi contraseña", Mi perfil, Personal | Solo piden a Firebase que **mande un correo** para crear otra contraseña. |
-
-### Firestore
-
-Los documentos se guardan con todos los campos de su clase en `model/` (los que no se llenan van como `null`). El `id` no se guarda como campo: es el nombre del documento.
+### 4.1 Estructura de paquetes
 
 ```
-users/{uid}                            ← model/Usuario
-  nombre, email (texto)
-  rol: "ADMIN" | "OPTOMETRISTA" | "VENDEDOR"
-  opticaId, codigoUsado (texto; codigoUsado vacío para el dueño)
-  fotoUrl (URL de Storage o vacío)
+mx.itch.opticaapp
+├── MainActivity        Barra superior, barra inferior, menú lateral y navegación
+├── OpticaApp           Clase Application (aplica el tema guardado)
+├── data/
+│   ├── Sesion          Usuario y óptica de la sesión; referencias a sus colecciones
+│   └── Preferencias    Preferencias locales (SharedPreferences)
+├── model/              Clases que Firestore convierte en documentos
+├── ui/                 Un paquete por módulo (Fragment y Adapter)
+└── util/
+    ├── Validaciones    Reglas de validación de formularios
+    ├── Formato         Moneda, números, teléfonos e iniciales
+    ├── Fechas          Formatos de fecha e intervalos (día, semana)
+    ├── Imagenes        Cámara, compresión de fotografías y carga con Glide
+    ├── SelectorDeFoto  Diálogo "Tomar foto / Elegir de la galería" reutilizable
+    ├── Aviso           Aviso flotante de confirmación ("Producto guardado")
+    ├── Pdf             Receta y nota de venta con PdfDocument
+    ├── Animaciones     Animaciones de entrada de cada pantalla
+    └── AlEscribir      TextWatcher simplificado
+```
+
+### 4.2 Navegación
+
+- **Barra inferior:** Inicio, Pacientes, Inventario, Ventas y Laboratorio. Cada sección conserva su propio historial.
+- **Menú lateral:** Mi perfil, Configuración, el grupo Administración (solo administrador) y Cerrar sesión. Sus pantallas se abren sobre la sección actual y el botón Atrás regresa a ella.
+- La navegación está bloqueada en el inicio de sesión y el registro, y se reinicia al iniciar o cerrar sesión.
+
+### 4.3 Pantallas
+
+| # | Pantalla | Clase | Layout |
+|---|----------|-------|--------|
+| 1 | Inicio de sesión | `ui/login/LoginFragment` | `fragment_login.xml` |
+| 2 | Registro y unión con código | `ui/registro/RegistroFragment` | `fragment_registro.xml` |
+| 3 | Panel principal | `ui/panel/PanelFragment`, `FondoLentes` | `fragment_panel.xml` |
+| 4 | Pacientes (alta y edición en `DialogoPaciente`) | `ui/pacientes/PacientesFragment`, `PacientesAdapter`, `DialogoPaciente` | `fragment_pacientes.xml`, `item_paciente.xml`, `dialog_paciente.xml` |
+| 5 | Expediente clínico | `ui/expediente/ExpedienteFragment`, `ConsultasAdapter` | `fragment_expediente.xml` |
+| 6 | Inventario | `ui/inventario/InventarioFragment`, `ProductosAdapter` | `fragment_inventario.xml`, `item_producto.xml` |
+| 7 | Detalle de producto | `ui/inventario/ProductoDetalleFragment`, `MuestraColor` | `fragment_producto_detalle.xml`, `item_color.xml`, `item_etiqueta.xml`, `dialog_color.xml` |
+| 8 | Alta y edición de producto | `ui/inventario/ProductoFormFragment` | `fragment_producto_form.xml` |
+| 9 | Punto de venta | `ui/venta/VentaFragment`, `CarritoAdapter` | `fragment_venta.xml` |
+| 10 | Órdenes de laboratorio | `ui/laboratorio/LaboratorioFragment`, `OrdenesAdapter` | `fragment_laboratorio.xml` |
+| 11 | Configuración | `ui/ajustes/AjustesFragment` | `fragment_ajustes.xml` |
+| 12 | Mi perfil | `ui/administracion/PerfilFragment` | `fragment_perfil.xml` |
+| 13 | Datos de la óptica | `ui/administracion/OpticaFragment` | `fragment_optica.xml` |
+| 14 | Personal | `ui/administracion/PersonalFragment`, `PersonalAdapter` | `fragment_personal.xml`, `item_persona.xml` |
+| 15 | Nueva cuenta | `ui/administracion/NuevaCuentaFragment` | `fragment_nueva_cuenta.xml` |
+| — | Corte de caja (diálogo) | `ui/administracion/CorteDeCaja` | — |
+
+### 4.4 Detalle de producto
+
+- **Características:** se capturan en el formulario separadas por coma y se muestran como etiquetas.
+- **Variantes de color:** carrusel de círculos con nombre y código hexadecimal. El color elegido se marca con un anillo doble y una textura de tela (`MuestraColor`). Administrador y vendedor pueden agregar un color exacto (`#RRGGBB`, con vista previa) o quitarlo manteniendo presionado el círculo.
+- **Personalización:** si el producto lo permite, un interruptor agrega el estampado del logotipo de la óptica y su costo al precio. El administrador puede subir o cambiar el logotipo desde ahí mismo.
+- **Venta:** "Vender" agrega al carrito el producto con el color y el estampado elegidos; cada combinación ocupa su propio renglón (por ejemplo, "Paño · Gris Oxford · logo estampado") y el costo del estampado se suma al precio unitario.
+
+### 4.5 Edición de pacientes
+
+`DialogoPaciente` se usa tanto para el alta como para la edición (botón de lápiz en el expediente o pulsación larga en la lista). La edición solo modifica nombre, teléfono y edad; la graduación y el historial no cambian. Las ventas y órdenes anteriores conservan el nombre con que se registraron.
+
+### 4.6 Creación de cuentas por el administrador
+
+`FirebaseAuth` inicia sesión automáticamente con la cuenta que crea. Para que el administrador no pierda su sesión, **Nueva cuenta** utiliza una segunda instancia de Firebase (`"altas"`) que crea la cuenta, guarda el documento `users/{uid}` con el código de invitación de la óptica y cierra su propia sesión. Si el documento no se puede guardar, la cuenta recién creada se elimina para permitir un nuevo intento.
+
+## 5. Validación de datos
+
+Todas las reglas están centralizadas en `util/Validaciones`. Cada formulario revisa todos sus campos a la vez y marca cada error en su propio campo. Además, los layouts limitan la entrada con `android:maxLength` y, cuando aplica, con `android:digits`, de modo que el teclado no permite escribir caracteres o longitudes fuera de regla.
+
+| Dato | Regla |
+|------|-------|
+| Nombre de persona | Obligatorio, de 3 a 60 caracteres; solo letras (incluye acentos y ñ), espacios, punto, apóstrofo y guion. |
+| Nombre de óptica o producto | Obligatorio, de 2 a 60 caracteres, con al menos una letra o número. |
+| Correo electrónico | Obligatorio, formato válido, sin espacios, máximo 100 caracteres. |
+| Contraseña | De 8 a 64 caracteres, con mayúscula, minúscula, número y símbolo, sin espacios. Se confirma en un segundo campo. |
+| Teléfono | **Exactamente 10 dígitos** (lada y número). Se rechazan longitudes distintas y secuencias de un solo dígito repetido. Se almacena solo con dígitos y se muestra como `747 123 4567`. |
+| Dirección | De 5 a 150 caracteres. |
+| Edad | Número entero de 0 a 120. |
+| Código de invitación | Formato `OPT-XXXXXX` (6 letras o números). |
+| Precio | Mayor que $0 y hasta $999,999.99, con un máximo de 2 decimales. |
+| Meta semanal | Opcional, de $0 a $9,999,999.99, con un máximo de 2 decimales. |
+| Existencias / stock mínimo | Enteros de 0 a 99,999 y de 0 a 9,999, respectivamente. |
+| Esfera | Obligatoria, de −20.00 a +20.00 en pasos de 0.25. |
+| Cilindro | Opcional, de −10.00 a +10.00 en pasos de 0.25. |
+| Eje | De 1° a 180°; obligatorio cuando hay cilindro y no permitido sin cilindro. |
+| Adición | De +0.25 a +4.00 en pasos de 0.25; obligatoria en al menos un ojo para lentes bifocales y progresivos. |
+| Distancia pupilar | Opcional, de 40 a 80 mm en pasos de 0.5. |
+| Agudeza visual | Opcional, notación de Snellen (por ejemplo, `20/40`). |
+| Observaciones, descripciones | Máximo 500 y 300 caracteres, respectivamente. |
+| Características de producto | Hasta 5, separadas por coma, de 2 a 20 caracteres cada una; se eliminan repetidas. |
+| Nombre de color | De 2 a 20 caracteres (letras, números y espacios); no se repite en el mismo producto. |
+| Código de color | Formato hexadecimal `#RRGGBB`; no se repite en el mismo producto. |
+| Costo del estampado | De $0 a $9,999.99, con un máximo de 2 decimales. |
+| Números en general | Se aceptan coma o punto decimal; se rechazan expresiones como `NaN`, `Infinity` o notación científica. |
+
+Verificaciones adicionales de consistencia:
+
+- **Pacientes duplicados:** al registrar o editar, si ya existe otro paciente con el mismo teléfono o el mismo nombre, se solicita confirmación antes de guardar. Si en la edición no cambió ningún dato, no se escribe en la base de datos.
+- **Productos duplicados:** no se permiten dos productos con el mismo nombre en el inventario.
+- **Venta:** la cantidad no puede superar las existencias (considerando lo que ya está en el carrito); el anticipo no puede ser negativo ni mayor que el total; un saldo pendiente y una orden de laboratorio requieren un paciente registrado.
+- **Nueva cuenta:** no se permite usar el correo del propio administrador; los correos ya registrados se rechazan.
+- **Personal:** nadie puede cambiar su propio rol ni el del dueño de la óptica.
+- **Mi perfil:** no se escribe en la base de datos si el nombre no cambió.
+
+## 6. Datos almacenados en Firebase
+
+La aplicación no utiliza servidores propios ni Cloud Functions: todas las escrituras se realizan desde el cliente y están sujetas a las reglas de seguridad (sección 7).
+
+### 6.1 Authentication
+
+| Origen | Información |
+|--------|-------------|
+| Registro con correo y Nueva cuenta | Cuenta de correo y contraseña. La contraseña la administra Firebase de forma cifrada; nunca se escribe en Firestore. |
+| Inicio con Google | Cuenta de Google vinculada al proyecto. |
+| Recuperar o cambiar contraseña | Solicitud a Firebase para enviar un enlace de restablecimiento al correo. |
+
+### 6.2 Cloud Firestore
+
+Cada documento contiene todos los campos públicos de su clase en `model/`; el identificador es el nombre del documento y no se repite como campo.
+
+```
+users/{uid}                                   model/Usuario
+  nombre, email, rol (ADMIN | OPTOMETRISTA | VENDEDOR), opticaId, codigoUsado, fotoUrl
 
 codigos/{OPT-XXXXXX}
-  opticaId                              ← lo crea el dueño al registrar su óptica
+  opticaId
 
-opticas/{opticaId}                     ← model/Optica
-  nombre, telefono, estado, direccion (texto)
-  metaSemanal (número)
-  codigoInvitacion ("OPT-" + 6 letras/números), ownerId (uid del dueño)
-  logoUrl (URL de Storage o vacío)
+opticas/{opticaId}                            model/Optica
+  nombre, telefono, estado, direccion, metaSemanal, codigoInvitacion, ownerId, logoUrl
 
-opticas/{opticaId}/pacientes/{id}      ← model/Paciente
-  nombre, telefono (texto), edad (entero)
-  fechaRegistro (fecha)
-  ultimaConsulta (fecha), resumenGraduacion ("OD -1.25 / OI -1.50")   ← null hasta la primera consulta
+opticas/{opticaId}/pacientes/{id}             model/Paciente
+  nombre, telefono, edad, fechaRegistro, ultimaConsulta, resumenGraduacion
 
-opticas/{opticaId}/pacientes/{id}/consultas/{id}   ← model/Consulta
-  fecha
-  odEsfera, odCilindro, odAdicion, oiEsfera, oiCilindro, oiAdicion, distanciaPupilar (número)
-  odEje, oiEje (entero)
-  agudezaVisual, tipoLente, observaciones (texto)
-  optometristaId, optometristaNombre
+opticas/{opticaId}/pacientes/{id}/consultas/{id}   model/Consulta
+  fecha, odEsfera, odCilindro, odEje, odAdicion, oiEsfera, oiCilindro, oiEje, oiAdicion,
+  distanciaPupilar, agudezaVisual, tipoLente, observaciones, optometristaId, optometristaNombre
 
-opticas/{opticaId}/productos/{id}      ← model/Producto
-  nombre, categoria, descripcion (texto)
-  precio (número), stock, stockMinimo (entero)
-  fotoUrl (URL de Storage o vacío)
+opticas/{opticaId}/productos/{id}             model/Producto
+  nombre, categoria, descripcion, precio, stock, stockMinimo, fotoUrl,
+  etiquetas [texto], colores [{nombre, hex}], personalizable, costoPersonalizacion
 
-opticas/{opticaId}/ventas/{id}         ← model/Venta
-  pacienteId ("" si es público en general), pacienteNombre
-  items: lista de { productoId, nombre, categoria, precio, cantidad }
-  total, anticipo, saldo (número), metodoPago ("Efectivo" | "Tarjeta" | "Transferencia")
-  vendedorId, vendedorNombre, fecha
+opticas/{opticaId}/ventas/{id}                model/Venta
+  pacienteId, pacienteNombre, items [{productoId, nombre, categoria, precio, cantidad}],
+  total, anticipo, saldo, metodoPago, vendedorId, vendedorNombre, fecha
 
-opticas/{opticaId}/ordenes/{id}        ← model/Orden
-  ventaId ("" si se creó a mano), pacienteId, pacienteNombre, descripcion
-  estatus: "ENVIADO" | "EN_PROCESO" | "RECIBIDO" | "ENTREGADO"
+opticas/{opticaId}/ordenes/{id}               model/Orden
+  ventaId, pacienteId, pacienteNombre, descripcion, estatus (ENVIADO | EN_PROCESO | RECIBIDO | ENTREGADO),
   fechaCreacion, fechaEnvio, fechaEnProceso, fechaRecibido, fechaEntregado
 ```
 
-Escrituras que cambian solo algunos campos:
+Operaciones compuestas, ejecutadas en un solo lote (`WriteBatch`) para que se apliquen completas o no se apliquen:
 
-| Pantalla | Qué cambia |
-|----------|------------|
-| Punto de venta | En una sola escritura: crea la venta, resta `stock` a cada producto vendido (`FieldValue.increment`) y, si se pidió, crea la orden. |
-| Expediente | En una sola escritura: crea la consulta y actualiza `ultimaConsulta` y `resumenGraduacion` del paciente. |
-| Laboratorio | `estatus` y la fecha de esa etapa (`fechaEnProceso`, etc.). |
-| Mi perfil | `nombre` y `fotoUrl` del propio usuario. |
-| Datos de la óptica | `nombre`, `telefono`, `estado`, `direccion`, `metaSemanal` y `logoUrl`. |
-| Personal | `rol` de otra persona (solo administrador). |
-| Inventario | Crear, editar (documento completo) o **borrar** un producto. Es lo único que la app borra en Firestore. |
+| Operación | Escrituras |
+|-----------|-----------|
+| Registro de óptica | Documento de la óptica, código de invitación y usuario administrador. |
+| Venta | Documento de la venta, resta de existencias por producto (`FieldValue.increment`) y, si se solicita, la orden de laboratorio. |
+| Consulta | Documento de la consulta y actualización de `ultimaConsulta` y `resumenGraduacion` del paciente. |
 
-### Storage
+Actualizaciones parciales: datos del paciente (`nombre`, `telefono`, `edad`), estatus de órdenes, rol del personal, datos y logotipo de la óptica, y variantes de color de un producto (`FieldValue.arrayUnion` / `arrayRemove`).
 
-| Ruta | Qué es | Quién la sube |
-|------|--------|---------------|
-| `users/{uid}/perfil.jpg` | Foto de perfil | Cada usuario, desde Mi perfil |
-| `opticas/{opticaId}/logo.jpg` | Logotipo | El dueño al registrarse o el administrador en Datos de la óptica |
-| `opticas/{opticaId}/productos/{productoId}.jpg` | Foto del producto | Quien edita el inventario |
+La única eliminación de documentos que realiza la aplicación es la de productos (solo administrador).
 
-- Antes de subirla, la app convierte cualquier foto (cámara o galería, JPEG, PNG, WebP o HEIC) en un **JPEG de máximo 1600 px y calidad 85** (`util/Imagenes.subir`), normalmente de unos cientos de KB. El original del teléfono no se sube.
-- Cada archivo nuevo **reemplaza** al anterior en la misma ruta. Al borrar un producto, su foto se queda en Storage.
+### 6.3 Fotografías
 
-### Lo que no se sube
+Las fotografías se guardan dentro de Firestore, sin Cloud Storage:
 
-Las preferencias (tema, texto grande, modo sin imágenes), el fondo de pantalla elegido y los PDF de recetas y notas de venta se quedan solo en el teléfono. Los PDF se comparten con el menú de Android, no pasan por Firebase.
+| Campo | Contenido | Lado máximo |
+|-------|-----------|-------------|
+| `users/{uid}.fotoUrl` | Foto de perfil | 320 px |
+| `opticas/{opticaId}.logoUrl` | Logotipo | 400 px |
+| `opticas/{opticaId}/productos/{id}.fotoUrl` | Foto del producto | 640 px |
 
-## Pendientes conocidos
+`Imagenes.convertir()` acepta imágenes de cámara o galería (JPEG, PNG, WebP o HEIC), corrige la orientación, reduce la resolución y comprime en JPEG hasta un máximo de 120 KB. El resultado se guarda como texto `data:image/jpeg;base64,…`, que Glide muestra igual que una URL. El archivo original del dispositivo no se envía. Para los PDF, `Imagenes.decodificar()` convierte el logotipo de nuevo en imagen y se dibuja en la esquina superior derecha.
 
-- **Tema:** el control de Configuración cambia entre claro, oscuro o el del teléfono. Si piden de 3 a 5 combinaciones de color, se agregan como temas extra en `themes.xml`.
-- **Personal:** al unirse con un código, el empleado elige su puesto. Después el administrador puede cambiarlo en *Personal y roles*.
-- **Sin internet:** Firestore guarda lo leído y muestra los datos. Una venta hecha sin conexión se guarda en el teléfono y se sube al volver la red, pero el botón queda en espera mientras tanto.
-- **Existencias:** si dos personas venden la última pieza al mismo tiempo, el stock puede quedar en negativo; la app lo marca como "Agotado".
+### 6.4 Información que permanece en el dispositivo
+
+Preferencias de apariencia (tema, texto grande, modo sin imágenes), el fondo de pantalla elegido y los PDF de recetas y notas de venta. Los PDF se comparten mediante el menú del sistema y no pasan por Firebase.
+
+## 7. Seguridad
+
+Las reglas de `firebase/firestore.rules` establecen:
+
+- Cada usuario puede leer su documento y los de su misma óptica.
+- Un usuario solo puede crearse como administrador de una óptica de la que es dueño, o como optometrista o vendedor con un código de invitación válido para esa óptica.
+- Un usuario puede modificar sus propios datos, pero no su rol ni su óptica; el administrador puede modificar el rol del personal de su óptica.
+- Los códigos de invitación pueden consultarse de uno en uno, pero no listarse.
+- Los datos de cada óptica (pacientes, productos, ventas y órdenes) solo son accesibles para su personal; los datos generales de la óptica solo los modifica su administrador.
+
+## 8. Interfaz de usuario
+
+### 8.1 Sistema visual
+
+| Elemento | Valor |
+|----------|-------|
+| Fondo | Degradado lila a rosa (`degradado_*`); en modo oscuro, azul noche a morado. |
+| Superficies | Hoja blanca con esquinas superiores de 36 dp (`bg_hoja`). |
+| Texto principal | Índigo oscuro `#1E1B4B` (`texto`). |
+| Texto de apoyo | Gris `#64748B` (`texto_secundario`), en formato normal, sin mayúsculas forzadas. |
+| Acción principal | Azul cielo `#3BB4F2` (`cielo`). |
+| Insignias de rol | Fondo `#EDE9FE`, texto `#5B21B6` (`Texto.Pildora.Rol`). |
+| Tipografía | Lexend en cuatro grosores: Light (títulos grandes), Regular (texto), Medium (etiquetas, botones y menús) y SemiBold (títulos de sección, nombres y precios). |
+| Iconografía | Íconos vectoriales de trazo fino (`res/drawable/ic_*`). |
+
+Colores: `res/values/colors.xml` y `res/values-night/colors.xml`. Estilos reutilizables: `res/values/styles.xml`. Tema: `res/values/themes.xml`. Todos los layouts incluyen datos de ejemplo (`tools:text`) para revisarlos en la vista **Design** de Android Studio.
+
+### 8.2 Menú lateral
+
+Fondo de vidrio esmerilado (`bg_menu_vidrio`): degradado lila translúcido, borde blanco fino y esquinas derechas redondeadas. El encabezado muestra la foto con borde translúcido, la insignia de óptica y rol, el nombre y el correo, actualizados en tiempo real desde `users/{uid}`. La opción **Personal** muestra el número de integrantes mediante una consulta de conteo de Firestore. En Android 12 o superior, el contenido detrás del menú se desenfoca mientras está abierto.
+
+### 8.3 Panel principal
+
+`FondoLentes` dibuja la imagen de los lentes dos veces: nítida fuera de la hoja y desenfocada dentro de ella, lo que produce el efecto de vidrio en cualquier versión de Android sin bibliotecas adicionales. La imagen tiene animación de entrada, flotación, destello periódico, desplazamiento según la inclinación del dispositivo (acelerómetro) y giro al pulsarla. Las animaciones se detienen fuera de la pantalla y respetan la opción del sistema que desactiva animaciones.
+
+### 8.4 Animaciones
+
+- **Entre pantallas** (`res/anim`): las secciones cambian con un desvanecimiento y una ligera escala; los detalles y formularios entran desde la derecha.
+- **Dentro de cada pantalla** (`util/Animaciones`): el encabezado aparece en cascada y la hoja sube; las listas muestran sus elementos de forma escalonada. La animación se ejecuta solo la primera vez que se abre cada pantalla.
+
+## 9. Limitaciones conocidas
+
+- Las restricciones por rol se aplican en la interfaz. Las reglas de Firestore limitan el acceso por óptica, pero no distinguen entre optometrista y vendedor dentro de la misma óptica.
+- Las validaciones de formato se realizan en la aplicación; las reglas de Firestore no validan el contenido de cada campo.
+- Si dos usuarios venden la última pieza de un producto al mismo tiempo, las existencias pueden quedar en negativo; la aplicación lo muestra como "Agotado".
+- Las operaciones realizadas sin conexión se guardan en el dispositivo y se sincronizan al recuperar la red; mientras tanto, el botón correspondiente permanece en espera.
+- Al guardar las fotografías dentro de los documentos, cada lectura de una lista también descarga sus imágenes. Para inventarios de varios cientos de productos convendría migrarlas a Cloud Storage.
+
+## 10. Licencias
+
+- **Lexend** — SIL Open Font License 1.1 (`licencias/OFL_Lexend.txt`).
+- Bibliotecas de AndroidX, Material Components, Firebase y Glide — Apache License 2.0.

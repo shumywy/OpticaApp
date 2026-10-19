@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Administración · Nueva cuenta: el administrador registra a alguien de su equipo con correo y contraseña -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- ===== Encabezado sobre el degradado ===== -->
+        <LinearLayout
+            android:id="@+id/encabezado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="28dp">
+
+            <TextView
+                style="@style/Texto.Eyebrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Administración" />
+
+            <TextView
+                style="@style/Texto.Hero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Nueva cuenta" />
+
+            <TextView
+                style="@style/Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Registra a alguien de tu equipo. Entrará con este correo y contraseña." />
+        </LinearLayout>
+
+        <!-- ===== Hoja blanca con el formulario ===== -->
+        <LinearLayout
+            android:id="@+id/hoja"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_hoja"
+            android:divider="@drawable/espacio"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="26dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp"
+            android:showDividers="middle">
+
+            <TextView
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Datos de la persona" />
+
+            <EditText
+                android:id="@+id/etNombre"
+                android:maxLength="60"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre completo"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName|textCapWords" />
+
+            <EditText
+                android:id="@+id/etCorreo"
+                android:maxLength="100"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_correo"
+                android:drawablePadding="12dp"
+                android:drawableTint="@color/texto_secundario"
+                android:hint="Correo electrónico"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/etContrasena"
+                android:maxLength="64"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_candado"
+                android:drawablePadding="12dp"
+                android:drawableTint="@color/texto_secundario"
+                android:hint="Contraseña temporal"
+                android:importantForAutofill="no"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:id="@+id/tvReglas"
+                style="@style/Texto.Secundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp" />
+
+            <EditText
+                android:id="@+id/etConfirmar"
+                android:maxLength="64"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Confirmar contraseña"
+                android:importantForAutofill="no"
+                android:inputType="textPassword" />
+
+            <TextView
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:text="Puesto" />
+
+            <!-- Pestañas subrayadas con el rol -->
+            <RadioGroup
+                android:id="@+id/rgRol"
+                style="@style/Segmentos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp">
+
+                <RadioButton
+                    android:id="@+id/rbOptometrista"
+                    style="@style/Segmento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Optometrista" />
+
+                <RadioButton
+                    android:id="@+id/rbVendedor"
+                    style="@style/Segmento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vendedor" />
+            </RadioGroup>
+
+            <TextView
+                style="@style/Texto.Secundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:text="¿Necesitas otro administrador? Crea la cuenta y luego cambia su rol en Personal." />
+
+            <Button
+                android:id="@+id/btnCrear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Crear cuenta" />
+
+            <ProgressBar
+                android:id="@+id/progreso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:indeterminateTint="@color/cielo"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

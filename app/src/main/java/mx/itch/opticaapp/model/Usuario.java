@@ -18,6 +18,7 @@ public class Usuario {
     public String email;
     public String rol;
     public String opticaId;
+    /** Foto de perfil como texto "data:image/jpeg;base64,..." (máx. 320 px), o vacío. Ver util/Imagenes. */
     public String fotoUrl;
     /** Código con el que se unió a la óptica (vacío para el dueño). Lo revisan las reglas de seguridad. */
     public String codigoUsado;

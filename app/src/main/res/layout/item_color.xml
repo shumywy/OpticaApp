@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Una variante de color del carrusel: círculo y, debajo, nombre y código en dos líneas -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="84dp"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <mx.itch.opticaapp.ui.inventario.MuestraColor
+        android:id="@+id/muestra"
+        android:layout_width="56dp"
+        android:layout_height="56dp" />
+
+    <TextView
+        android:id="@+id/tvNombreColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/lexend_medium"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="@color/texto"
+        android:textSize="11sp"
+        tools:text="Gris Oxford" />
+
+    <TextView
+        android:id="@+id/tvHexColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lexend_regular"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="@color/texto_secundario"
+        android:textSize="10sp"
+        tools:text="#3C434A" />
+</LinearLayout>
