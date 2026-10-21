@@ -300,6 +300,64 @@
                         android:layout_marginStart="6dp"
                         tools:text="Mínimo: 5 piezas" />
                 </LinearLayout>
+
+                <!-- 5. Historial del producto (subcolección movimientos en Firestore) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Texto.Seccion"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Historial"
+                        android:textSize="18sp" />
+
+                    <!-- Estado en Firebase: guardado, pendiente de subir o sin conexión -->
+                    <TextView
+                        android:id="@+id/tvSincronizacion"
+                        style="@style/Texto.Pildora"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_pildora_verde"
+                        android:drawablePadding="6dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/verde"
+                        tools:drawableStart="@drawable/ic_nube"
+                        tools:text="Guardado en Firebase" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvRegistro"
+                    style="@style/Texto.Secundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="12sp"
+                    tools:text="Registrado el 18/10/2026 por Fernanda Mancilla · Última actualización el 20/10/2026 por Luis Pérez" />
+
+                <!-- Los renglones los agrega ProductoDetalleFragment (item_movimiento.xml) -->
+                <LinearLayout
+                    android:id="@+id/contenedorHistorial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:divider="@drawable/divisor_menu"
+                    android:orientation="vertical"
+                    android:showDividers="middle" />
+
+                <TextView
+                    android:id="@+id/tvSinHistorial"
+                    style="@style/Texto.Secundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Sin movimientos registrados todavía."
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

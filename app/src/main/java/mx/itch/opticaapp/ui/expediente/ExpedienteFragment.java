@@ -30,9 +30,11 @@ import mx.itch.opticaapp.R;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentExpedienteBinding;
 import mx.itch.opticaapp.model.Consulta;
+import mx.itch.opticaapp.model.Documento;
 import mx.itch.opticaapp.model.Paciente;
 import mx.itch.opticaapp.ui.pacientes.DialogoPaciente;
 import mx.itch.opticaapp.util.Animaciones;
+import mx.itch.opticaapp.util.Documentos;
 import mx.itch.opticaapp.util.Fechas;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Pdf;
@@ -289,6 +291,8 @@ public class ExpedienteFragment extends Fragment {
         if (c == null) return;
         try {
             File pdf = Pdf.receta(requireContext(), Sesion.getOptica(), paciente, c);
+            // Queda registrada en Firebase (opticas/{id}/documentos) con el PDF incluido
+            Documentos.registrar(pdf, Documento.RECETA, "Receta · " + c.tipoLente, pacienteId, paciente.nombre);
             Pdf.compartir(requireContext(), pdf);
         } catch (IOException e) {
             mensaje("No se pudo crear el PDF: " + e.getMessage());

@@ -20,13 +20,23 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import mx.itch.opticaapp.R;
+import mx.itch.opticaapp.data.Historial;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentProductoFormBinding;
+import mx.itch.opticaapp.model.Movimiento;
 import mx.itch.opticaapp.model.Producto;
+import mx.itch.opticaapp.model.Usuario;
 import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Aviso;
 import mx.itch.opticaapp.util.Formato;
@@ -195,25 +205,20 @@ public class ProductoFormFragment extends Fragment {
                 .addOnFailureListener(e -> error("No se pudo revisar el inventario", e));
     }
 
-    /** Escribe el producto (con su foto nueva, si se eligió una) después de validar. */
+    /** Prepara la foto nueva (si se eligió una) y después escribe el producto. */
     private void guardarProducto(Producto p) {
-        // Si es nuevo, Firestore genera el id aquí mismo
-        DocumentReference ref = productoId != null
-                ? Sesion.coleccion("productos").document(productoId)
-                : Sesion.coleccion("productos").document();
-
         if (fotoNueva == null) {
-            escribir(ref, p);
+            escribir(p);
             return;
         }
         Imagenes.convertir(fotoNueva, Imagenes.LADO_PRODUCTO,
                 datos -> {
                     p.fotoUrl = datos;
-                    escribir(ref, p);
+                    escribir(p);
                 },
                 e -> {
                     mensaje("No se pudo preparar la foto (se guarda sin ella): " + e.getMessage());
-                    escribir(ref, p);
+                    escribir(p);
                 });
     }
 
@@ -228,8 +233,51 @@ public class ProductoFormFragment extends Fragment {
         return error == null;
     }
 
-    private void escribir(DocumentReference ref, Producto p) {
-        ref.set(p)
+    /**
+     * Guarda el producto y su registro en el historial en una sola escritura (WriteBatch).
+     * - Nuevo: documento completo con quién lo registró, y un movimiento ALTA.
+     * - Edición: solo los campos que cambiaron; las existencias con FieldValue.increment para no
+     *   perder una venta hecha al mismo tiempo en otro teléfono; y un movimiento EDICION o AJUSTE.
+     * El aviso "Producto guardado" aparece cuando Firestore confirma que ya está en el servidor.
+     */
+    private void escribir(Producto p) {
+        Usuario u = Sesion.getUsuario();
+        WriteBatch lote = FirebaseFirestore.getInstance().batch();
+
+        if (productoId == null) {
+            DocumentReference ref = Sesion.coleccion("productos").document();
+            p.registradoPorId = u.id;
+            p.registradoPorNombre = u.nombre;
+            p.actualizadoPorId = u.id;
+            p.actualizadoPorNombre = u.nombre;
+            // fechaRegistro y fechaActualizacion van vacías: las llena el servidor (@ServerTimestamp)
+            lote.set(ref, p);
+            Historial.registrar(lote, ref.getId(), Movimiento.ALTA,
+                    "Alta con " + piezas(p.stock) + " a " + Formato.moneda(p.precio) + " c/u",
+                    p.stock, 0, null);
+        } else {
+            Map<String, Object> cambios = new HashMap<>();
+            List<String> detalle = new ArrayList<>();
+            compararCambios(p, cambios, detalle);
+            int diferencia = p.stock - original.stock;
+            if (cambios.isEmpty() && diferencia == 0) {
+                mostrarCargando(false);
+                mensaje("No hay cambios que guardar");
+                return;
+            }
+            if (diferencia != 0) {
+                cambios.put("stock", FieldValue.increment(diferencia));
+                detalle.add(0, "Existencias: " + original.stock + " → " + p.stock);
+            }
+            cambios.put("fechaActualizacion", FieldValue.serverTimestamp());
+            cambios.put("actualizadoPorId", u.id);
+            cambios.put("actualizadoPorNombre", u.nombre);
+            lote.update(Sesion.coleccion("productos").document(productoId), cambios);
+            Historial.registrar(lote, productoId, diferencia != 0 ? Movimiento.AJUSTE : Movimiento.EDICION,
+                    String.join("\n", detalle), diferencia, original.stock, null);
+        }
+
+        lote.commit()
                 .addOnSuccessListener(x -> {
                     Aviso.mostrar(getActivity(), "Producto guardado");
                     regresar();
@@ -237,16 +285,78 @@ public class ProductoFormFragment extends Fragment {
                 .addOnFailureListener(e -> error("No se pudo guardar", e));
     }
 
+    /** Llena "cambios" con los campos distintos al original y "detalle" con su descripción. */
+    private void compararCambios(Producto p, Map<String, Object> cambios, List<String> detalle) {
+        if (!igual(p.nombre, original.nombre)) {
+            cambios.put("nombre", p.nombre);
+            detalle.add("Nombre: " + original.nombre + " → " + p.nombre);
+        }
+        if (!igual(p.categoria, original.categoria)) {
+            cambios.put("categoria", p.categoria);
+            detalle.add("Categoría: " + original.categoria + " → " + p.categoria);
+        }
+        if (p.precio != original.precio) {
+            cambios.put("precio", p.precio);
+            detalle.add("Precio: " + Formato.moneda(original.precio) + " → " + Formato.moneda(p.precio));
+        }
+        if (p.stockMinimo != original.stockMinimo) {
+            cambios.put("stockMinimo", p.stockMinimo);
+            detalle.add("Stock mínimo: " + original.stockMinimo + " → " + p.stockMinimo);
+        }
+        if (!igual(p.descripcion, original.descripcion)) {
+            cambios.put("descripcion", p.descripcion);
+            detalle.add("Descripción actualizada");
+        }
+        List<String> etiquetasAntes = original.etiquetas != null ? original.etiquetas : new ArrayList<>();
+        if (!p.etiquetas.equals(etiquetasAntes)) {
+            cambios.put("etiquetas", p.etiquetas);
+            detalle.add(p.etiquetas.isEmpty() ? "Características eliminadas"
+                    : "Características: " + String.join(", ", p.etiquetas));
+        }
+        if (p.personalizable != original.personalizable || p.costoPersonalizacion != original.costoPersonalizacion) {
+            cambios.put("personalizable", p.personalizable);
+            cambios.put("costoPersonalizacion", p.costoPersonalizacion);
+            detalle.add(p.personalizable
+                    ? "Estampado de logo: sí (+" + Formato.moneda(p.costoPersonalizacion) + ")"
+                    : "Estampado de logo: no");
+        }
+        if (!igual(p.fotoUrl, original.fotoUrl)) {
+            cambios.put("fotoUrl", p.fotoUrl);
+            detalle.add("Foto nueva");
+        }
+    }
+
+    private static boolean igual(String a, String b) {
+        return (a == null ? "" : a).equals(b == null ? "" : b);
+    }
+
+    private static String piezas(int n) {
+        return n + (n == 1 ? " pieza" : " piezas");
+    }
+
+    /**
+     * Elimina el producto. En la misma escritura se guarda un movimiento BAJA con sus últimos datos:
+     * el historial queda en Firestore aunque el documento del producto ya no exista.
+     */
     private void confirmarEliminar() {
+        if (original == null) return;
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Eliminar producto")
-                .setMessage("¿Seguro que quieres eliminar \"" + binding.etNombre.getText() + "\"?")
-                .setPositiveButton("Eliminar", (d, w) -> Sesion.coleccion("productos").document(productoId).delete()
-                        .addOnSuccessListener(x -> {
-                            Aviso.mostrar(getActivity(), "Producto eliminado");
-                            regresar();
-                        })
-                        .addOnFailureListener(e -> error("No se pudo eliminar", e)))
+                .setMessage("¿Seguro que quieres eliminar \"" + original.nombre + "\"? Su historial se conserva en Firebase.")
+                .setPositiveButton("Eliminar", (d, w) -> {
+                    WriteBatch lote = FirebaseFirestore.getInstance().batch();
+                    Historial.registrar(lote, productoId, Movimiento.BAJA,
+                            "Producto eliminado: " + original.nombre + " (" + Formato.moneda(original.precio)
+                                    + ", " + piezas(original.stock) + ")",
+                            -original.stock, original.stock, null);
+                    lote.delete(Sesion.coleccion("productos").document(productoId));
+                    lote.commit()
+                            .addOnSuccessListener(x -> {
+                                Aviso.mostrar(getActivity(), "Producto eliminado");
+                                regresar();
+                            })
+                            .addOnFailureListener(e -> error("No se pudo eliminar", e));
+                })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }

@@ -1,5 +1,6 @@
 package mx.itch.opticaapp.ui.inventario;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,31 +12,45 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.SnapshotMetadata;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import mx.itch.opticaapp.R;
+import mx.itch.opticaapp.data.Historial;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.DialogColorBinding;
 import mx.itch.opticaapp.databinding.FragmentProductoDetalleBinding;
 import mx.itch.opticaapp.databinding.ItemColorBinding;
+import mx.itch.opticaapp.databinding.ItemMovimientoBinding;
+import mx.itch.opticaapp.model.Movimiento;
 import mx.itch.opticaapp.model.Optica;
 import mx.itch.opticaapp.model.Producto;
+import mx.itch.opticaapp.model.Usuario;
 import mx.itch.opticaapp.model.VarianteColor;
 import mx.itch.opticaapp.ui.venta.VentaFragment;
 import mx.itch.opticaapp.util.AlEscribir;
 import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Aviso;
+import mx.itch.opticaapp.util.Fechas;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Imagenes;
 import mx.itch.opticaapp.util.SelectorDeFoto;
@@ -57,6 +72,7 @@ public class ProductoDetalleFragment extends Fragment {
 
     private FragmentProductoDetalleBinding binding;
     private ListenerRegistration escucha;
+    private ListenerRegistration escuchaHistorial;
     private String productoId;
     private Producto producto;
     /** Posición del color elegido en producto.colores. */
@@ -109,7 +125,9 @@ public class ProductoDetalleFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if (!Sesion.estaActiva() || productoId == null) return;
-        escucha = Sesion.coleccion("productos").document(productoId).addSnapshotListener((doc, error) -> {
+        DocumentReference ref = Sesion.coleccion("productos").document(productoId);
+        // MetadataChanges.INCLUDE: también avisa cuando un cambio pendiente termina de subirse a Firebase
+        escucha = ref.addSnapshotListener(MetadataChanges.INCLUDE, (doc, error) -> {
             if (binding == null) return;
             if (error != null) {
                 mensaje("No se pudo leer el producto: " + error.getMessage());
@@ -117,12 +135,24 @@ public class ProductoDetalleFragment extends Fragment {
             }
             if (doc == null || !doc.exists()) {
                 // Lo borraron (por ejemplo, desde el formulario): regresamos al catálogo
-                NavHostFragment.findNavController(this).popBackStack();
+                if (doc != null && !doc.getMetadata().isFromCache()) {
+                    NavHostFragment.findNavController(this).popBackStack();
+                }
                 return;
             }
-            producto = doc.toObject(Producto.class);
+            // ESTIMATE: mientras el servidor no confirma la fecha, se usa la hora del teléfono
+            producto = doc.toObject(Producto.class, DocumentSnapshot.ServerTimestampBehavior.ESTIMATE);
             mostrar();
+            mostrarSincronizacion(doc.getMetadata());
         });
+        escuchaHistorial = ref.collection("movimientos")
+                .orderBy("fecha", Query.Direction.DESCENDING)
+                .limit(20)
+                .addSnapshotListener((resultado, error) -> {
+                    if (binding == null || resultado == null) return;
+                    mostrarHistorial(resultado.toObjects(Movimiento.class,
+                            DocumentSnapshot.ServerTimestampBehavior.ESTIMATE));
+                });
     }
 
     @Override
@@ -131,6 +161,10 @@ public class ProductoDetalleFragment extends Fragment {
         if (escucha != null) {
             escucha.remove();
             escucha = null;
+        }
+        if (escuchaHistorial != null) {
+            escuchaHistorial.remove();
+            escuchaHistorial = null;
         }
     }
 
@@ -246,6 +280,113 @@ public class ProductoDetalleFragment extends Fragment {
         binding.btnVender.setText(hayExistencias ? "Vender" : "Agotado");
     }
 
+    // ---------------- Firebase e historial ----------------
+
+    /**
+     * Píldora con el estado del producto en Firebase:
+     * verde = ya está en el servidor; naranja = hay cambios guardados en el teléfono que aún no se suben;
+     * gris = sin conexión, se muestra la última copia guardada en el teléfono.
+     */
+    private void mostrarSincronizacion(SnapshotMetadata metadatos) {
+        int fondo;
+        int color;
+        String texto;
+        if (metadatos.hasPendingWrites()) {
+            texto = "Pendiente de subir";
+            fondo = R.drawable.bg_pildora_naranja;
+            color = R.color.naranja;
+        } else if (metadatos.isFromCache()) {
+            texto = "Sin conexión";
+            fondo = R.drawable.bg_pildora_gris;
+            color = R.color.texto_secundario;
+        } else {
+            texto = "Guardado en Firebase";
+            fondo = R.drawable.bg_pildora_verde;
+            color = R.color.verde;
+        }
+        int tinte = ContextCompat.getColor(requireContext(), color);
+        binding.tvSincronizacion.setText(texto);
+        binding.tvSincronizacion.setBackgroundResource(fondo);
+        binding.tvSincronizacion.setTextColor(tinte);
+        Drawable nube = ContextCompat.getDrawable(requireContext(), R.drawable.ic_nube);
+        if (nube != null) {
+            nube = DrawableCompat.wrap(nube.mutate());
+            DrawableCompat.setTint(nube, tinte);
+            int lado = Math.round(14 * getResources().getDisplayMetrics().density);
+            nube.setBounds(0, 0, lado, lado);
+            binding.tvSincronizacion.setCompoundDrawablesRelative(nube, null, null, null);
+        }
+
+        // Quién registró el producto y quién lo cambió por última vez
+        StringBuilder registro = new StringBuilder();
+        if (producto.fechaRegistro != null && producto.registradoPorNombre != null) {
+            registro.append("Registrado el ").append(Fechas.corta(producto.fechaRegistro))
+                    .append(" por ").append(producto.registradoPorNombre);
+        } else {
+            registro.append("Registrado antes de que existiera el historial");
+        }
+        if (producto.fechaActualizacion != null && producto.actualizadoPorNombre != null
+                && (producto.fechaRegistro == null
+                || producto.fechaActualizacion.getTime() - producto.fechaRegistro.getTime() > 60_000)) {
+            registro.append(" · Última actualización el ").append(Fechas.conHora(producto.fechaActualizacion))
+                    .append(" por ").append(producto.actualizadoPorNombre);
+        }
+        binding.tvRegistro.setText(registro);
+    }
+
+    /** Renglones del historial: más reciente primero. */
+    private void mostrarHistorial(List<Movimiento> movimientos) {
+        binding.contenedorHistorial.removeAllViews();
+        LayoutInflater inflater = getLayoutInflater();
+        for (Movimiento m : movimientos) {
+            ItemMovimientoBinding fila = ItemMovimientoBinding.inflate(inflater, binding.contenedorHistorial, false);
+            fila.tvTipo.setText(Movimiento.nombreTipo(m.tipo));
+            fila.tvDescripcion.setText(m.descripcion);
+            fila.tvDescripcion.setVisibility(m.descripcion == null || m.descripcion.isEmpty() ? View.GONE : View.VISIBLE);
+            fila.tvFecha.setText((m.fecha != null ? Fechas.conHora(m.fecha) : "Ahora")
+                    + (m.usuarioNombre != null && !m.usuarioNombre.isEmpty() ? " · " + m.usuarioNombre : ""));
+            fila.ivTipo.setImageResource(iconoDe(m.tipo));
+
+            if (m.cantidad == 0) {
+                fila.tvCantidad.setVisibility(View.GONE);
+                fila.tvExistencias.setVisibility(View.GONE);
+            } else {
+                boolean entra = m.cantidad > 0;
+                fila.tvCantidad.setText((entra ? "+" : "−") + Math.abs(m.cantidad));
+                fila.tvCantidad.setBackgroundResource(entra ? R.drawable.bg_pildora_verde : R.drawable.bg_pildora_rojo);
+                fila.tvCantidad.setTextColor(ContextCompat.getColor(requireContext(), entra ? R.color.verde : R.color.rojo));
+                fila.tvExistencias.setText("Quedan " + Math.max(0, m.existenciasDespues));
+            }
+            binding.contenedorHistorial.addView(fila.getRoot());
+        }
+        binding.tvSinHistorial.setVisibility(movimientos.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    private static int iconoDe(String tipo) {
+        if (Movimiento.ALTA.equals(tipo)) return R.drawable.ic_agregar;
+        if (Movimiento.VENTA.equals(tipo)) return R.drawable.ic_ventas;
+        if (Movimiento.AJUSTE.equals(tipo)) return R.drawable.ic_inventario;
+        if (Movimiento.BAJA.equals(tipo)) return R.drawable.ic_alerta;
+        return R.drawable.ic_editar;
+    }
+
+    /**
+     * Agrega o quita un color en una sola escritura junto con su registro en el historial
+     * y los datos de quién hizo el cambio.
+     */
+    private void cambiarColores(FieldValue operacion, String descripcion) {
+        Usuario u = Sesion.getUsuario();
+        Map<String, Object> cambios = new HashMap<>();
+        cambios.put("colores", operacion);
+        cambios.put("fechaActualizacion", FieldValue.serverTimestamp());
+        cambios.put("actualizadoPorId", u.id);
+        cambios.put("actualizadoPorNombre", u.nombre);
+        WriteBatch lote = FirebaseFirestore.getInstance().batch();
+        lote.update(Sesion.coleccion("productos").document(productoId), cambios);
+        Historial.registrar(lote, productoId, Movimiento.EDICION, descripcion, 0, producto.stock, null);
+        lote.commit().addOnFailureListener(e -> mensaje("No se pudo guardar el cambio: " + e.getMessage()));
+    }
+
     // ---------------- Colores ----------------
 
     private void dialogoAgregarColor() {
@@ -286,9 +427,8 @@ public class ProductoDetalleFragment extends Fragment {
             if (errorNombre != null || errorHex != null) return;
 
             colorElegido = producto.colores.size();   // el nuevo queda elegido
-            Sesion.coleccion("productos").document(productoId)
-                    .update("colores", FieldValue.arrayUnion(mapaColor(nombre, hex)))
-                    .addOnFailureListener(e -> mensaje("No se pudo agregar el color: " + e.getMessage()));
+            cambiarColores(FieldValue.arrayUnion(mapaColor(nombre, hex)),
+                    "Color agregado: " + nombre + " (" + hex + ")");
             dialogo.dismiss();
         }));
         dialogo.show();
@@ -300,9 +440,8 @@ public class ProductoDetalleFragment extends Fragment {
                 .setMessage("¿Quitar " + c.descripcion() + " de las variantes de este producto?")
                 .setPositiveButton("Quitar", (d, w) -> {
                     colorElegido = 0;
-                    Sesion.coleccion("productos").document(productoId)
-                            .update("colores", FieldValue.arrayRemove(mapaColor(c.nombre, c.hex)))
-                            .addOnFailureListener(e -> mensaje("No se pudo quitar: " + e.getMessage()));
+                    cambiarColores(FieldValue.arrayRemove(mapaColor(c.nombre, c.hex)),
+                            "Color quitado: " + c.descripcion());
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();

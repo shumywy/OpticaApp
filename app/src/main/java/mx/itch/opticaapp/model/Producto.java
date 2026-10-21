@@ -1,8 +1,10 @@
 package mx.itch.opticaapp.model;
 
 import com.google.firebase.firestore.DocumentId;
+import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,6 +31,16 @@ public class Producto {
     public boolean personalizable;
     /** Costo adicional del estampado del logotipo. */
     public double costoPersonalizacion;
+
+    // Registro: quién dio de alta el producto y quién lo cambió por última vez (las fechas las pone el servidor)
+    @ServerTimestamp
+    public Date fechaRegistro;
+    public String registradoPorId;
+    public String registradoPorNombre;
+    @ServerTimestamp
+    public Date fechaActualizacion;
+    public String actualizadoPorId;
+    public String actualizadoPorNombre;
 
     public Producto() {
     }

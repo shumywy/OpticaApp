@@ -25,19 +25,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import mx.itch.opticaapp.R;
+import mx.itch.opticaapp.data.Historial;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentVentaBinding;
+import mx.itch.opticaapp.model.Documento;
 import mx.itch.opticaapp.model.ItemVenta;
+import mx.itch.opticaapp.model.Movimiento;
 import mx.itch.opticaapp.model.Orden;
 import mx.itch.opticaapp.model.Paciente;
 import mx.itch.opticaapp.model.Producto;
 import mx.itch.opticaapp.model.Venta;
 import mx.itch.opticaapp.util.AlEscribir;
 import mx.itch.opticaapp.util.Animaciones;
+import mx.itch.opticaapp.util.Documentos;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Pdf;
 import mx.itch.opticaapp.util.Validaciones;
@@ -346,10 +352,20 @@ public class VentaFragment extends Fragment {
         WriteBatch lote = db.batch();
         DocumentReference ventaRef = Sesion.coleccion("ventas").document();
         lote.set(ventaRef, venta);
+        Map<String, Integer> existencias = new HashMap<>();   // para el historial: existencias antes de cada renglón
+        for (Producto p : productosDisponibles) existencias.put(p.id, p.stock);
         for (ItemVenta i : venta.items) {
             // Resta las piezas vendidas directamente en el servidor
             lote.update(Sesion.coleccion("productos").document(i.productoId),
                     "stock", FieldValue.increment(-i.cantidad));
+            // Y deja el registro en el historial del producto, ligado a esta venta
+            Integer antes = existencias.get(i.productoId);
+            int previas = antes != null ? antes : 0;
+            Historial.registrar(lote, i.productoId, Movimiento.VENTA,
+                    "Venta de " + i.cantidad + " × " + i.nombre + " a " + Formato.moneda(i.precio)
+                            + " · cliente: " + venta.pacienteNombre,
+                    -i.cantidad, previas, ventaRef.getId());
+            existencias.put(i.productoId, previas - i.cantidad);
         }
         if (conOrden) {
             Orden orden = new Orden();
@@ -400,6 +416,9 @@ public class VentaFragment extends Fragment {
     private void compartirNota(Venta venta) {
         try {
             File pdf = Pdf.notaVenta(requireContext(), Sesion.getOptica(), venta);
+            // Queda registrada en Firebase (opticas/{id}/documentos) con el PDF incluido
+            Documentos.registrar(pdf, Documento.NOTA_VENTA, "Nota de venta · " + Formato.moneda(venta.total),
+                    venta.id, venta.pacienteNombre);
             Pdf.compartir(requireContext(), pdf);
         } catch (IOException e) {
             mensaje("No se pudo crear el PDF: " + e.getMessage());

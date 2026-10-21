@@ -38,10 +38,10 @@ Aplicación móvil para Android orientada a la gestión de ópticas. Integra exp
 | **Panel** | Avance de la meta semanal de ventas, ventas y pacientes del día, órdenes pendientes y productos con existencias bajas. |
 | **Pacientes** | Alta y edición de datos (nombre, teléfono y edad), búsqueda por nombre o teléfono, orden por fecha o alfabético y fichas con la última consulta y la graduación vigente. |
 | **Expediente clínico** | Registro de consultas (esfera, cilindro, eje, adición, distancia pupilar, agudeza visual, tipo de lente), historial y receta en PDF. |
-| **Inventario** | Catálogo con fotografía, búsqueda, alta, edición y baja de productos, y alerta de existencias mínimas. El detalle de cada producto muestra sus características, variantes de color (con alta de colores exactos) y la opción de estampar el logotipo de la óptica con un costo adicional. |
+| **Inventario** | Catálogo con fotografía, búsqueda, alta, edición y baja de productos, y alerta de existencias mínimas. El detalle de cada producto muestra sus características, variantes de color (con alta de colores exactos), la opción de estampar el logotipo de la óptica con un costo adicional, su estado en Firebase y el historial completo de movimientos. |
 | **Punto de venta** | Carrito, anticipo y saldo, método de pago, descuento automático de existencias, nota de venta en PDF y orden de laboratorio opcional. |
 | **Laboratorio** | Seguimiento de órdenes en cuatro etapas: Enviado, En proceso, Recibido y Entregado, con la fecha de cada una. |
-| **Administración** | Datos y logotipo de la óptica, personal y roles, creación de cuentas para el equipo y corte de caja del día. El logotipo aparece en el detalle de los productos y en las recetas y notas de venta en PDF. |
+| **Administración** | Datos y logotipo de la óptica, personal y roles, creación de cuentas para el equipo y corte de caja del día, que se guarda en Firebase y puede consultarse después. El logotipo aparece en el detalle de los productos y en las recetas y notas de venta en PDF. |
 | **Configuración** | Tema claro, oscuro o del sistema, texto grande, modo sin imágenes y fondo de pantalla. |
 
 ## 2. Roles y permisos
@@ -101,6 +101,7 @@ mx.itch.opticaapp
 ├── OpticaApp           Clase Application (aplica el tema guardado)
 ├── data/
 │   ├── Sesion          Usuario y óptica de la sesión; referencias a sus colecciones
+│   ├── Historial       Registros del historial de productos (dentro de un WriteBatch)
 │   └── Preferencias    Preferencias locales (SharedPreferences)
 ├── model/              Clases que Firestore convierte en documentos
 ├── ui/                 Un paquete por módulo (Fragment y Adapter)
@@ -112,6 +113,7 @@ mx.itch.opticaapp
     ├── SelectorDeFoto  Diálogo "Tomar foto / Elegir de la galería" reutilizable
     ├── Aviso           Aviso flotante de confirmación ("Producto guardado")
     ├── Pdf             Receta y nota de venta con PdfDocument
+    ├── Documentos      Registro de cada PDF generado en Firestore
     ├── Animaciones     Animaciones de entrada de cada pantalla
     └── AlEscribir      TextWatcher simplificado
 ```
@@ -149,12 +151,28 @@ mx.itch.opticaapp
 - **Variantes de color:** carrusel de círculos con nombre y código hexadecimal. El color elegido se marca con un anillo doble y una textura de tela (`MuestraColor`). Administrador y vendedor pueden agregar un color exacto (`#RRGGBB`, con vista previa) o quitarlo manteniendo presionado el círculo.
 - **Personalización:** si el producto lo permite, un interruptor agrega el estampado del logotipo de la óptica y su costo al precio. El administrador puede subir o cambiar el logotipo desde ahí mismo.
 - **Venta:** "Vender" agrega al carrito el producto con el color y el estampado elegidos; cada combinación ocupa su propio renglón (por ejemplo, "Paño · Gris Oxford · logo estampado") y el costo del estampado se suma al precio unitario.
+- **Estado en Firebase:** una insignia indica si el producto ya está en el servidor ("Guardado en Firebase"), si tiene cambios guardados en el dispositivo que aún no se suben ("Pendiente de subir") o si no hay conexión. Se obtiene de los metadatos del documento (`hasPendingWrites` e `isFromCache`).
+- **Historial:** muestra quién registró el producto y cuándo, la última actualización y los 20 movimientos más recientes (sección 4.5).
 
-### 4.5 Edición de pacientes
+### 4.5 Historial de productos
+
+Cada cambio en un producto se guarda junto con un registro en la subcolección `movimientos`, en la misma escritura (`WriteBatch`), de modo que no puede existir un cambio sin su registro. La clase `data/Historial` crea esos registros con el usuario de la sesión; la fecha la asigna el servidor.
+
+| Tipo | Cuándo se registra | Cambio en existencias |
+|------|--------------------|-----------------------|
+| `ALTA` | Al dar de alta el producto | + existencias iniciales |
+| `EDICION` | Cambios de nombre, categoría, precio, stock mínimo, descripción, características, estampado, foto o colores | 0 |
+| `AJUSTE` | Edición que modifica las existencias (se aplica con `FieldValue.increment`, sin perder ventas simultáneas) | + / − diferencia |
+| `VENTA` | Cada renglón de una venta, ligado a su `ventaId` | − piezas vendidas |
+| `BAJA` | Al eliminar el producto; guarda su nombre, precio y existencias | − existencias restantes |
+
+Al eliminar un producto, su historial permanece en Firestore como registro de auditoría.
+
+### 4.6 Edición de pacientes
 
 `DialogoPaciente` se usa tanto para el alta como para la edición (botón de lápiz en el expediente o pulsación larga en la lista). La edición solo modifica nombre, teléfono y edad; la graduación y el historial no cambian. Las ventas y órdenes anteriores conservan el nombre con que se registraron.
 
-### 4.6 Creación de cuentas por el administrador
+### 4.7 Creación de cuentas por el administrador
 
 `FirebaseAuth` inicia sesión automáticamente con la cuenta que crea. Para que el administrador no pierda su sesión, **Nueva cuenta** utiliza una segunda instancia de Firebase (`"altas"`) que crea la cuenta, guarda el documento `users/{uid}` con el código de invitación de la óptica y cierra su propia sesión. Si el documento no se puede guardar, la cuenta recién creada se elimina para permitir un nuevo intento.
 
@@ -232,7 +250,13 @@ opticas/{opticaId}/pacientes/{id}/consultas/{id}   model/Consulta
 
 opticas/{opticaId}/productos/{id}             model/Producto
   nombre, categoria, descripcion, precio, stock, stockMinimo, fotoUrl,
-  etiquetas [texto], colores [{nombre, hex}], personalizable, costoPersonalizacion
+  etiquetas [texto], colores [{nombre, hex}], personalizable, costoPersonalizacion,
+  fechaRegistro, registradoPorId, registradoPorNombre,
+  fechaActualizacion, actualizadoPorId, actualizadoPorNombre
+
+opticas/{opticaId}/productos/{id}/movimientos/{id}   model/Movimiento
+  tipo (ALTA | EDICION | AJUSTE | VENTA | BAJA), descripcion, cantidad,
+  existenciasAntes, existenciasDespues, ventaId, usuarioId, usuarioNombre, fecha
 
 opticas/{opticaId}/ventas/{id}                model/Venta
   pacienteId, pacienteNombre, items [{productoId, nombre, categoria, precio, cantidad}],
@@ -241,17 +265,32 @@ opticas/{opticaId}/ventas/{id}                model/Venta
 opticas/{opticaId}/ordenes/{id}               model/Orden
   ventaId, pacienteId, pacienteNombre, descripcion, estatus (ENVIADO | EN_PROCESO | RECIBIDO | ENTREGADO),
   fechaCreacion, fechaEnvio, fechaEnProceso, fechaRecibido, fechaEntregado
+
+opticas/{opticaId}/cortes/{id}                model/Corte
+  dia (yyyy-MM-dd), ventas, totalVendido, cobrado, saldoPendiente,
+  porMetodo {Efectivo, Tarjeta, Transferencia}, realizadoPorId, realizadoPorNombre, fecha
+
+opticas/{opticaId}/documentos/{id}            model/Documento
+  tipo (RECETA | NOTA_VENTA), descripcion, referenciaId (paciente o venta), pacienteNombre,
+  nombreArchivo, tamanoBytes, pdf ("data:application/pdf;base64,…"), archivoIncluido,
+  generadoPorId, generadoPorNombre, fecha
 ```
+
+Las fechas de registro de productos, movimientos, cortes y documentos las asigna el servidor de Firestore (`@ServerTimestamp`), no el reloj del dispositivo.
 
 Operaciones compuestas, ejecutadas en un solo lote (`WriteBatch`) para que se apliquen completas o no se apliquen:
 
 | Operación | Escrituras |
 |-----------|-----------|
 | Registro de óptica | Documento de la óptica, código de invitación y usuario administrador. |
-| Venta | Documento de la venta, resta de existencias por producto (`FieldValue.increment`) y, si se solicita, la orden de laboratorio. |
+| Venta | Documento de la venta, resta de existencias por producto (`FieldValue.increment`), un movimiento `VENTA` por renglón y, si se solicita, la orden de laboratorio. |
+| Alta, edición o baja de producto | El producto (documento completo, campos modificados o eliminación) y su movimiento en el historial. |
+| Agregar o quitar un color | La lista `colores` (`FieldValue.arrayUnion` / `arrayRemove`) y su movimiento `EDICION`. |
 | Consulta | Documento de la consulta y actualización de `ultimaConsulta` y `resumenGraduacion` del paciente. |
 
-Actualizaciones parciales: datos del paciente (`nombre`, `telefono`, `edad`), estatus de órdenes, rol del personal, datos y logotipo de la óptica, y variantes de color de un producto (`FieldValue.arrayUnion` / `arrayRemove`).
+Actualizaciones parciales: datos del paciente (`nombre`, `telefono`, `edad`), estatus de órdenes, rol del personal y datos y logotipo de la óptica.
+
+Registros adicionales: cada **corte de caja** que se guarda desde Administración y cada **PDF** generado (receta o nota de venta), con el archivo incluido cuando pesa 600 KB o menos (`util/Documentos`).
 
 La única eliminación de documentos que realiza la aplicación es la de productos (solo administrador).
 
@@ -269,7 +308,11 @@ Las fotografías se guardan dentro de Firestore, sin Cloud Storage:
 
 ### 6.4 Información que permanece en el dispositivo
 
-Preferencias de apariencia (tema, texto grande, modo sin imágenes), el fondo de pantalla elegido y los PDF de recetas y notas de venta. Los PDF se comparten mediante el menú del sistema y no pasan por Firebase.
+Solo las preferencias de apariencia de cada dispositivo (tema, texto grande, modo sin imágenes) y el fondo de pantalla elegido. Los PDF se generan en el dispositivo para compartirlos, pero cada uno queda registrado en Firebase (sección 6.2).
+
+### 6.5 Cómo comprobar los datos en la consola de Firebase
+
+En **Firestore Database › Datos**, los datos de cada óptica están dentro de su documento: abrir la colección `opticas`, seleccionar el documento de la óptica y, en la columna de subcolecciones, elegir `productos`, `pacientes`, `ventas`, `ordenes`, `cortes` o `documentos`. El historial de un producto está dentro de su documento, en `movimientos`. En la aplicación, la insignia "Guardado en Firebase" del detalle de producto confirma que el servidor ya recibió el último cambio.
 
 ## 7. Seguridad
 
@@ -315,7 +358,7 @@ Fondo de vidrio esmerilado (`bg_menu_vidrio`): degradado lila translúcido, bord
 
 - Las restricciones por rol se aplican en la interfaz. Las reglas de Firestore limitan el acceso por óptica, pero no distinguen entre optometrista y vendedor dentro de la misma óptica.
 - Las validaciones de formato se realizan en la aplicación; las reglas de Firestore no validan el contenido de cada campo.
-- Si dos usuarios venden la última pieza de un producto al mismo tiempo, las existencias pueden quedar en negativo; la aplicación lo muestra como "Agotado".
+- Si dos usuarios venden la última pieza de un producto al mismo tiempo, las existencias pueden quedar en negativo; la aplicación lo muestra como "Agotado". En ese caso, las columnas "antes / después" del historial se calculan con los datos que tenía cada dispositivo; el valor vigente de existencias siempre es el del documento del producto.
 - Las operaciones realizadas sin conexión se guardan en el dispositivo y se sincronizan al recuperar la red; mientras tanto, el botón correspondiente permanece en espera.
 - Al guardar las fotografías dentro de los documentos, cada lectura de una lista también descarga sus imágenes. Para inventarios de varios cientos de productos convendría migrarlas a Cloud Storage.
 
