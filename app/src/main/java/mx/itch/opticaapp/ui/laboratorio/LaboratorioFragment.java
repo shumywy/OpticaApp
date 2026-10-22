@@ -25,6 +25,10 @@ import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.DialogOrdenBinding;
 import mx.itch.opticaapp.databinding.FragmentLaboratorioBinding;
 import mx.itch.opticaapp.model.Orden;
+import mx.itch.opticaapp.util.Animaciones;
+import mx.itch.opticaapp.util.Campos;
+import mx.itch.opticaapp.util.HojaOpciones;
+import mx.itch.opticaapp.util.Validaciones;
 
 /**
  * Pantalla 8: seguimiento de órdenes de laboratorio en tiempo real.
@@ -60,6 +64,11 @@ public class LaboratorioFragment extends Fragment {
         // El optometrista consulta; administrador y vendedor pueden crear órdenes a mano
         binding.fabAgregar.setVisibility(Sesion.esOptometrista() ? View.GONE : View.VISIBLE);
         binding.fabAgregar.setOnClickListener(v -> dialogoNuevaOrden());
+
+        // Animación de entrada: título en cascada, hoja que sube y el botón + que aparece con rebote
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            Animaciones.aparecer(binding.fabAgregar, 450);
+        }
     }
 
     @Override
@@ -111,24 +120,26 @@ public class LaboratorioFragment extends Fragment {
             }
         }
         adaptador.mostrar(visibles);
+        Animaciones.listaUnaVez(this, binding.rvOrdenes);   // las órdenes entran una tras otra
         binding.tvVacio.setVisibility(visibles.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
-    /** Muestra las 4 etapas para elegir el nuevo estatus. */
+    /** Hoja inferior con las 4 etapas para elegir el nuevo estatus (la actual lleva palomita). */
     private void elegirEstatus(Orden orden) {
-        String[] nombres = new String[Orden.ETAPAS.length];
-        for (int i = 0; i < nombres.length; i++) {
-            nombres[i] = Orden.nombreEstatus(Orden.ETAPAS[i]);
+        int[] iconos = {R.drawable.ic_nube, R.drawable.ic_laboratorio, R.drawable.ic_tienda, R.drawable.ic_check};
+        String[] detalles = {
+                "Se mandó al laboratorio",
+                "El laboratorio la está trabajando",
+                "Ya llegó a la óptica",
+                "El paciente ya se la llevó"};
+        HojaOpciones hoja = HojaOpciones.con(requireContext(), "Estatus de la orden")
+                .subtitulo(orden.pacienteNombre + " · " + orden.descripcion);
+        for (int i = 0; i < Orden.ETAPAS.length; i++) {
+            String etapa = Orden.ETAPAS[i];
+            hoja.elegible(iconos[i], Orden.nombreEstatus(etapa), detalles[i], etapa.equals(orden.estatus),
+                    () -> cambiarEstatus(orden, etapa));
         }
-        int actual = Orden.indiceEtapa(orden.estatus);
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Estatus de la orden de " + orden.pacienteNombre)
-                .setSingleChoiceItems(nombres, actual, (dialogo, elegido) -> {
-                    cambiarEstatus(orden, Orden.ETAPAS[elegido]);
-                    dialogo.dismiss();
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
+        hoja.mostrar();
     }
 
     /** Guarda el estatus y la fecha en que se llegó a esa etapa. */
@@ -149,16 +160,13 @@ public class LaboratorioFragment extends Fragment {
                 .setNegativeButton("Cancelar", null)
                 .create();
         dialogo.setOnShowListener(x -> dialogo.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-            String paciente = d.etPaciente.getText().toString().trim();
-            String trabajo = d.etDescripcion.getText().toString().trim();
-            if (paciente.isEmpty()) {
-                d.etPaciente.setError("Escribe el nombre");
-                return;
-            }
-            if (trabajo.isEmpty()) {
-                d.etDescripcion.setError("Describe el trabajo");
-                return;
-            }
+            String paciente = d.etPaciente.getText().toString().trim().replaceAll("\\s+", " ");
+            String trabajo = d.etDescripcion.getText().toString().trim().replaceAll("\\s+", " ");
+            String errorPaciente = Validaciones.nombrePersona(paciente);
+            String errorTrabajo = Validaciones.textoLibre(trabajo, true, 5, Validaciones.LARGO_TRABAJO, "el trabajo");
+            Campos.error(d.etPaciente, errorPaciente);
+            Campos.error(d.etDescripcion, errorTrabajo);
+            if (errorPaciente != null || errorTrabajo != null) return;
             Orden o = new Orden();
             o.pacienteId = "";
             o.pacienteNombre = paciente;

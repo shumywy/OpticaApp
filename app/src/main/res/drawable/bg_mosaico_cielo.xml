@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Pista gris del control segmentado -->
+<!-- Mosaico azul cielo de la acción rápida -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="@color/icono_fondo" />
-    <corners android:radius="14dp" />
+    <solid android:color="@color/cielo" />
+    <corners android:radius="20dp" />
 </shape>

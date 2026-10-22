@@ -52,7 +52,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
-    implementation(libs.firebase.storage)
+    // Sin Firebase Storage: las fotos se guardan comprimidas dentro de Firestore (util/Imagenes)
 
     // Inicio de sesión con Google (Credential Manager)
     implementation(libs.credentials)

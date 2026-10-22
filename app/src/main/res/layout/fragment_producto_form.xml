@@ -3,148 +3,274 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/espacio"
-        android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="24dp"
-        android:showDividers="middle">
+        android:orientation="vertical">
 
-        <!-- Foto grande del producto -->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivFoto"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/superficie"
-            android:contentDescription="Foto del producto"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/Forma.Redondeada" />
-
+        <!-- ===== Foto del producto sobre el degradado ===== -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/encabezado"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="28dp">
 
-            <Button
-                android:id="@+id/btnCamara"
-                style="@style/Boton.Secundario"
+            <TextView
+                style="@style/Texto.Eyebrow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Inventario" />
+
+            <TextView
+                style="@style/Texto.Hero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Producto" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivFoto"
+                android:layout_width="180dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/blanco_translucido"
+                android:contentDescription="Foto del producto"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/Forma.Redondeada" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="Tomar foto"
-                app:icon="@drawable/ic_camara" />
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnGaleria"
-                style="@style/Boton.Secundario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Galería"
-                app:icon="@drawable/ic_imagen" />
+                <Button
+                    android:id="@+id/btnCamara"
+                    style="@style/Boton.Secundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="Tomar foto"
+                    app:backgroundTint="@color/blanco_translucido"
+                    app:icon="@drawable/ic_camara" />
+
+                <Button
+                    android:id="@+id/btnGaleria"
+                    style="@style/Boton.Secundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Galería"
+                    app:backgroundTint="@color/blanco_translucido"
+                    app:icon="@drawable/ic_imagen" />
+            </LinearLayout>
         </LinearLayout>
 
-        <com.google.android.material.card.MaterialCardView
+        <!-- ===== Hoja blanca con los datos ===== -->
+        <LinearLayout
+            android:id="@+id/hoja"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_hoja"
+            android:divider="@drawable/espacio"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="26dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp"
+            android:showDividers="middle">
+
+            <TextView
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Datos del producto" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre o modelo">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="60"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapSentences" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/spCategoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Descripción"
+                app:helperText="Color, medidas, material"
+                app:counterEnabled="true"
+                app:counterMaxLength="300">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="300"
+                    android:gravity="top"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:minLines="2" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Se muestran como etiquetas en el detalle del producto -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEtiquetas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Características"
+                app:helperText="Separadas por coma (ej. Microfibra, Suave, 15x15 cm)"
+                app:counterEnabled="true"
+                app:counterMaxLength="110">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etEtiquetas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapSentences"
+                    android:maxLength="110" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPrecio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Precio"
+                app:prefixText="$">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPrecio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="9"
+                    android:importantForAutofill="no"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/espacio"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:showDividers="middle">
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilStock"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:hint="Existencias">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etStock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="5"
+                        android:importantForAutofill="no"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilStockMinimo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Stock mínimo">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etStockMinimo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="4"
+                        android:importantForAutofill="no"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <!-- Personalización: estampar el logotipo de la óptica con un costo adicional -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="4dp">
 
                 <TextView
-                    style="@style/Texto.Seccion"
+                    style="@style/Texto.Fila"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Se puede estampar el logo de la óptica" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/swPersonalizable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Datos del producto" />
-
-                <EditText
-                    android:id="@+id/etNombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Nombre o modelo"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapSentences" />
-
-                <Spinner
-                    android:id="@+id/spCategoria"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <EditText
-                    android:id="@+id/etDescripcion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Descripción (color, medidas, material)"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapSentences" />
-
-                <EditText
-                    android:id="@+id/etPrecio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Precio ($)"
-                    android:importantForAutofill="no"
-                    android:inputType="numberDecimal" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/etStock"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:hint="Existencias"
-                        android:importantForAutofill="no"
-                        android:inputType="number" />
-
-                    <EditText
-                        android:id="@+id/etStockMinimo"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="Stock mínimo"
-                        android:importantForAutofill="no"
-                        android:inputType="number" />
-                </LinearLayout>
+                    android:contentDescription="Se puede estampar el logo de la óptica" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <Button
-            android:id="@+id/btnGuardar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Guardar producto" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCostoPersonalizacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Costo del estampado"
+                android:visibility="gone"
+                app:prefixText="$">
 
-        <Button
-            android:id="@+id/btnEliminar"
-            style="@style/Boton.Texto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Eliminar producto"
-            android:textColor="@color/rojo"
-            android:visibility="gone" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCostoPersonalizacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:importantForAutofill="no"
+                    android:inputType="numberDecimal"
+                    android:maxLength="7" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <ProgressBar
-            android:id="@+id/progreso"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone" />
+            <Button
+                android:id="@+id/btnGuardar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Guardar producto" />
+
+            <Button
+                android:id="@+id/btnEliminar"
+                style="@style/Boton.Texto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Eliminar producto"
+                android:textColor="@color/rojo"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/progreso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:indeterminateTint="@color/cielo"
+                android:visibility="gone" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

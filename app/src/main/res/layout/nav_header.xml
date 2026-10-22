@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Encabezado del menú lateral, sin fondo propio para que se vea el degradado de vidrio del menú.
+    MainActivity lo llena con los datos de /users/{uid} (foto, nombre y correo) y se actualiza
+    solo cuando cambian en Firestore. Al tocarlo se abre Mi perfil.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/encabezadoMenu"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:background="@android:color/transparent"
+    android:foreground="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Foto circular con borde de vidrio (blanco translúcido) y sombra leve -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivFotoMenu"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@color/superficie"
+        android:contentDescription="Foto de perfil"
+        android:elevation="6dp"
+        android:outlineAmbientShadowColor="@color/morado"
+        android:outlineSpotShadowColor="@color/morado"
+        android:padding="2dp"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/Forma.Circulo"
+        app:strokeColor="@color/menu_foto_borde"
+        app:strokeWidth="4dp"
+        tools:targetApi="p" />
+
+    <!-- Óptica y rol en la píldora violeta, justo debajo de la foto -->
+    <TextView
+        android:id="@+id/tvOpticaMenu"
+        style="@style/Texto.Pildora.Rol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingStart="8dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="3dp"
+        android:textSize="12sp"
+        tools:text="Óptica Vista Clara · Administrador" />
+
+    <TextView
+        android:id="@+id/tvNombreMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/lexend_semibold"
+        android:maxLines="2"
+        android:textColor="@color/texto"
+        android:textSize="22sp"
+        tools:text="Laura Martínez" />
+
+    <TextView
+        android:id="@+id/tvCorreoMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/lexend_regular"
+        android:maxLines="1"
+        android:textColor="@color/texto_secundario"
+        android:textSize="13sp"
+        tools:text="laura@opticavistaclara.mx" />
+
+</LinearLayout>

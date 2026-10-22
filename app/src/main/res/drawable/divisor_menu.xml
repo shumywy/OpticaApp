@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Línea divisoria del menú lateral: 1 dp, gris al 10 % -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/menu_divisor" />
+    <size android:height="1dp" />
+</shape>

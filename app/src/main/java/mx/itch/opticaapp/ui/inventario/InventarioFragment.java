@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.google.firebase.firestore.ListenerRegistration;
 
@@ -24,6 +24,7 @@ import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentInventarioBinding;
 import mx.itch.opticaapp.model.Producto;
 import mx.itch.opticaapp.util.AlEscribir;
+import mx.itch.opticaapp.util.Animaciones;
 
 /** Pantalla 6: catálogo de productos con búsqueda y filtro por categoría. */
 public class InventarioFragment extends Fragment {
@@ -46,14 +47,20 @@ public class InventarioFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         if (!Sesion.estaActiva()) return;
 
-        adaptador = new ProductosAdapter(producto -> abrirFormulario(producto.id));
-        binding.rvProductos.setLayoutManager(new LinearLayoutManager(requireContext()));
+        // Catálogo en cuadrícula de 2 columnas; al tocar un producto se abre su detalle
+        adaptador = new ProductosAdapter(producto -> abrirDetalle(producto.id));
+        binding.rvProductos.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         binding.rvProductos.setAdapter(adaptador);
 
         // Chips de categoría: al elegir uno se vuelve a filtrar la lista
         binding.chipsCategoria.setOnCheckedStateChangeListener((grupo, elegidos) -> aplicarFiltro());
         binding.etBuscar.addTextChangedListener(new AlEscribir(texto -> aplicarFiltro()));
         binding.fabAgregar.setOnClickListener(v -> abrirFormulario(null));
+
+        // Animación de entrada: título en cascada, hoja que sube y el botón + que aparece con rebote
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            Animaciones.aparecer(binding.fabAgregar, 450);
+        }
     }
 
     @Override
@@ -102,7 +109,10 @@ public class InventarioFragment extends Fragment {
             }
         }
         adaptador.mostrar(visibles);
+        Animaciones.listaUnaVez(this, binding.rvProductos);   // los mosaicos entran uno tras otro
         binding.tvVacio.setVisibility(visibles.isEmpty() ? View.VISIBLE : View.GONE);
+        // Contador "08/24": productos que se ven / total
+        binding.tvContador.setText(String.format(Locale.US, "%02d/%02d", visibles.size(), todos.size()));
     }
 
     /** Texto de la categoría del chip elegido, o null si está elegido "Todas". */
@@ -117,6 +127,13 @@ public class InventarioFragment extends Fragment {
     }
 
     /** Abre el formulario: con id edita un producto, sin id crea uno nuevo. */
+    /** Abre la pantalla de detalle del producto. */
+    private void abrirDetalle(String productoId) {
+        Bundle args = new Bundle();
+        args.putString(ProductoDetalleFragment.ARG_PRODUCTO_ID, productoId);
+        NavHostFragment.findNavController(this).navigate(R.id.action_inventario_to_detalle, args);
+    }
+
     private void abrirFormulario(@Nullable String productoId) {
         Bundle args = new Bundle();
         args.putString(ProductoFormFragment.ARG_PRODUCTO_ID, productoId);

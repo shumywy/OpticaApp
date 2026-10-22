@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Pantalla 3: Panel principal -->
+<!--
+    Pantalla 3: Panel principal con efecto de vidrio.
+    Detrás de todo, FondoLentes dibuja unos lentes grandes que flotan: nítidos sobre el degradado
+    y desenfocados detrás de la hoja. Encima van la tarjeta de avance y los mosaicos de vidrio
+    (blanco translúcido con borde fino), que dejan ver los lentes.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,83 +12,55 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/contenedorPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@drawable/bg_aurora">
 
-        <!-- Encabezado: tarjeta con foto y saludo + botón de avisos -->
+        <!-- Lentes de fondo (PanelFragment le indica dónde está la hoja de vidrio) -->
+        <mx.itch.opticaapp.ui.panel.FondoLentes
+            android:id="@+id/fondoLentes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no" />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/tarjetaPerfil"
-                android:layout_width="0dp"
+            <!-- ===== Íconos de arriba: menú (⁘), avisos y foto ===== -->
+            <LinearLayout
+                android:id="@+id/barraIconos"
+                android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="16dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="16dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp">
+                <ImageView
+                    android:id="@+id/tarjetaMenu"
+                    style="@style/BotonIcono"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:contentDescription="@string/menu_abrir"
+                    android:src="@drawable/ic_puntos" />
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/ivAvatar"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@color/icono_fondo"
-                        android:contentDescription="Foto de perfil"
-                        android:scaleType="centerCrop"
-                        app:shapeAppearanceOverlay="@style/Forma.Circulo" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tvSaludo"
-                            style="@style/Texto.Etiqueta"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:text="¡Buenos días!" />
-
-                        <TextView
-                            android:id="@+id/tvNombre"
-                            style="@style/Texto.Fila"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            tools:text="Laura Martínez" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/tarjetaAvisos"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="10dp"
-                android:clickable="true"
-                android:contentDescription="Avisos"
-                android:focusable="true"
-                app:cardCornerRadius="16dp">
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
 
                 <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:id="@+id/tarjetaAvisos"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="Avisos"
+                    android:focusable="true">
 
                     <ImageView
                         android:layout_width="24dp"
@@ -98,323 +75,496 @@
                         android:layout_width="8dp"
                         android:layout_height="8dp"
                         android:layout_gravity="top|end"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="12dp"
                         android:background="@drawable/bg_punto_rojo"
                         android:visibility="gone" />
                 </FrameLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvOptica"
-            style="@style/Texto.Secundario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            tools:text="Óptica Vista Clara · Administrador" />
+                <!-- Foto: abre Perfil y ajustes -->
+                <FrameLayout
+                    android:id="@+id/tarjetaPerfil"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="6dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="Perfil y ajustes"
+                    android:focusable="true">
 
-        <!-- Avance semanal (Administrador y Vendedor) -->
-        <LinearLayout
-            android:id="@+id/layoutAvance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingTop="16dp">
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/ivAvatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/superficie"
+                        android:importantForAccessibility="no"
+                        android:padding="1.5dp"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearanceOverlay="@style/Forma.Circulo"
+                        app:strokeColor="@color/superficie"
+                        app:strokeWidth="2dp" />
+                </FrameLayout>
+            </LinearLayout>
 
-            <FrameLayout
-                android:layout_width="200dp"
-                android:layout_height="200dp">
-
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/barraAvance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:max="100"
-                    app:indicatorColor="@color/azul"
-                    app:indicatorSize="184dp"
-                    app:trackColor="@color/borde"
-                    app:trackCornerRadius="8dp"
-                    app:trackThickness="14dp"
-                    tools:progress="68" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvAvancePorcentaje"
-                        style="@style/Texto.Titulo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="36sp"
-                        tools:text="68 %" />
-
-                    <TextView
-                        style="@style/Texto.Etiqueta"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Avance semanal" />
-                </LinearLayout>
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/tvAvanceMonto"
-                style="@style/Texto.Fila"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                tools:text="$20,400.00 de $30,000.00" />
-
-            <TextView
-                android:id="@+id/tvFaltante"
-                style="@style/Texto.Secundario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                tools:text="Faltan $9,600.00 · quedan 3 días" />
-        </LinearLayout>
-
-        <!-- Panel blanco inferior con los indicadores -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="24dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_hoja"
-            android:orientation="vertical"
-            android:paddingStart="12dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="16dp">
-
-            <TextView
-                style="@style/Texto.Seccion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="12dp"
-                android:text="Resumen de hoy" />
-
-            <!-- Fila 1 -->
+            <!-- ===== Saludo y nombre ===== -->
             <LinearLayout
+                android:id="@+id/encabezado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingStart="24dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="24dp">
+
+                <TextView
+                    android:id="@+id/tvSaludo"
+                    style="@style/Texto.Eyebrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="¡Buenas tardes!" />
+
+                <TextView
+                    android:id="@+id/tvNombre"
+                    style="@style/Texto.Hero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    tools:text="Laura Martínez" />
+
+                <TextView
+                    android:id="@+id/tvOptica"
+                    style="@style/Texto.Pildora.Rol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:text="Óptica Vista Clara · Administrador" />
+            </LinearLayout>
+
+            <!-- Aquí se lucen los lentes; la tarjeta de avance los tapa a medias, como vidrio -->
+            <Space
+                android:id="@+id/espacioLentes"
+                android:layout_width="match_parent"
+                android:layout_height="104dp" />
+
+            <!-- ===== Avance semanal (Administrador y Vendedor) en una tarjeta de vidrio ===== -->
+            <LinearLayout
+                android:id="@+id/layoutAvance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_vidrio"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/tileVentas"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="20dp">
 
-                    <ImageView
-                        style="@style/IconoPanel"
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_dinero" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/Texto.Categoria"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Avance semanal" />
+
+                            <TextView
+                                android:id="@+id/tvAvanceMonto"
+                                style="@style/Texto.Fila"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                tools:text="$20,400.00 de $30,000.00" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvAvancePorcentaje"
+                            style="@style/Texto.Precio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            tools:text="68 %" />
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/barraAvance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:max="100"
+                        app:indicatorColor="@color/cielo"
+                        app:trackColor="@color/vidrio_borde"
+                        app:trackCornerRadius="4dp"
+                        app:trackThickness="8dp"
+                        tools:progress="68" />
 
                     <TextView
-                        android:id="@+id/tvVentasHoy"
-                        style="@style/Texto.Valor"
+                        android:id="@+id/tvFaltante"
+                        style="@style/Texto.Secundario"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="—"
-                        tools:text="$3,250.00" />
-
-                    <TextView
-                        style="@style/Texto.Etiqueta"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ventas de hoy" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tilePacientes"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <ImageView
-                        style="@style/IconoPanel"
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_pacientes" />
-
-                    <TextView
-                        android:id="@+id/tvPacientesHoy"
-                        style="@style/Texto.Valor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="—"
-                        tools:text="6" />
-
-                    <TextView
-                        style="@style/Texto.Etiqueta"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Pacientes hoy" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tileOrdenes"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <ImageView
-                        style="@style/IconoPanel"
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_laboratorio" />
-
-                    <TextView
-                        android:id="@+id/tvOrdenes"
-                        style="@style/Texto.Valor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="—"
-                        tools:text="4" />
-
-                    <TextView
-                        style="@style/Texto.Etiqueta"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="En laboratorio" />
+                        android:layout_marginTop="10dp"
+                        tools:text="Faltan $9,600.00 · quedan 3 días" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Fila 2 -->
+            <!-- ===== Hoja de vidrio con los indicadores ===== -->
             <LinearLayout
+                android:id="@+id/hoja"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
+                android:layout_height="0dp"
+                android:layout_marginTop="28dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_hoja_vidrio"
+                android:divider="@drawable/espacio"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="26dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp"
+                android:showDividers="middle">
 
+                <!-- Título de sección con la etiqueta "Hoy" y una línea a la derecha -->
                 <LinearLayout
-                    android:id="@+id/tileStock"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <ImageView
-                        style="@style/IconoPanel"
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_alerta" />
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tvStockBajo"
-                        style="@style/Texto.Valor"
-                        android:layout_width="wrap_content"
+                        style="@style/Texto.Seccion"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="—"
-                        tools:text="3" />
+                        android:layout_weight="1"
+                        android:text="Resumen de hoy" />
 
-                    <TextView
-                        style="@style/Texto.Etiqueta"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Stock bajo" />
+                        android:gravity="end"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/Texto.Contador"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hoy" />
+
+                        <View
+                            android:layout_width="96dp"
+                            android:layout_height="6dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/bg_linea_contador" />
+                    </LinearLayout>
                 </LinearLayout>
 
+                <!-- Fila 1: ventas | pacientes (los que el rol no usa se ocultan y el otro ocupa todo el ancho) -->
                 <LinearLayout
-                    android:id="@+id/tileMeta"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+                    android:divider="@drawable/espacio"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
 
-                    <ImageView
-                        style="@style/IconoPanel"
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_meta" />
-
-                    <TextView
-                        android:id="@+id/tvMeta"
-                        style="@style/Texto.Valor"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/tileVentas"
+                        android:background="@drawable/bg_vidrio_mosaico"
+                        android:foreground="@drawable/ripple_vidrio"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="—"
-                        tools:text="$30,000.00" />
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                    <TextView
-                        style="@style/Texto.Etiqueta"
-                        android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                style="@style/IconoPanel"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_dinero" />
+
+                            <TextView
+                                android:id="@+id/tvVentasHoy"
+                                style="@style/Texto.Valor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="18dp"
+                                android:text="—"
+                                android:textSize="16sp"
+                                tools:text="$3,250.00" />
+
+                            <TextView
+                                style="@style/Texto.Etiqueta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Ventas de hoy" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tilePacientes"
+                        android:background="@drawable/bg_vidrio_mosaico"
+                        android:foreground="@drawable/ripple_vidrio"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Meta semanal" />
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                style="@style/IconoPanel"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_pacientes" />
+
+                            <TextView
+                                android:id="@+id/tvPacientesHoy"
+                                style="@style/Texto.Valor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="18dp"
+                                android:text="—"
+                                android:textSize="16sp"
+                                tools:text="6" />
+
+                            <TextView
+                                style="@style/Texto.Etiqueta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Pacientes hoy" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Acción rápida (círculo azul): nueva venta o, para el optometrista, pacientes -->
+                <!-- Fila 2: laboratorio | stock bajo -->
                 <LinearLayout
-                    android:id="@+id/tileAccion"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+                    android:divider="@drawable/espacio"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
 
-                    <ImageView
-                        android:id="@+id/ivAccion"
-                        style="@style/IconoPanel.Activo"
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_ventas" />
-
-                    <TextView
-                        android:id="@+id/tvAccion"
-                        style="@style/Texto.Valor"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/tileOrdenes"
+                        android:background="@drawable/bg_vidrio_mosaico"
+                        android:foreground="@drawable/ripple_vidrio"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Nueva" />
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                    <TextView
-                        android:id="@+id/tvAccionEtiqueta"
-                        style="@style/Texto.Etiqueta"
-                        android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                style="@style/IconoPanel"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_laboratorio" />
+
+                            <TextView
+                                android:id="@+id/tvOrdenes"
+                                style="@style/Texto.Valor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="18dp"
+                                android:text="—"
+                                android:textSize="16sp"
+                                tools:text="4" />
+
+                            <TextView
+                                style="@style/Texto.Etiqueta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="En laboratorio" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tileStock"
+                        android:background="@drawable/bg_vidrio_mosaico"
+                        android:foreground="@drawable/ripple_vidrio"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="venta" />
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                style="@style/IconoPanel"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_alerta" />
+
+                            <TextView
+                                android:id="@+id/tvStockBajo"
+                                style="@style/Texto.Valor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="18dp"
+                                android:text="—"
+                                android:textSize="16sp"
+                                tools:text="3" />
+
+                            <TextView
+                                style="@style/Texto.Etiqueta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Stock bajo" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Fila 3: meta | acción rápida (azul cielo) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/espacio"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
+
+                    <LinearLayout
+                        android:id="@+id/tileMeta"
+                        android:background="@drawable/bg_vidrio_mosaico"
+                        android:foreground="@drawable/ripple_vidrio"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                style="@style/IconoPanel"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_meta" />
+
+                            <TextView
+                                android:id="@+id/tvMeta"
+                                style="@style/Texto.Valor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="18dp"
+                                android:text="—"
+                                android:textSize="16sp"
+                                tools:text="$30,000.00" />
+
+                            <TextView
+                                style="@style/Texto.Etiqueta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Meta semanal" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Acción rápida: nueva venta o, para el optometrista, expedientes -->
+                    <LinearLayout
+                        android:id="@+id/tileAccion"
+                        android:background="@drawable/bg_mosaico_cielo"
+                        android:foreground="@drawable/ripple_vidrio"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:id="@+id/ivAccion"
+                                style="@style/IconoPanel"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_ventas"
+                                app:tint="@color/cielo" />
+
+                            <TextView
+                                android:id="@+id/tvAccion"
+                                style="@style/Texto.Valor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="18dp"
+                                android:text="Nueva"
+                                android:textColor="@color/blanco"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/tvAccionEtiqueta"
+                                style="@style/Texto.Etiqueta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="venta"
+                                android:textColor="@color/blanco" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </FrameLayout>
 </ScrollView>

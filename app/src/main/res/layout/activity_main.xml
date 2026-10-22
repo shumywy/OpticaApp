@@ -1,53 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    DrawerLayout tiene dos hijos:
+    1) el contenido normal (barra superior, pantallas y barra inferior) sobre el degradado;
+    2) el menú lateral (NavigationView), que sale desde la izquierda.
+-->
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
+    android:id="@+id/drawer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <!-- Se oculta en el inicio de sesión y en el panel (esas pantallas tienen su propio encabezado) -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- ========== 1) Contenido ========== -->
+    <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_degradado"
+        android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <!-- Fondo de pantalla personalizado (se elige en Perfil y ajustes) -->
-        <ImageView
-            android:id="@+id/ivFondo"
+        <!--
+            Barra transparente: solo íconos (⁘ para el menú o ‹ para regresar, y el perfil).
+            El título grande lo pone cada pantalla. Se oculta en el inicio de sesión y en el panel.
+        -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.25"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            android:visibility="gone" />
+            android:layout_height="?attr/actionBarSize"
+            android:paddingStart="4dp"
+            android:theme="@style/TemaBarraSuperior"
+            android:paddingEnd="4dp" />
 
-        <!-- Aquí se muestran todas las pantallas (Fragments) -->
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/navHost"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:defaultNavHost="true" />
-    </FrameLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-    <!-- Línea fina arriba de la barra inferior -->
-    <View
-        android:id="@+id/divisorNav"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/borde" />
+            <!-- Fondo de pantalla personalizado (se elige en Perfil y ajustes) -->
+            <ImageView
+                android:id="@+id/ivFondo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.25"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/bottom_nav" />
+            <!-- Aquí se muestran todas las pantallas (Fragments) -->
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/navHost"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:defaultNavHost="true" />
+        </FrameLayout>
 
-</LinearLayout>
+        <!-- Blanca y sin línea: continúa la hoja blanca de cada pantalla -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/bottom_nav" />
+
+        <!--
+            Franja blanca detrás de la barra de navegación del sistema (o del teclado).
+            MainActivity le da la altura justa; así abajo nunca se asoma el degradado.
+        -->
+        <View
+            android:id="@+id/espacioInferior"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/superficie" />
+
+    </LinearLayout>
+
+    <!-- ========== 2) Menú lateral ========== -->
+    <!-- layout_gravity="start" = sale desde la izquierda -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navView"
+        style="@style/MenuLateral"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/menu_lateral" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

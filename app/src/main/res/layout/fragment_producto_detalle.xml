@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Detalle de producto:
+    foto grande sobre el degradado y, en la hoja blanca: categoría, nombre, descripción,
+    etiquetas de características, variantes de color, personalización con el logotipo de la óptica
+    y existencias. Abajo fijo: precio y botón "Vender".
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ===== Foto del producto ===== -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivFoto"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="28dp"
+                android:layout_marginBottom="28dp"
+                android:background="@color/blanco_translucido"
+                android:contentDescription="Foto del producto"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/Forma.Redondeada" />
+
+            <!-- ===== Hoja blanca con la información ===== -->
+            <LinearLayout
+                android:id="@+id/hoja"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_hoja"
+                android:orientation="vertical"
+                android:paddingStart="24dp"
+                android:paddingTop="28dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvCategoria"
+                        style="@style/Texto.Categoria"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        tools:text="Accesorios" />
+
+                    <ImageView
+                        android:id="@+id/btnEditar"
+                        style="@style/BotonIcono"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:contentDescription="Editar producto"
+                        android:src="@drawable/ic_editar" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvNombre"
+                    style="@style/Texto.Titulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/lexend_semibold"
+                    android:textSize="24sp"
+                    tools:text="Paño de limpieza Twins" />
+
+                <TextView
+                    android:id="@+id/tvDescripcion"
+                    style="@style/Texto.Secundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="8dp"
+                    tools:text="Paño de microfibra para limpiar micas sin rayarlas." />
+
+                <!-- 1. Etiquetas de características ("Microfibra", "Suave", "15x15 cm") -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/grupoEtiquetas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingVertical="6dp" />
+
+                <!-- 2. Variante de color -->
+                <LinearLayout
+                    android:id="@+id/seccionColores"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Texto.Seccion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Variante de color"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tvColorActivo"
+                        style="@style/Texto.Secundario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        tools:text="Color activo: Gris Oxford (#3C434A)" />
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="-8dp"
+                        android:layout_marginTop="10dp"
+                        android:clipToPadding="false"
+                        android:scrollbars="none">
+
+                        <!-- Los círculos los agrega ProductoDetalleFragment (item_color.xml) -->
+                        <LinearLayout
+                            android:id="@+id/contenedorColores"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" />
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <!-- 3. Personalización: estampar el logotipo de la óptica -->
+                <LinearLayout
+                    android:id="@+id/seccionPersonalizacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Texto.Seccion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Personalización"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_contenedor_fino"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_pano"
+                                app:tint="@color/menu_icono" />
+
+                            <TextView
+                                android:id="@+id/tvEstampado"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/lexend_medium"
+                                android:textColor="@color/texto"
+                                android:textSize="13sp"
+                                tools:text="Estampar logo de la óptica (+$5.00)" />
+
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/swEstampar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:contentDescription="Estampar logo de la óptica" />
+                        </LinearLayout>
+
+                        <!-- Vista previa del logotipo y botón para cambiarlo (solo administrador) -->
+                        <LinearLayout
+                            android:id="@+id/filaLogo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="52dp"
+                                android:background="@drawable/bg_capsula_blanca"
+                                android:minWidth="96dp"
+                                android:paddingStart="14dp"
+                                android:paddingTop="6dp"
+                                android:paddingEnd="14dp"
+                                android:paddingBottom="6dp">
+
+                                <ImageView
+                                    android:id="@+id/ivLogoOptica"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:adjustViewBounds="true"
+                                    android:contentDescription="Logotipo de la óptica"
+                                    android:maxWidth="150dp"
+                                    android:scaleType="fitCenter" />
+
+                                <!-- Si la óptica todavía no tiene logotipo, se muestra su nombre -->
+                                <TextView
+                                    android:id="@+id/tvLogoAlterno"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:fontFamily="@font/lexend_semibold"
+                                    android:maxLines="1"
+                                    android:textColor="@color/texto"
+                                    android:textSize="13sp"
+                                    android:visibility="gone"
+                                    tools:text="Twins" />
+                            </FrameLayout>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_weight="1" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCambiarLogo"
+                                style="@style/Boton.Secundario"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minHeight="44dp"
+                                android:text="Cambiar"
+                                app:cornerRadius="14dp"
+                                app:icon="@drawable/ic_editar"
+                                app:iconSize="18dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 4. Existencias -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvStock"
+                        style="@style/Texto.Pildora"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_pildora_verde"
+                        android:paddingStart="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="6dp"
+                        android:textColor="@color/verde"
+                        android:textSize="12sp"
+                        tools:text="Existencias: 10 en stock" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_alerta"
+                        app:tint="@color/naranja" />
+
+                    <TextView
+                        android:id="@+id/tvMinimo"
+                        style="@style/Texto.Secundario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        tools:text="Mínimo: 5 piezas" />
+                </LinearLayout>
+
+                <!-- 5. Historial del producto (subcolección movimientos en Firestore) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Texto.Seccion"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Historial"
+                        android:textSize="18sp" />
+
+                    <!-- Estado en Firebase: guardado, pendiente de subir o sin conexión -->
+                    <TextView
+                        android:id="@+id/tvSincronizacion"
+                        style="@style/Texto.Pildora"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_pildora_verde"
+                        android:drawablePadding="6dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/verde"
+                        tools:drawableStart="@drawable/ic_nube"
+                        tools:text="Guardado en Firebase" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvRegistro"
+                    style="@style/Texto.Secundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="12sp"
+                    tools:text="Registrado el 18/10/2026 por Fernanda Mancilla · Última actualización el 20/10/2026 por Luis Pérez" />
+
+                <!-- Los renglones los agrega ProductoDetalleFragment (item_movimiento.xml) -->
+                <LinearLayout
+                    android:id="@+id/contenedorHistorial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:divider="@drawable/divisor_menu"
+                    android:orientation="vertical"
+                    android:showDividers="middle" />
+
+                <TextView
+                    android:id="@+id/tvSinHistorial"
+                    style="@style/Texto.Secundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Sin movimientos registrados todavía."
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ===== 5. Pie fijo: precio y botón "Vender" ===== -->
+    <LinearLayout
+        android:id="@+id/pie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/superficie"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="24dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="18dp">
+
+        <TextView
+            android:id="@+id/tvPrecio"
+            style="@style/Texto.Precio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="26sp"
+            tools:text="$50.00" />
+
+        <!-- Abre Punto de venta con este producto, su color y su personalización ya en el carrito -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:minHeight="58dp"
+            android:paddingStart="30dp"
+            android:paddingEnd="34dp"
+            android:text="Vender"
+            android:textSize="16sp"
+            app:cornerRadius="29dp"
+            app:icon="@drawable/ic_agregar" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La pantalla anterior se recorre un poco a la izquierda y se desvanece rápido -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:interpolator/fast_out_slow_in">
+    <translate
+        android:duration="320"
+        android:fromXDelta="0%"
+        android:toXDelta="-8%" />
+    <alpha
+        android:duration="140"
+        android:fromAlpha="1"
+        android:toAlpha="0" />
+</set>

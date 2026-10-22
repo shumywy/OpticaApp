@@ -1,78 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    Mosaico de producto del inventario:
+    foto dentro de un cuadro lila, precio abajo y el nombre debajo del cuadro.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    app:cardCornerRadius="18dp">
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    android:padding="6dp">
 
-    <LinearLayout
-        style="@style/Fila"
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Tarjeta.Mosaico"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="10dp">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivFoto"
-            android:layout_width="68dp"
-            android:layout_height="68dp"
-            android:layout_marginEnd="14dp"
-            android:background="@color/icono_fondo"
-            android:contentDescription="Foto del producto"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/Forma.Redondeada" />
+        android:duplicateParentState="true">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <TextView
-                android:id="@+id/tvNombre"
-                style="@style/Texto.Fila"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Acetato A-102" />
-
-            <TextView
-                android:id="@+id/tvCategoria"
-                style="@style/Texto.Secundario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Armazones" />
-
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_height="112dp">
 
-                <TextView
-                    android:id="@+id/tvPrecio"
-                    style="@style/Texto.Valor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:textSize="15sp"
-                    tools:text="$1,450.00" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivFoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/blanco_translucido"
+                    android:contentDescription="Foto del producto"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/Forma.Foto" />
 
+                <!-- Estado de existencias: verde, naranja o rojo -->
                 <TextView
                     android:id="@+id/tvStock"
                     style="@style/Texto.Pildora"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="6dp"
                     android:background="@drawable/bg_pildora_verde"
                     android:textColor="@color/verde"
                     tools:text="8 en stock" />
-            </LinearLayout>
-        </LinearLayout>
+            </FrameLayout>
 
-        <ImageView
-            style="@style/FlechaFila"
-            android:layout_width="22dp"
-            android:layout_height="22dp" />
-    </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tvPrecio"
+                style="@style/Texto.Valor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="2dp"
+                tools:text="$1,450.00" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Nombre del producto debajo del cuadro -->
+    <TextView
+        android:id="@+id/tvNombre"
+        style="@style/Texto.Valor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:maxLines="1"
+        android:textSize="13sp"
+        tools:text="Acetato A-102" />
+
+    <TextView
+        android:id="@+id/tvCategoria"
+        style="@style/Texto.Categoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="6dp"
+        android:gravity="center_horizontal"
+        android:textSize="9sp"
+        tools:text="Armazones" />
+</LinearLayout>

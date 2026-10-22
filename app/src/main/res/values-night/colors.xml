@@ -1,21 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Mismos nombres que values/colors.xml, pero para el tema oscuro -->
-    <color name="azul">#6E93F7</color>
-    <color name="azul_claro">#1F2A45</color>
-    <color name="fondo">#111214</color>
-    <color name="superficie">#1C1D21</color>
-    <color name="texto">#F2F3F5</color>
-    <color name="texto_secundario">#9A9DA4</color>
-    <color name="borde">#2C2E34</color>
-    <color name="icono_fondo">#2A2C31</color>
+
+    <color name="degradado_inicio">#1C2142</color>
+    <color name="degradado_centro">#2A2349</color>
+    <color name="degradado_fin">#3B2242</color>
+
+    <color name="fondo">#14172A</color>
+    <color name="superficie">#181B2E</color>
+    <color name="lavanda">#272C4B</color>
+    <color name="lavanda_suave">#20243D</color>
+    <color name="blanco_translucido">#26FFFFFF</color>
+    <color name="borde">#2E3352</color>
+    <color name="icono_fondo">#20243D</color>
+
+    <color name="texto">#EEF0FA</color>
+    <color name="texto_secundario">#94A3B8</color>
+    <color name="texto_tenue">#6E7494</color>
+
+    <color name="marino">#1E1B4B</color>
+    <color name="cielo">#4CBEF5</color>
+    <color name="cielo_claro">#173247</color>
+
+    <color name="seleccion">#4CBEF5</color>
+    <color name="seleccion_texto">#0E1222</color>
+
+    <color name="azul">#6DB6F2</color>
+    <color name="azul_claro">#18304A</color>
 
     <color name="verde">#4CC985</color>
-    <color name="verde_claro">#16301F</color>
+    <color name="verde_claro">#15301F</color>
     <color name="naranja">#F5A04A</color>
     <color name="naranja_claro">#33240F</color>
     <color name="rojo">#FF6B70</color>
     <color name="rojo_claro">#3A1A1C</color>
-    <color name="morado">#A88BF0</color>
-    <color name="morado_claro">#2A2240</color>
+    <color name="morado">#C4B5FD</color>
+    <color name="morado_claro">#2E2458</color>
+    <color name="gris_claro">#262A3E</color>
+    <color name="aviso_fondo">#374151</color>
+    <color name="campo_borde">#3B4166</color>
+
+    <color name="menu_vidrio_inicio">#F21C1A33</color>
+    <color name="menu_vidrio_fin">#ED2A2148</color>
+    <color name="menu_vidrio_borde">#1FFFFFFF</color>
+    <color name="menu_icono">#C4B5FD</color>
+    <color name="menu_salir">#FB7185</color>
+    <color name="menu_seleccion">#1FFFFFFF</color>
+    <color name="menu_divisor">#1AFFFFFF</color>
+    <color name="menu_foto_borde">#4DFFFFFF</color>
+    <color name="menu_velo">#99000000</color>
+    <color name="insignia_conteo_fondo">#3B2A5C</color>
+    <color name="insignia_conteo_texto">#E9D5FF</color>
+
+    <color name="vidrio_inicio">#2EFFFFFF</color>
+    <color name="vidrio_fin">#0FFFFFFF</color>
+    <color name="vidrio_borde">#38FFFFFF</color>
+    <color name="hoja_vidrio_inicio">#59181B2E</color>
+    <color name="hoja_vidrio_centro">#D9181B2E</color>
+    <color name="hoja_vidrio_fin">#FF181B2E</color>
+    <color name="vidrio_mosaico_inicio">#2EFFFFFF</color>
+    <color name="vidrio_mosaico_fin">#0FFFFFFF</color>
+    <color name="aurora_morado">#806650E0</color>
+    <color name="aurora_azul">#4D3F5BD6</color>
 </resources>

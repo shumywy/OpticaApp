@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Renglón de una venta en el corte de caja: hora, cliente, método y total -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:id="@+id/tvHoraVenta"
+        style="@style/Texto.Contador"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        tools:text="10:42" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvClienteVenta"
+            style="@style/Texto.Fila"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="14sp"
+            tools:text="María López" />
+
+        <TextView
+            android:id="@+id/tvDetalleVenta"
+            style="@style/Texto.Secundario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Efectivo · 2 piezas · Debe $300.00" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvTotalVenta"
+        style="@style/Texto.Valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textSize="15sp"
+        tools:text="$1,250.00" />
+</LinearLayout>

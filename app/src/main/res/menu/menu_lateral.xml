@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Menú lateral: cuenta y administración. Las secciones de trabajo
+    (Inicio, Pacientes, Inventario, Ventas, Laboratorio) están en la barra inferior.
+
+    Los id son iguales a los destinos de nav_graph.xml. menuCategory="secondary" hace que
+    se abran encima de la pantalla actual y "atrás" regrese a ella (MainActivity.navegarSeccion).
+    El grupo de Administración solo lo ve el administrador (MainActivity.configurarMenuPorRol).
+
+    Cada opción define el color de su ícono con app:iconTint: violeta en general y un tono
+    cálido en "Cerrar sesión" para distinguirla.
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- ===== Mi cuenta (todos los roles) ===== -->
+    <group
+        android:id="@+id/grupoCuenta"
+        android:checkableBehavior="all">
+        <item
+            android:id="@+id/perfilFragment"
+            android:icon="@drawable/ic_perfil"
+            android:menuCategory="secondary"
+            android:title="@string/menu_perfil"
+            app:iconTint="@color/menu_icono" />
+        <item
+            android:id="@+id/ajustesFragment"
+            android:icon="@drawable/ic_configuracion"
+            android:menuCategory="secondary"
+            android:title="@string/menu_configuracion"
+            app:iconTint="@color/menu_icono" />
+    </group>
+
+    <!-- ===== Administración (solo administrador) ===== -->
+    <item
+        android:id="@+id/seccionAdministracion"
+        android:title="@string/menu_administracion">
+        <menu>
+            <group
+                android:id="@+id/grupoAdministracion"
+                android:checkableBehavior="all">
+                <item
+                    android:id="@+id/opticaFragment"
+                    android:icon="@drawable/ic_tienda"
+                    android:menuCategory="secondary"
+                    android:title="@string/menu_optica"
+                    app:iconTint="@color/menu_icono" />
+                <!-- La insignia "N personas" la llena MainActivity.actualizarInsigniaPersonal() -->
+                <item
+                    android:id="@+id/personalFragment"
+                    android:icon="@drawable/ic_pacientes"
+                    android:menuCategory="secondary"
+                    android:title="@string/menu_personal"
+                    app:actionLayout="@layout/insignia_personal"
+                    app:iconTint="@color/menu_icono" />
+                <item
+                    android:id="@+id/nuevaCuentaFragment"
+                    android:icon="@drawable/ic_nueva_cuenta"
+                    android:menuCategory="secondary"
+                    android:title="@string/menu_nueva_cuenta"
+                    app:iconTint="@color/menu_icono" />
+                <!-- No es pantalla: abre un diálogo con las ventas del día -->
+                <item
+                    android:id="@+id/accionCorteCaja"
+                    android:checkable="false"
+                    android:icon="@drawable/ic_recibo"
+                    android:title="@string/menu_corte_caja"
+                    app:iconTint="@color/menu_icono" />
+            </group>
+        </menu>
+    </item>
+
+    <!-- ===== Salir ===== -->
+    <group android:id="@+id/grupoSalir">
+        <item
+            android:id="@+id/accionCerrarSesion"
+            android:checkable="false"
+            android:icon="@drawable/ic_salir"
+            android:title="@string/menu_cerrar_sesion"
+            app:iconTint="@color/menu_salir" />
+    </group>
+
+</menu>

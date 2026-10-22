@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Contorno de los campos de texto: azul cielo con el foco, gris lila sin él -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/cielo" android:state_focused="true" />
+    <item android:color="@color/texto_secundario" android:state_hovered="true" />
+    <item android:color="@color/texto_tenue" android:state_enabled="false" />
+    <item android:color="@color/campo_borde" />
+</selector>

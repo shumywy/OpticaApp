@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Diálogo "Agregar color exacto": vista previa, nombre y código hexadecimal -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/espacio"
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="24dp"
+    android:showDividers="middle">
+
+    <mx.itch.opticaapp.ui.inventario.MuestraColor
+        android:id="@+id/muestraPrevia"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:id="@+id/etNombreColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre (ej. Gris Oxford)"
+        android:importantForAutofill="no"
+        android:inputType="textCapWords"
+        android:maxLength="20" />
+
+    <EditText
+        android:id="@+id/etHexColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:digits="#0123456789ABCDEFabcdef"
+        android:hint="Código (ej. #3C434A)"
+        android:importantForAutofill="no"
+        android:inputType="textCapCharacters"
+        android:maxLength="7" />
+</LinearLayout>

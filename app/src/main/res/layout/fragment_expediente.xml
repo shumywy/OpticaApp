@@ -4,334 +4,504 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/espacio"
-        android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="24dp"
-        android:showDividers="middle">
+        android:orientation="vertical">
 
-        <!-- Encabezado del paciente -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                style="@style/Fila"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null">
-
-                <TextView
-                    android:id="@+id/tvIniciales"
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:layout_marginEnd="14dp"
-                    android:background="@drawable/bg_avatar"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="center"
-                    android:textColor="@color/azul"
-                    android:textSize="17sp"
-                    tools:text="MF" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvPaciente"
-                        style="@style/Texto.Seccion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        tools:text="María Fernanda López" />
-
-                    <TextView
-                        android:id="@+id/tvDatosPaciente"
-                        style="@style/Texto.Secundario"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="34 años · Paciente desde 12/03/2024" />
-                </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Graduación -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    style="@style/Texto.Seccion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="Graduación" />
-
-                <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:stretchColumns="1,2,3,4">
-
-                    <TableRow>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="" />
-
-                        <TextView
-                            style="@style/Texto.Etiqueta"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="ESF" />
-
-                        <TextView
-                            style="@style/Texto.Etiqueta"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="CIL" />
-
-                        <TextView
-                            style="@style/Texto.Etiqueta"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="EJE" />
-
-                        <TextView
-                            style="@style/Texto.Etiqueta"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="ADD" />
-                    </TableRow>
-
-                    <TableRow android:gravity="center_vertical">
-
-                        <TextView
-                            style="@style/Texto.Fila"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingEnd="8dp"
-                            android:text="OD" />
-
-                        <EditText
-                            android:id="@+id/etOdEsfera"
-                            style="@style/Campo.Compacto"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="1"
-                            android:hint="0.00"
-                            android:importantForAutofill="no"
-                            android:inputType="numberSigned|numberDecimal" />
-
-                        <EditText
-                            android:id="@+id/etOdCilindro"
-                            style="@style/Campo.Compacto"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="1"
-                            android:hint="0.00"
-                            android:importantForAutofill="no"
-                            android:inputType="numberSigned|numberDecimal" />
-
-                        <EditText
-                            android:id="@+id/etOdEje"
-                            style="@style/Campo.Compacto"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="1"
-                            android:hint="°"
-                            android:importantForAutofill="no"
-                            android:inputType="number" />
-
-                        <EditText
-                            android:id="@+id/etOdAdicion"
-                            style="@style/Campo.Compacto"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="0.00"
-                            android:importantForAutofill="no"
-                            android:inputType="numberDecimal" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_marginTop="8dp"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            style="@style/Texto.Fila"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingEnd="8dp"
-                            android:text="OI" />
-
-                        <EditText
-                            android:id="@+id/etOiEsfera"
-                            style="@style/Campo.Compacto"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="1"
-                            android:hint="0.00"
-                            android:importantForAutofill="no"
-                            android:inputType="numberSigned|numberDecimal" />
-
-                        <EditText
-                            android:id="@+id/etOiCilindro"
-                            style="@style/Campo.Compacto"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="1"
-                            android:hint="0.00"
-                            android:importantForAutofill="no"
-                            android:inputType="numberSigned|numberDecimal" />
-
-                        <EditText
-                            android:id="@+id/etOiEje"
-                            style="@style/Campo.Compacto"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="1"
-                            android:hint="°"
-                            android:importantForAutofill="no"
-                            android:inputType="number" />
-
-                        <EditText
-                            android:id="@+id/etOiAdicion"
-                            style="@style/Campo.Compacto"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="0.00"
-                            android:importantForAutofill="no"
-                            android:inputType="numberDecimal" />
-                    </TableRow>
-                </TableLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/etDistanciaPupilar"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:hint="DIP (mm)"
-                        android:importantForAutofill="no"
-                        android:inputType="numberDecimal" />
-
-                    <EditText
-                        android:id="@+id/etAgudezaVisual"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="Agudeza (20/20)"
-                        android:importantForAutofill="no"
-                        android:inputType="text" />
-                </LinearLayout>
-
-                <TextView
-                    style="@style/Texto.Secundario"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Tipo de lente" />
-
-                <Spinner
-                    android:id="@+id/spTipoLente"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp" />
-
-                <EditText
-                    android:id="@+id/etObservaciones"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="top"
-                    android:hint="Observaciones"
-                    android:importantForAutofill="no"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:minLines="3" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
+        <!-- ===== Encabezado del paciente sobre el degradado ===== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="24dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="28dp">
 
-            <Button
-                android:id="@+id/btnPdf"
-                style="@style/Boton.Secundario"
+            <LinearLayout
+
+                android:id="@+id/encabezado"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:minHeight="54dp"
-                android:text="Receta PDF"
-                app:icon="@drawable/ic_documento" />
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btnGuardar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.3"
-                android:text="Guardar" />
+                <TextView
+                    style="@style/Texto.Eyebrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expediente clínico" />
+
+                <TextView
+                    android:id="@+id/tvPaciente"
+                    style="@style/Texto.Hero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textSize="26sp"
+                    tools:text="María Fernanda López" />
+
+                <TextView
+                    android:id="@+id/tvDatosPaciente"
+                    style="@style/Texto.Secundario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    tools:text="34 años · Paciente desde 12/03/2024" />
+            </LinearLayout>
+
+            <!-- Iniciales en un círculo blanco; el lápiz abre "Editar paciente" -->
+            <FrameLayout
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:id="@+id/tvIniciales"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_icono_circulo"
+                    android:fontFamily="@font/lexend_medium"
+                    android:gravity="center"
+                    android:textColor="@color/texto"
+                    android:textSize="17sp"
+                    tools:text="MF" />
+
+                <ImageView
+                    android:id="@+id/btnEditarPaciente"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/bg_circulo_cielo"
+                    android:contentDescription="Editar datos del paciente"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_editar"
+                    app:tint="@color/blanco" />
+            </FrameLayout>
         </LinearLayout>
 
-        <TextView
-            style="@style/Texto.Seccion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Historial de consultas" />
-
-        <TextView
-            android:id="@+id/tvSinHistorial"
-            style="@style/Texto.Secundario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sin consultas registradas. Toca una consulta para cargarla en el formulario." />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvHistorial"
+        <!-- ===== Hoja blanca: graduación e historial ===== -->
+        <LinearLayout
+            android:id="@+id/hoja"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            tools:itemCount="2"
-            tools:listitem="@layout/item_consulta" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_hoja"
+            android:divider="@drawable/espacio"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="26dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Texto.Seccion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Graduación" />
+
+                <TextView
+                    style="@style/Texto.Categoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nueva consulta" />
+            </LinearLayout>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1,2,3,4">
+
+                <TableRow android:layout_marginBottom="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+
+                    <TextView
+                        style="@style/Texto.Categoria"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="ESF" />
+
+                    <TextView
+                        style="@style/Texto.Categoria"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="CIL" />
+
+                    <TextView
+                        style="@style/Texto.Categoria"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="EJE" />
+
+                    <TextView
+                        style="@style/Texto.Categoria"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="ADD" />
+                </TableRow>
+
+                <TableRow android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Texto.Valor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="10dp"
+                        android:text="OD" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilOdEsfera"
+                        style="@style/CampoMaterial.Tabla"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etOdEsfera"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="6"
+                            android:hint="0.00"
+                            android:importantForAutofill="no"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:gravity="center"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilOdCilindro"
+                        style="@style/CampoMaterial.Tabla"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etOdCilindro"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="6"
+                            android:hint="0.00"
+                            android:importantForAutofill="no"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:gravity="center"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilOdEje"
+                        style="@style/CampoMaterial.Tabla"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        app:suffixText="°">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etOdEje"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="3"
+                            android:hint="0"
+                            android:importantForAutofill="no"
+                            android:inputType="number"
+                            android:gravity="center"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilOdAdicion"
+                        style="@style/CampoMaterial.Tabla"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etOdAdicion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="5"
+                            android:hint="0.00"
+                            android:importantForAutofill="no"
+                            android:inputType="numberDecimal"
+                            android:gravity="center"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/Texto.Valor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="10dp"
+                        android:text="OI" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilOiEsfera"
+                        style="@style/CampoMaterial.Tabla"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etOiEsfera"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="6"
+                            android:hint="0.00"
+                            android:importantForAutofill="no"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:gravity="center"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilOiCilindro"
+                        style="@style/CampoMaterial.Tabla"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etOiCilindro"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="6"
+                            android:hint="0.00"
+                            android:importantForAutofill="no"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:gravity="center"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilOiEje"
+                        style="@style/CampoMaterial.Tabla"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        app:suffixText="°">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etOiEje"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="3"
+                            android:hint="0"
+                            android:importantForAutofill="no"
+                            android:inputType="number"
+                            android:gravity="center"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilOiAdicion"
+                        style="@style/CampoMaterial.Tabla"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etOiAdicion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="5"
+                            android:hint="0.00"
+                            android:importantForAutofill="no"
+                            android:inputType="numberDecimal"
+                            android:gravity="center"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </TableRow>
+            </TableLayout>
+
+            <!-- Errores de la tabla: las celdas solo se marcan en rojo y aquí se explica cada una -->
+            <TextView
+                android:id="@+id/tvErrorGraduacion"
+                style="@style/Texto.Secundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="@color/rojo"
+                android:visibility="gone"
+                tools:text="OD · Eje: obligatorio cuando hay cilindro"
+                tools:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDistanciaPupilar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:hint="Distancia pupilar"
+                    app:suffixText="mm">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDistanciaPupilar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="4"
+                        android:importantForAutofill="no"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilAgudezaVisual"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Agudeza visual"
+                    app:placeholderText="20/20">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etAgudezaVisual"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="6"
+                        android:digits="0123456789/"
+                        android:importantForAutofill="no"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <TextView
+                style="@style/Texto.Categoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:text="Tipo de lente" />
+
+            <Spinner
+                android:id="@+id/spTipoLente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilObservaciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Observaciones"
+                app:counterEnabled="true"
+                app:counterMaxLength="500">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etObservaciones"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="500"
+                    android:gravity="top"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:minLines="3" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnPdf"
+                    style="@style/Boton.Secundario"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:minHeight="56dp"
+                    android:text="Receta PDF"
+                    app:icon="@drawable/ic_documento" />
+
+                <Button
+                    android:id="@+id/btnGuardar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.3"
+                    android:text="Guardar" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:text="Historial de consultas" />
+
+            <TextView
+                android:id="@+id/tvSinHistorial"
+                style="@style/Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Sin consultas registradas. Toca una consulta para cargarla en el formulario." />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_consulta" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

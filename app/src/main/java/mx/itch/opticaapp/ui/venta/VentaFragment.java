@@ -25,20 +25,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import mx.itch.opticaapp.R;
+import mx.itch.opticaapp.data.Historial;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentVentaBinding;
+import mx.itch.opticaapp.model.Documento;
 import mx.itch.opticaapp.model.ItemVenta;
+import mx.itch.opticaapp.model.Movimiento;
 import mx.itch.opticaapp.model.Orden;
 import mx.itch.opticaapp.model.Paciente;
 import mx.itch.opticaapp.model.Producto;
 import mx.itch.opticaapp.model.Venta;
 import mx.itch.opticaapp.util.AlEscribir;
+import mx.itch.opticaapp.util.Animaciones;
+import mx.itch.opticaapp.util.Campos;
+import mx.itch.opticaapp.util.Documentos;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Pdf;
+import mx.itch.opticaapp.util.Validaciones;
 
 /**
  * Pantalla 7: punto de venta.
@@ -47,7 +56,19 @@ import mx.itch.opticaapp.util.Pdf;
  */
 public class VentaFragment extends Fragment {
 
+    /** Si llega este argumento (desde el detalle de producto), ese producto se agrega solo al carrito. */
+    public static final String ARG_PRODUCTO_ID = "productoId";
+    /** Color y personalización elegidos en el detalle ("Gris Oxford · logo estampado"). */
+    public static final String ARG_DETALLE = "detalle";
+    /** Costo adicional por pieza (estampado del logotipo). */
+    public static final String ARG_EXTRA = "extra";
+
     private static final String PUBLICO_GENERAL = "Público general";
+
+    /** Producto que hay que agregar en cuanto llegue la lista de productos de Firestore. */
+    private String productoPorAgregar;
+    private String detallePorAgregar;
+    private double extraPorAgregar;
 
     private FragmentVentaBinding binding;
     private ListenerRegistration escuchaPacientes;
@@ -91,9 +112,24 @@ public class VentaFragment extends Fragment {
         binding.btnAgregar.setOnClickListener(v -> agregarAlCarrito());
         binding.etAnticipo.addTextChangedListener(new AlEscribir(texto -> actualizarTotales()));
         binding.swOrden.setOnCheckedChangeListener((boton, marcado) ->
-                binding.etOrdenDescripcion.setVisibility(marcado ? View.VISIBLE : View.GONE));
+                Campos.mostrar(binding.etOrdenDescripcion, marcado));
         binding.btnConfirmar.setOnClickListener(v -> confirmarVenta());
         actualizarTotales();
+
+        // Se lee una sola vez: se borra del Bundle para no agregarlo de nuevo al regresar a esta pantalla
+        if (getArguments() != null && getArguments().containsKey(ARG_PRODUCTO_ID)) {
+            productoPorAgregar = getArguments().getString(ARG_PRODUCTO_ID);
+            detallePorAgregar = getArguments().getString(ARG_DETALLE);
+            extraPorAgregar = getArguments().getDouble(ARG_EXTRA, 0);
+            getArguments().remove(ARG_PRODUCTO_ID);
+            getArguments().remove(ARG_DETALLE);
+            getArguments().remove(ARG_EXTRA);
+        }
+
+        // Animación de entrada: título en cascada, hoja que sube y el pie con el total al final
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            Animaciones.subir(binding.pie, 40 * getResources().getDisplayMetrics().density, 260);
+        }
     }
 
     @Override
@@ -123,6 +159,7 @@ public class VentaFragment extends Fragment {
             }
             Collections.sort(productosDisponibles, (a, b) -> texto(a.nombre).compareTo(texto(b.nombre)));
             adaptadorProductos.notifyDataSetChanged();
+            agregarProductoPendiente();
         });
     }
 
@@ -147,25 +184,63 @@ public class VentaFragment extends Fragment {
             mensaje("No hay productos con existencias");
             return;
         }
-        Integer cantidad = Formato.leerEntero(binding.etCantidad.getText().toString());
-        if (cantidad == null || cantidad <= 0) {
-            binding.etCantidad.setError("Cantidad no válida");
+        String error = Validaciones.entero(binding.etCantidad.getText().toString(), 1, 999, "la cantidad");
+        if (error != null) {
+            Campos.error(binding.etCantidad, error);
             return;
         }
-        // Revisa que no se vendan más piezas de las que hay
+        agregar(p, Formato.leerEntero(binding.etCantidad.getText().toString()));
+    }
+
+    /** Agrega el producto que se eligió en el detalle de producto ("Vender"). */
+    private void agregarProductoPendiente() {
+        if (productoPorAgregar == null) return;
+        String id = productoPorAgregar;
+        productoPorAgregar = null;   // solo una vez
+        for (int i = 0; i < productosDisponibles.size(); i++) {
+            Producto p = productosDisponibles.get(i);
+            if (id.equals(p.id)) {
+                binding.spProducto.setSelection(i);
+                agregar(p, 1, detallePorAgregar, extraPorAgregar);
+                return;
+            }
+        }
+        mensaje("Ese producto ya no tiene existencias");
+    }
+
+    private void agregar(Producto p, int cantidad) {
+        agregar(p, cantidad, null, 0);
+    }
+
+    /**
+     * Agrega piezas al carrito. Con detalle (color o estampado) se crea un renglón propio:
+     * "Paño Twins · Gris Oxford" y "Paño Twins · Azul Marino" son renglones distintos.
+     */
+    private void agregar(Producto p, int cantidad, String detalle, double extra) {
+        ItemVenta nuevo = new ItemVenta(p, cantidad, detalle, extra);
+        // Revisa que no se vendan más piezas de las que hay (sumando todos los renglones del producto)
         ItemVenta existente = null;
+        int yaAgregadas = 0;
         for (ItemVenta i : carrito) {
-            if (i.productoId.equals(p.id)) existente = i;
+            if (!i.productoId.equals(p.id)) continue;
+            yaAgregadas += i.cantidad;
+            if (i.nombre.equals(nuevo.nombre) && i.precio == nuevo.precio) existente = i;
         }
-        int yaAgregadas = existente != null ? existente.cantidad : 0;
         if (yaAgregadas + cantidad > p.stock) {
-            binding.etCantidad.setError("Solo quedan " + p.stock);
+            int disponibles = p.stock - yaAgregadas;
+            Campos.error(binding.etCantidad, disponibles > 0
+                    ? "Solo puedes agregar " + disponibles + " más (quedan " + p.stock + ")"
+                    : "Ya agregaste todas las piezas disponibles (" + p.stock + ")");
             return;
         }
+        Campos.error(binding.etCantidad, null);
+        // Avisos por renglón (no notifyDataSetChanged) para que RecyclerView anime la entrada o el cambio
         if (existente != null) {
             existente.cantidad += cantidad;
+            adaptadorCarrito.notifyItemChanged(carrito.indexOf(existente));
         } else {
-            carrito.add(new ItemVenta(p, cantidad));
+            carrito.add(nuevo);
+            adaptadorCarrito.notifyItemInserted(carrito.size() - 1);
         }
         // Si lleva micas, normalmente se manda a laboratorio
         if (Producto.CATEGORIA_MICAS.equals(p.categoria)) {
@@ -175,14 +250,13 @@ public class VentaFragment extends Fragment {
             }
         }
         binding.etCantidad.setText("1");
-        adaptadorCarrito.notifyDataSetChanged();
         actualizarTotales();
     }
 
     private void quitarDelCarrito(int posicion) {
         if (posicion == RecyclerView.NO_POSITION || posicion >= carrito.size()) return;
         carrito.remove(posicion);
-        adaptadorCarrito.notifyDataSetChanged();
+        adaptadorCarrito.notifyItemRemoved(posicion);   // el renglón se desvanece
         actualizarTotales();
     }
 
@@ -222,16 +296,38 @@ public class VentaFragment extends Fragment {
             return;
         }
         double total = total();
-        Double anticipo = anticipo();
-        if (anticipo == null || anticipo < 0 || anticipo > total) {
-            binding.etAnticipo.setError("El anticipo debe estar entre $0 y el total");
+        String anticipoTexto = binding.etAnticipo.getText().toString();
+        String errorAnticipo = Validaciones.importe(anticipoTexto, total);
+        Double escrito = Formato.leerNumero(anticipoTexto);
+        if (escrito != null && escrito > total) {
+            errorAnticipo = "No puede ser mayor que el total (" + Formato.moneda(total) + ")";
+        }
+        if (errorAnticipo != null) {
+            Campos.error(binding.etAnticipo, errorAnticipo);
+            return;
+        }
+        double anticipo = anticipo();
+        boolean conPaciente = binding.spPaciente.getSelectedItemPosition() > 0;
+
+        // Un saldo pendiente necesita a quién cobrárselo: no se permite con "Público en general"
+        if (!conPaciente && anticipo < total) {
+            Campos.error(binding.etAnticipo, "Para dejar saldo pendiente elige un paciente registrado");
             return;
         }
         boolean conOrden = binding.swOrden.isChecked();
-        String trabajo = binding.etOrdenDescripcion.getText().toString().trim();
-        if (conOrden && trabajo.isEmpty()) {
-            binding.etOrdenDescripcion.setError("Describe el trabajo para el laboratorio");
-            return;
+        String trabajo = binding.etOrdenDescripcion.getText().toString().trim().replaceAll("\\s+", " ");
+        if (conOrden) {
+            // La orden de laboratorio se entrega a un paciente: debe estar registrado
+            if (!conPaciente) {
+                mensaje("Para mandar una orden a laboratorio elige un paciente registrado");
+                return;
+            }
+            String errorTrabajo = Validaciones.textoLibre(trabajo, true, 5, Validaciones.LARGO_TRABAJO,
+                    "el trabajo para el laboratorio");
+            if (errorTrabajo != null) {
+                Campos.error(binding.etOrdenDescripcion, errorTrabajo);
+                return;
+            }
         }
 
         Venta venta = new Venta();
@@ -247,7 +343,7 @@ public class VentaFragment extends Fragment {
         venta.items = new ArrayList<>(carrito);
         venta.total = total;
         venta.anticipo = anticipo;
-        venta.saldo = total - anticipo;
+        venta.saldo = Math.round((total - anticipo) * 100) / 100.0;   // sin residuos de decimales
         venta.metodoPago = metodoDePago();
         venta.vendedorId = Sesion.getUsuario().id;
         venta.vendedorNombre = Sesion.getUsuario().nombre;
@@ -257,10 +353,20 @@ public class VentaFragment extends Fragment {
         WriteBatch lote = db.batch();
         DocumentReference ventaRef = Sesion.coleccion("ventas").document();
         lote.set(ventaRef, venta);
+        Map<String, Integer> existencias = new HashMap<>();   // para el historial: existencias antes de cada renglón
+        for (Producto p : productosDisponibles) existencias.put(p.id, p.stock);
         for (ItemVenta i : venta.items) {
             // Resta las piezas vendidas directamente en el servidor
             lote.update(Sesion.coleccion("productos").document(i.productoId),
                     "stock", FieldValue.increment(-i.cantidad));
+            // Y deja el registro en el historial del producto, ligado a esta venta
+            Integer antes = existencias.get(i.productoId);
+            int previas = antes != null ? antes : 0;
+            Historial.registrar(lote, i.productoId, Movimiento.VENTA,
+                    "Venta de " + i.cantidad + " × " + i.nombre + " a " + Formato.moneda(i.precio)
+                            + " · cliente: " + venta.pacienteNombre,
+                    -i.cantidad, previas, ventaRef.getId());
+            existencias.put(i.productoId, previas - i.cantidad);
         }
         if (conOrden) {
             Orden orden = new Orden();
@@ -311,6 +417,9 @@ public class VentaFragment extends Fragment {
     private void compartirNota(Venta venta) {
         try {
             File pdf = Pdf.notaVenta(requireContext(), Sesion.getOptica(), venta);
+            // Queda registrada en Firebase (opticas/{id}/documentos) con el PDF incluido
+            Documentos.registrar(pdf, Documento.NOTA_VENTA, "Nota de venta · " + Formato.moneda(venta.total),
+                    venta.id, venta.pacienteNombre);
             Pdf.compartir(requireContext(), pdf);
         } catch (IOException e) {
             mensaje("No se pudo crear el PDF: " + e.getMessage());

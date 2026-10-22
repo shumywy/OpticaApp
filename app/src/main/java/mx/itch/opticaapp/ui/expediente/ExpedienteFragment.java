@@ -23,14 +23,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import mx.itch.opticaapp.R;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentExpedienteBinding;
 import mx.itch.opticaapp.model.Consulta;
+import mx.itch.opticaapp.model.Documento;
 import mx.itch.opticaapp.model.Paciente;
+import mx.itch.opticaapp.ui.pacientes.DialogoPaciente;
+import mx.itch.opticaapp.util.AlEscribir;
+import mx.itch.opticaapp.util.Animaciones;
+import mx.itch.opticaapp.util.Campos;
+import mx.itch.opticaapp.util.Documentos;
 import mx.itch.opticaapp.util.Fechas;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Pdf;
@@ -51,6 +59,8 @@ public class ExpedienteFragment extends Fragment {
     private ConsultasAdapter adaptador;
     private ListenerRegistration escuchaPaciente;
     private ListenerRegistration escuchaConsultas;
+    /** Errores de las celdas de la tabla de graduación ("OD · Eje: ..."), se muestran debajo de ella. */
+    private final Map<EditText, String> erroresTabla = new HashMap<>();
 
     @Nullable
     @Override
@@ -78,13 +88,30 @@ public class ExpedienteFragment extends Fragment {
         // El vendedor puede ver el expediente pero no modificarlo
         boolean puedeEditar = !Sesion.esVendedor();
         for (EditText campo : camposDelFormulario()) {
-            campo.setEnabled(puedeEditar);
+            Campos.habilitar(campo, puedeEditar);
+        }
+        // Al corregir una celda se quita su renglón del mensaje de errores de la tabla
+        for (EditText celda : celdasDeGraduacion()) {
+            celda.addTextChangedListener(new AlEscribir(texto -> {
+                if (erroresTabla.remove(celda) != null) mostrarErroresTabla();
+            }));
         }
         binding.spTipoLente.setEnabled(puedeEditar);
         binding.btnGuardar.setVisibility(puedeEditar ? View.VISIBLE : View.GONE);
 
+        // Editar nombre, teléfono y edad del paciente (mismo diálogo que el alta)
+        binding.btnEditarPaciente.setVisibility(puedeEditar ? View.VISIBLE : View.GONE);
+        binding.btnEditarPaciente.setOnClickListener(v -> {
+            if (paciente != null) DialogoPaciente.mostrar(this, paciente);
+        });
+
         binding.btnGuardar.setOnClickListener(v -> guardar());
         binding.btnPdf.setOnClickListener(v -> generarReceta());
+
+        // Animación de entrada: nombre en cascada, iniciales con rebote y la hoja que sube
+        if (Animaciones.entrada(this, binding.encabezado, binding.hoja)) {
+            Animaciones.aparecer(binding.tvIniciales, 200);
+        }
     }
 
     @Override
@@ -100,7 +127,8 @@ public class ExpedienteFragment extends Fragment {
             binding.tvIniciales.setText(Formato.iniciales(paciente.nombre));
             binding.tvPaciente.setText(paciente.nombre);
             String edad = paciente.edad > 0 ? paciente.edad + " años · " : "";
-            String telefono = paciente.telefono == null || paciente.telefono.isEmpty() ? "" : "Tel. " + paciente.telefono + " · ";
+            String telefono = paciente.telefono == null || paciente.telefono.isEmpty()
+                    ? "" : "Tel. " + Formato.telefono(paciente.telefono) + " · ";
             binding.tvDatosPaciente.setText(edad + telefono + "Paciente desde " + Fechas.corta(paciente.fechaRegistro));
         });
 
@@ -113,6 +141,7 @@ public class ExpedienteFragment extends Fragment {
                 return b.fecha.compareTo(a.fecha);
             });
             adaptador.mostrar(consultas);
+            Animaciones.listaUnaVez(this, binding.rvHistorial);
             binding.tvSinHistorial.setVisibility(consultas.isEmpty() ? View.VISIBLE : View.GONE);
         });
     }
@@ -137,6 +166,38 @@ public class ExpedienteFragment extends Fragment {
                 binding.etDistanciaPupilar, binding.etAgudezaVisual, binding.etObservaciones};
     }
 
+    /** Las 8 celdas de la tabla, en el orden en que se leen (OD y luego OI). */
+    private EditText[] celdasDeGraduacion() {
+        return new EditText[]{
+                binding.etOdEsfera, binding.etOdCilindro, binding.etOdEje, binding.etOdAdicion,
+                binding.etOiEsfera, binding.etOiCilindro, binding.etOiEje, binding.etOiAdicion};
+    }
+
+    /** "OD · Esfera" para el mensaje de error; null si el campo no es una celda de la tabla. */
+    @Nullable
+    private String nombreCelda(EditText campo) {
+        String[] nombres = {"OD · Esfera", "OD · Cilindro", "OD · Eje", "OD · Adición",
+                "OI · Esfera", "OI · Cilindro", "OI · Eje", "OI · Adición"};
+        EditText[] celdas = celdasDeGraduacion();
+        for (int i = 0; i < celdas.length; i++) {
+            if (celdas[i] == campo) return nombres[i];
+        }
+        return null;
+    }
+
+    private void mostrarErroresTabla() {
+        if (binding == null) return;
+        StringBuilder texto = new StringBuilder();
+        for (EditText celda : celdasDeGraduacion()) {
+            String error = erroresTabla.get(celda);
+            if (error == null) continue;
+            if (texto.length() > 0) texto.append('\n');
+            texto.append(error);
+        }
+        binding.tvErrorGraduacion.setText(texto);
+        binding.tvErrorGraduacion.setVisibility(erroresTabla.isEmpty() ? View.GONE : View.VISIBLE);
+    }
+
     // ---------------- Formulario ----------------
 
     /**
@@ -154,15 +215,25 @@ public class ExpedienteFragment extends Fragment {
         Double oiAdd = Formato.leerNumero(binding.etOiAdicion.getText().toString());
         Double dip = Formato.leerNumero(binding.etDistanciaPupilar.getText().toString());
 
-        boolean ok = marcar(binding.etOdEsfera, Validaciones.esfera(odEsf));
-        ok &= marcar(binding.etOdCilindro, Validaciones.cilindro(odCil));
-        ok &= marcar(binding.etOdEje, Validaciones.eje(odEje, odCil));
-        ok &= marcar(binding.etOdAdicion, Validaciones.adicion(odAdd));
-        ok &= marcar(binding.etOiEsfera, Validaciones.esfera(oiEsf));
-        ok &= marcar(binding.etOiCilindro, Validaciones.cilindro(oiCil));
-        ok &= marcar(binding.etOiEje, Validaciones.eje(oiEje, oiCil));
-        ok &= marcar(binding.etOiAdicion, Validaciones.adicion(oiAdd));
-        ok &= marcar(binding.etDistanciaPupilar, Validaciones.distanciaPupilar(dip));
+        boolean ok = revisar(binding.etOdEsfera, Validaciones.esfera(odEsf));
+        ok &= revisar(binding.etOdCilindro, Validaciones.cilindro(odCil));
+        ok &= revisar(binding.etOdEje, Validaciones.eje(odEje, odCil));
+        ok &= revisar(binding.etOdAdicion, Validaciones.adicion(odAdd));
+        ok &= revisar(binding.etOiEsfera, Validaciones.esfera(oiEsf));
+        ok &= revisar(binding.etOiCilindro, Validaciones.cilindro(oiCil));
+        ok &= revisar(binding.etOiEje, Validaciones.eje(oiEje, oiCil));
+        ok &= revisar(binding.etOiAdicion, Validaciones.adicion(oiAdd));
+        ok &= revisar(binding.etDistanciaPupilar, Validaciones.distanciaPupilar(dip));
+        ok &= marcar(binding.etAgudezaVisual, Validaciones.agudezaVisual(binding.etAgudezaVisual.getText().toString()));
+        ok &= marcar(binding.etObservaciones, Validaciones.textoLibre(binding.etObservaciones.getText().toString(),
+                false, 0, Validaciones.LARGO_OBSERVACIONES, "observaciones"));
+
+        // Bifocal y progresivo necesitan adición en al menos un ojo
+        String tipo = binding.spTipoLente.getSelectedItem().toString();
+        boolean sinAdicion = (odAdd == null || odAdd == 0) && (oiAdd == null || oiAdd == 0);
+        if (ok && sinAdicion && (tipo.equals("Bifocal") || tipo.equals("Progresivo"))) {
+            ok = marcar(binding.etOdAdicion, "Un lente " + tipo.toLowerCase(Locale.ROOT) + " necesita adición");
+        }
         if (!ok) {
             mensaje("Revisa los campos marcados");
             return null;
@@ -187,10 +258,34 @@ public class ExpedienteFragment extends Fragment {
         return c;
     }
 
-    /** Pone o quita el error de un campo. Devuelve true si no hay error. */
+    /**
+     * Como marcar(), pero si el campo tiene algo escrito que no es un número (por ejemplo "1..5"),
+     * muestra "Número no válido" en lugar del error de rango.
+     */
+    private boolean revisar(EditText campo, String errorDeRango) {
+        String texto = campo.getText().toString();
+        boolean malEscrito = !texto.trim().isEmpty() && Formato.leerNumero(texto) == null;
+        boolean esEje = campo == binding.etOdEje || campo == binding.etOiEje;
+        if (!malEscrito && esEje && !texto.trim().isEmpty() && Formato.leerEntero(texto) == null) {
+            return marcar(campo, "Solo números enteros");
+        }
+        return marcar(campo, malEscrito ? "Número no válido" : errorDeRango);
+    }
+
+    /**
+     * Pone o quita el error de un campo. Devuelve true si no hay error.
+     * Las celdas de la tabla solo se marcan en rojo y su mensaje va debajo de la tabla.
+     */
     private boolean marcar(EditText campo, String error) {
-        campo.setError(error);
-        return error == null;
+        String celda = nombreCelda(campo);
+        if (celda == null) return Campos.error(campo, error);
+        if (error == null) {
+            erroresTabla.remove(campo);
+        } else {
+            erroresTabla.put(campo, celda + ": " + error);
+        }
+        mostrarErroresTabla();
+        return Campos.errorEnCelda(campo, error);
     }
 
     /** Copia una consulta del historial al formulario (para verla o imprimirla otra vez). */
@@ -250,6 +345,8 @@ public class ExpedienteFragment extends Fragment {
         if (c == null) return;
         try {
             File pdf = Pdf.receta(requireContext(), Sesion.getOptica(), paciente, c);
+            // Queda registrada en Firebase (opticas/{id}/documentos) con el PDF incluido
+            Documentos.registrar(pdf, Documento.RECETA, "Receta · " + c.tipoLente, pacienteId, paciente.nombre);
             Pdf.compartir(requireContext(), pdf);
         } catch (IOException e) {
             mensaje("No se pudo crear el PDF: " + e.getMessage());
@@ -265,6 +362,7 @@ public class ExpedienteFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        erroresTabla.clear();   // guarda referencias a las celdas de la vista que se destruye
         binding = null;
     }
 }

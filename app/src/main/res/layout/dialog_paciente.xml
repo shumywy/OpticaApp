@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:divider="@drawable/espacio"
@@ -9,27 +10,52 @@
     android:paddingEnd="24dp"
     android:showDividers="middle">
 
-    <EditText
-        android:id="@+id/etNombre"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilNombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre completo"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName|textCapWords" />
+        android:hint="Nombre completo">
 
-    <EditText
-        android:id="@+id/etTelefono"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="60"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName|textCapWords" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilTelefono"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Teléfono"
-        android:importantForAutofill="no"
-        android:inputType="phone" />
+        app:counterEnabled="true"
+        app:counterMaxLength="10">
 
-    <EditText
-        android:id="@+id/etEdad"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="10"
+            android:digits="0123456789"
+            android:importantForAutofill="no"
+            android:inputType="phone" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilEdad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Edad"
-        android:importantForAutofill="no"
-        android:inputType="number" />
+        app:suffixText="años">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEdad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="3"
+            android:importantForAutofill="no"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

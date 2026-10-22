@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Renglón de una persona del equipo: iniciales, nombre, correo y rol en píldora -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp">
+
+    <LinearLayout
+        style="@style/Fila"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="76dp"
+        android:paddingStart="14dp">
+
+        <TextView
+            android:id="@+id/tvIniciales"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/bg_avatar"
+            android:fontFamily="@font/lexend_medium"
+            android:gravity="center"
+            android:textColor="@color/texto"
+            android:textSize="14sp"
+            tools:text="LM" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNombre"
+                style="@style/Texto.Fila"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="Luisa Fernanda (tú)" />
+
+            <TextView
+                android:id="@+id/tvCorreo"
+                style="@style/Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="luisa@opticavistaclara.mx" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvRol"
+            style="@style/Texto.Pildora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_pildora_morado"
+            android:textColor="@color/morado"
+            tools:text="Administrador" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

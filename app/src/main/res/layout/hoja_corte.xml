@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Corte de caja (Administración) en una hoja inferior: día elegido con el selector de fechas
+    de Material, resumen en cuatro mosaicos, cobrado por método de pago, lista de las ventas del
+    día y los botones "Cortes anteriores" y "Guardar corte".
+-->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="16dp">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/Texto.TituloHoja"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Corte de caja" />
+
+        <TextView
+            style="@style/Texto.Secundario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Toca la fecha para ver el corte de otro día" />
+
+        <!-- Abre el MaterialDatePicker (solo deja elegir hoy o días anteriores) -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipDia"
+            style="@style/Etiqueta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:contentDescription="Cambiar el día del corte"
+            app:chipIcon="@drawable/ic_calendario"
+            app:chipIconTint="@color/morado"
+            app:chipIconVisible="true"
+            app:closeIcon="@drawable/ic_flecha_abajo"
+            app:closeIconTint="@color/morado"
+            app:closeIconVisible="true"
+            tools:text="Hoy · 20 oct" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progresoCorte"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:indicatorColor="@color/cielo"
+            app:trackCornerRadius="2dp" />
+
+        <!-- Resumen: 2 × 2 mosaicos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_contenedor_fino"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    style="@style/Texto.Categoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ventas" />
+
+                <TextView
+                    android:id="@+id/tvVentasCorte"
+                    style="@style/Texto.Valor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    tools:text="$0.00" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_contenedor_fino"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    style="@style/Texto.Categoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total vendido" />
+
+                <TextView
+                    android:id="@+id/tvTotalCorte"
+                    style="@style/Texto.Valor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    tools:text="$0.00" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_contenedor_fino"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    style="@style/Texto.Categoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dinero cobrado" />
+
+                <TextView
+                    android:id="@+id/tvCobradoCorte"
+                    style="@style/Texto.Valor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    tools:text="$0.00" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_contenedor_fino"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    style="@style/Texto.Categoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Saldo pendiente" />
+
+                <TextView
+                    android:id="@+id/tvSaldoCorte"
+                    style="@style/Texto.Valor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    tools:text="$0.00" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Cobrado por método de pago (Efectivo, Tarjeta, Transferencia) -->
+        <TextView
+            android:id="@+id/tvTituloMetodos"
+            style="@style/Texto.Fila"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Cobrado por método de pago" />
+
+        <LinearLayout
+            android:id="@+id/contenedorMetodos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical" />
+
+        <!-- Ventas del día, de la más temprana a la más tarde -->
+        <TextView
+            style="@style/Texto.Fila"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Ventas del día" />
+
+        <TextView
+            android:id="@+id/tvSinVentas"
+            style="@style/Texto.Secundario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="No hubo ventas este día."
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/contenedorVentas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:divider="@drawable/divisor_lista"
+            android:orientation="vertical"
+            android:showDividers="middle" />
+
+        <!-- Si ya se guardó un corte de este día, quién y a qué hora -->
+        <TextView
+            android:id="@+id/tvCorteGuardado"
+            style="@style/Texto.Secundario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_pildora_verde"
+            android:drawablePadding="8dp"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="8dp"
+            android:textColor="@color/verde"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_check"
+            app:drawableTint="@color/verde"
+            tools:text="Corte guardado a las 18:40 por Laura"
+            tools:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCortesAnteriores"
+                style="@style/Boton.Secundario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="Cortes anteriores" />
+
+            <Button
+                android:id="@+id/btnGuardarCorte"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Guardar corte" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

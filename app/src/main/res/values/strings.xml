@@ -12,7 +12,11 @@
     <string name="titulo_producto">Producto</string>
     <string name="titulo_venta">Nueva venta</string>
     <string name="titulo_laboratorio">Órdenes de laboratorio</string>
-    <string name="titulo_ajustes">Perfil y ajustes</string>
+    <string name="titulo_ajustes">Configuración</string>
+    <string name="titulo_perfil">Mi perfil</string>
+    <string name="titulo_optica">Datos de la óptica</string>
+    <string name="titulo_personal">Personal</string>
+    <string name="titulo_nueva_cuenta">Nueva cuenta</string>
 
     <!-- Barra inferior -->
     <string name="menu_inicio">Inicio</string>
@@ -20,5 +24,27 @@
     <string name="menu_inventario">Inventario</string>
     <string name="menu_ventas">Ventas</string>
     <string name="menu_laboratorio">Laboratorio</string>
-    <string name="menu_perfil">Perfil y ajustes</string>
+    <string name="menu_perfil">Mi perfil</string>
+
+    <!-- Menú lateral: Mi cuenta y Administración (las secciones de trabajo están en la barra inferior) -->
+    <string name="menu_administracion">Administración</string>
+    <string name="menu_optica">Datos de la óptica</string>
+    <string name="menu_personal">Personal</string>
+    <string name="menu_nueva_cuenta">Nueva cuenta</string>
+    <string name="menu_corte_caja">Corte de caja</string>
+    <string name="menu_configuracion">Configuración</string>
+    <string name="menu_cerrar_sesion">Cerrar sesión</string>
+    <string name="menu_abrir">Abrir menú</string>
+    <string name="atras">Regresar</string>
+
+    <!-- Lectores de pantalla: numeritos (insignias) de la barra inferior -->
+    <plurals name="insignia_ordenes">
+        <item quantity="one">%d orden pendiente</item>
+        <item quantity="other">%d órdenes pendientes</item>
+    </plurals>
+    <plurals name="insignia_stock_bajo">
+        <item quantity="one">%d producto con pocas existencias</item>
+        <item quantity="other">%d productos con pocas existencias</item>
+    </plurals>
+    <string name="insignia_mas_de_99">Más de 99</string>
 </resources>

@@ -1,115 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Pantalla 6: Inventario -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    Pantalla 6: Inventario en forma de catálogo.
+    Buscador y título sobre el degradado; mosaicos lila de 2 columnas en la hoja blanca.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+    <!-- ===== Encabezado sobre el degradado ===== -->
     <LinearLayout
+        android:id="@+id/encabezado"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="4dp">
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="24dp">
 
         <EditText
             android:id="@+id/etBuscar"
+            android:maxLength="60"
+            style="@style/Campo.Busqueda"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:drawableStart="@drawable/ic_buscar"
-            android:drawablePadding="12dp"
-            android:drawableTint="@color/texto_secundario"
             android:hint="Buscar producto"
-            android:importantForAutofill="no"
-            android:inputType="text" />
-
-        <!-- Filtro por categoría -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:clipToPadding="false"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:scrollbars="none">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipsCategoria"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:selectionRequired="true"
-                app:singleLine="true"
-                app:singleSelection="true">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipTodas"
-                    style="@style/Filtro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="Todas" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipArmazones"
-                    style="@style/Filtro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Armazones" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipMicas"
-                    style="@style/Filtro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Micas" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipContacto"
-                    style="@style/Filtro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lentes de contacto" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAccesorios"
-                    style="@style/Filtro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Accesorios" />
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
+            android:importantForAutofill="no" />
 
         <TextView
-            android:id="@+id/tvVacio"
-            style="@style/Texto.Secundario"
+            style="@style/Texto.Eyebrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="32dp"
-            android:text="No hay productos en esta categoría"
-            android:visibility="gone" />
+            android:layout_marginTop="28dp"
+            android:text="Catálogo" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvProductos"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="88dp"
-            tools:itemCount="4"
-            tools:listitem="@layout/item_producto" />
+        <TextView
+            style="@style/Texto.Hero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Inventario" />
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAgregar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:contentDescription="Agregar producto"
-        android:src="@drawable/ic_agregar" />
-</FrameLayout>
+    <!-- ===== Hoja blanca con el catálogo ===== -->
+    <FrameLayout
+        android:id="@+id/hoja"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_hoja">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="24dp">
+
+            <!-- Título "Productos" con el contador de piezas a la derecha -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
+
+                <TextView
+                    style="@style/Texto.Seccion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Productos" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvContador"
+                        style="@style/Texto.Contador"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="08/24" />
+
+                    <View
+                        android:layout_width="96dp"
+                        android:layout_height="6dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_linea_contador" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Filtro por categoría -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:clipToPadding="false"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipsCategoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:selectionRequired="true"
+                    app:singleLine="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipTodas"
+                        style="@style/Filtro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Todas" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipArmazones"
+                        style="@style/Filtro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Armazones" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipMicas"
+                        style="@style/Filtro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Micas" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipContacto"
+                        style="@style/Filtro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lentes de contacto" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipAccesorios"
+                        style="@style/Filtro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Accesorios" />
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/tvVacio"
+                style="@style/Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:text="No hay productos en esta categoría"
+                android:visibility="gone" />
+
+            <!-- Cuadrícula de 2 columnas (InventarioFragment usa GridLayoutManager) -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvProductos"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="6dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="96dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                tools:itemCount="6"
+                tools:listitem="@layout/item_producto" />
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAgregar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            android:contentDescription="Agregar producto"
+            android:src="@drawable/ic_agregar" />
+    </FrameLayout>
+</LinearLayout>

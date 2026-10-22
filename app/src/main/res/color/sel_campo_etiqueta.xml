@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Etiqueta flotante de los campos: azul cielo con el foco, gris sin él -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/cielo" android:state_focused="true" />
+    <item android:color="@color/texto_secundario" />
+</selector>

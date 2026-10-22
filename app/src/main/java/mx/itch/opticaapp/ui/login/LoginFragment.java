@@ -36,6 +36,8 @@ import mx.itch.opticaapp.databinding.FragmentLoginBinding;
 import mx.itch.opticaapp.model.Optica;
 import mx.itch.opticaapp.model.Usuario;
 import mx.itch.opticaapp.ui.registro.RegistroFragment;
+import mx.itch.opticaapp.util.Animaciones;
+import mx.itch.opticaapp.util.Campos;
 import mx.itch.opticaapp.util.Validaciones;
 
 /** Pantalla 1: inicio de sesión con correo o con Google. */
@@ -65,6 +67,9 @@ public class LoginFragment extends Fragment {
         binding.btnRegistrar.setOnClickListener(v -> irARegistro(RegistroFragment.MODO_NUEVA, false));
         binding.btnUnirme.setOnClickListener(v -> irARegistro(RegistroFragment.MODO_UNIRME, false));
 
+        // Animación de entrada: el título baja en cascada y la hoja blanca sube
+        Animaciones.entrada(this, binding.encabezado, binding.hoja);
+
         // Si Firebase recuerda una sesión abierta, cargamos sus datos sin pedir la contraseña otra vez
         if (auth.getCurrentUser() != null) {
             cargarSesion(false);
@@ -78,11 +83,11 @@ public class LoginFragment extends Fragment {
         String contrasena = binding.etContrasena.getText().toString();
         String errorCorreo = Validaciones.correo(correo);
         if (errorCorreo != null) {
-            binding.etCorreo.setError(errorCorreo);
+            Campos.error(binding.etCorreo, errorCorreo);
             return;
         }
         if (contrasena.isEmpty()) {
-            binding.etContrasena.setError("Escribe tu contraseña");
+            Campos.error(binding.etContrasena, "Escribe tu contraseña");
             return;
         }
         mostrarCargando(true);
@@ -95,7 +100,7 @@ public class LoginFragment extends Fragment {
         String correo = binding.etCorreo.getText().toString().trim();
         String errorCorreo = Validaciones.correo(correo);
         if (errorCorreo != null) {
-            binding.etCorreo.setError("Escribe tu correo para enviarte el enlace");
+            Campos.error(binding.etCorreo, "Escribe tu correo para enviarte el enlace");
             return;
         }
         auth.sendPasswordResetEmail(correo)
