@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Esquema de color (se abre desde Ajustes › Apariencia › Ver esquema completo), adaptado de Atrium:
+    colores núcleo, los 48 roles de Material 3 en claro u oscuro, las 6 paletas tonales y el
+    muestrario de componentes con ese tema. Tocar un color abre su ficha (hoja_ficha_color.xml).
+-->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- ===== Encabezado sobre el degradado ===== -->
+        <LinearLayout
+            android:id="@+id/encabezado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="28dp">
+
+            <TextView
+                style="@style/Texto.Eyebrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Esquema de color" />
+
+            <TextView
+                android:id="@+id/tvNombreEsquema"
+                style="@style/Texto.Hero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                tools:text="Cristal" />
+
+            <TextView
+                android:id="@+id/tvLemaEsquema"
+                style="@style/Texto.Secundario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                tools:text="Azul cielo · Violeta · Rosa" />
+        </LinearLayout>
+
+        <!-- ===== Hoja ===== -->
+        <LinearLayout
+            android:id="@+id/hoja"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_hoja"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="24dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="32dp">
+
+            <!-- Claro / oscuro: solo cambia lo que se ve aquí, no el tema de la app -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/grupoModoEsquema"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEsquemaClaro"
+                    style="@style/BotonSegmentado"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Esquema claro"
+                    app:icon="@drawable/ic_sol"
+                    app:iconSize="18dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEsquemaOscuro"
+                    style="@style/BotonSegmentado"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Esquema oscuro"
+                    app:icon="@drawable/ic_luna"
+                    app:iconSize="18dp" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Colores núcleo -->
+            <TextView
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Colores núcleo" />
+
+            <TextView
+                style="@style/Texto.Secundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Los colores de los que sale todo el esquema. Toca uno para ver su tono 40." />
+
+            <LinearLayout
+                android:id="@+id/listaNucleo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_contenedor_fino"
+                android:orientation="vertical"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp" />
+
+            <!-- Los 48 roles -->
+            <TextView
+                android:id="@+id/tvTituloRoles"
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                tools:text="Esquema claro" />
+
+            <TextView
+                style="@style/Texto.Secundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Los 48 roles de Material 3, como en Material Theme Builder. Toca un color para ver para qué se usa y su contraste." />
+
+            <LinearLayout
+                android:id="@+id/tarjetaRoles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:id="@+id/cuadriculaRoles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <!-- Paletas tonales -->
+            <TextView
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:text="Paletas tonales" />
+
+            <TextView
+                style="@style/Texto.Secundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Cada color núcleo en 14 tonos, de 0 (negro) a 100 (blanco). Los roles toman tonos fijos de aquí." />
+
+            <LinearLayout
+                android:id="@+id/listaTonos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical" />
+
+            <!-- Componentes con este esquema -->
+            <TextView
+                style="@style/Texto.Seccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Componentes" />
+
+            <TextView
+                style="@style/Texto.Secundario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="El esquema aplicado a los componentes de Material 3." />
+
+            <!-- Aquí se infla vista_componentes.xml con el tema que se está viendo -->
+            <FrameLayout
+                android:id="@+id/contenedorComponentes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

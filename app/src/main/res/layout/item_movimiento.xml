@@ -35,7 +35,7 @@
             android:id="@+id/tvTipo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/lexend_medium"
+            android:fontFamily="?attr/fuenteMedia"
             android:textColor="?attr/colorTexto"
             android:textSize="14sp"
             tools:text="Venta" />
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:fontFamily="@font/lexend_regular"
+            android:fontFamily="?attr/fuenteNormal"
             android:lineSpacingMultiplier="1.2"
             android:textColor="?attr/colorTextoSecundario"
             android:textSize="12sp"
@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:fontFamily="@font/lexend_regular"
+            android:fontFamily="?attr/fuenteNormal"
             android:textColor="?attr/colorTextoTenue"
             android:textSize="11sp"
             tools:text="20/10/2026 18:42 · Fernanda Mancilla" />
@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:fontFamily="@font/lexend_regular"
+            android:fontFamily="?attr/fuenteNormal"
             android:textColor="?attr/colorTextoTenue"
             android:textSize="11sp"
             tools:text="Quedan 9" />

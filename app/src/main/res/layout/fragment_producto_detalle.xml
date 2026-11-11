@@ -79,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/lexend_semibold"
+                    android:fontFamily="?attr/fuenteFuerte"
                     android:textSize="24sp"
                     tools:text="Paño de limpieza Twins" />
 
@@ -183,7 +183,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="12dp"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/lexend_medium"
+                                android:fontFamily="?attr/fuenteMedia"
                                 android:textColor="?attr/colorTexto"
                                 android:textSize="13sp"
                                 tools:text="Estampar logo de la óptica (+$5.00)" />
@@ -231,7 +231,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:fontFamily="@font/lexend_semibold"
+                                    android:fontFamily="?attr/fuenteFuerte"
                                     android:maxLines="1"
                                     android:textColor="?attr/colorTexto"
                                     android:textSize="13sp"

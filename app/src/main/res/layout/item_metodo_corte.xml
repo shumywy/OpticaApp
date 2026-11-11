@@ -22,6 +22,6 @@
         style="@style/Texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/lexend_medium"
+        android:fontFamily="?attr/fuenteMedia"
         tools:text="$850.00" />
 </LinearLayout>

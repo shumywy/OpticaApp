@@ -155,7 +155,7 @@
                                     android:id="@+id/previaAvatar"
                                     android:layout_width="30dp"
                                     android:layout_height="30dp"
-                                    android:fontFamily="@font/lexend_semibold"
+                                    android:fontFamily="?attr/fuenteFuerte"
                                     android:gravity="center"
                                     android:textSize="11sp"
                                     tools:text="LM" />
@@ -185,7 +185,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
-                                        android:fontFamily="@font/lexend_medium"
+                                        android:fontFamily="?attr/fuenteMedia"
                                         android:paddingStart="8dp"
                                         android:paddingTop="2dp"
                                         android:paddingEnd="8dp"
@@ -214,7 +214,7 @@
                                         android:layout_height="38dp"
                                         android:layout_marginEnd="8dp"
                                         android:layout_weight="1"
-                                        android:fontFamily="@font/lexend_medium"
+                                        android:fontFamily="?attr/fuenteMedia"
                                         android:gravity="center"
                                         android:text="Primario"
                                         android:textSize="13sp" />
@@ -224,7 +224,7 @@
                                         android:layout_width="0dp"
                                         android:layout_height="38dp"
                                         android:layout_weight="1"
-                                        android:fontFamily="@font/lexend_medium"
+                                        android:fontFamily="?attr/fuenteMedia"
                                         android:gravity="center"
                                         android:text="Tonal"
                                         android:textSize="13sp" />
@@ -335,41 +335,91 @@
                             android:layout_marginTop="6dp"
                             android:orientation="vertical" />
 
+                        <!-- Tipografía: tarjetas "Aa" con cada fuente (item_fuente.xml), se deslizan a los lados -->
                         <TextView
                             style="@style/Texto.Fila"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Modo" />
+                            android:layout_marginTop="18dp"
+                            android:text="Tipografía" />
 
-                        <RadioGroup
-                            android:id="@+id/rgTema"
-                            style="@style/Segmentos"
+                        <HorizontalScrollView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp">
+                            android:layout_marginTop="8dp"
+                            android:clipToPadding="false"
+                            android:scrollbars="none">
 
-                            <RadioButton
-                                android:id="@+id/rbTemaSistema"
-                                style="@style/Segmento"
+                            <LinearLayout
+                                android:id="@+id/contenedorFuentes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Sistema" />
+                                android:orientation="horizontal"
+                                android:paddingTop="2dp"
+                                android:paddingBottom="2dp" />
+                        </HorizontalScrollView>
 
-                            <RadioButton
-                                android:id="@+id/rbTemaClaro"
-                                style="@style/Segmento"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Claro" />
+                        <!-- Modo: botones segmentados de Material con ícono -->
+                        <TextView
+                            style="@style/Texto.Fila"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp"
+                            android:text="Modo" />
 
-                            <RadioButton
-                                android:id="@+id/rbTemaOscuro"
-                                style="@style/Segmento"
-                                android:layout_width="wrap_content"
+                        <com.google.android.material.button.MaterialButtonToggleGroup
+                            android:id="@+id/grupoModo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:selectionRequired="true"
+                            app:singleSelection="true">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnModoSistema"
+                                style="@style/BotonSegmentado"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="Oscuro" />
-                        </RadioGroup>
+                                android:layout_weight="1"
+                                android:maxLines="1"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                android:text="Sistema"
+                                app:icon="@drawable/ic_modo_sistema"
+                                app:iconGravity="textStart"
+                                app:iconPadding="6dp"
+                                app:iconSize="18dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnModoClaro"
+                                style="@style/BotonSegmentado"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:maxLines="1"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                android:text="Claro"
+                                app:icon="@drawable/ic_sol"
+                                app:iconGravity="textStart"
+                                app:iconPadding="6dp"
+                                app:iconSize="18dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnModoOscuro"
+                                style="@style/BotonSegmentado"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:maxLines="1"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                android:text="Oscuro"
+                                app:icon="@drawable/ic_luna"
+                                app:iconGravity="textStart"
+                                app:iconPadding="6dp"
+                                app:iconSize="18dp" />
+                        </com.google.android.material.button.MaterialButtonToggleGroup>
 
                         <Button
                             android:id="@+id/btnAplicarTema"

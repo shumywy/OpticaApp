@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Paletas de los tres temas en modo claro. Mismos nombres en values-night/colors_temas.xml para el modo oscuro.
+        Las asigna themes.xml a los atributos ?attr/color... (values/attrs.xml).
+    -->
+
+    <!-- ===== Cristal: Azul cielo · Violeta · Rosa ===== -->
+    <color name="cristal_degradado_inicio">#C9CEF7</color>
+    <color name="cristal_degradado_centro">#E1D6F8</color>
+    <color name="cristal_degradado_fin">#F8CFEA</color>
+    <color name="cristal_fondo">#EEF0FB</color>
+    <color name="cristal_superficie">#FFFFFF</color>
+    <color name="cristal_tonal">#DFE3F8</color>
+    <color name="cristal_tonal_suave">#F2F3FC</color>
+    <color name="cristal_borde">#E4E6F2</color>
+    <color name="cristal_borde_campo">#C9CDE3</color>
+    <color name="cristal_texto">#1E1B4B</color>
+    <color name="cristal_texto_secundario">#64748B</color>
+    <color name="cristal_texto_tenue">#A3A8BF</color>
+    <color name="cristal_acento">#3BB4F2</color>
+    <color name="cristal_sobre_acento">#FFFFFF</color>
+    <color name="cristal_marca">#5B21B6</color>
+    <color name="cristal_marca_suave">#EDE9FE</color>
+    <color name="cristal_tercero">#DB2777</color>
+    <color name="cristal_tercero_suave">#FCE7F3</color>
+    <color name="cristal_seleccion">#1E1B4B</color>
+    <color name="cristal_sobre_seleccion">#FFFFFF</color>
+    <color name="cristal_menu_vidrio_inicio">#F2F1EDFA</color>
+    <color name="cristal_menu_vidrio_fin">#EDE4DBF7</color>
+    <color name="cristal_menu_icono">#4C1D95</color>
+    <color name="cristal_menu_velo">#591E1B4B</color>
+    <color name="cristal_insignia_fondo">#E9D5FF</color>
+    <color name="cristal_insignia_texto">#6B21A8</color>
+    <color name="cristal_aurora_marca">#8C7862E8</color>
+    <color name="cristal_aurora_acento">#595E80F0</color>
+    <color name="cristal_hoja_vidrio_inicio">#4DFFFFFF</color>
+    <color name="cristal_hoja_vidrio_centro">#8CFFFFFF</color>
+    <color name="cristal_hoja_vidrio_fin">#F2FFFFFF</color>
+
+    <!-- ===== Clínica: Verde azulado · Azul clínico · Coral ===== -->
+    <color name="clinica_degradado_inicio">#CDEFE8</color>
+    <color name="clinica_degradado_centro">#D9E9F5</color>
+    <color name="clinica_degradado_fin">#FBE0D6</color>
+    <color name="clinica_fondo">#EEF6F5</color>
+    <color name="clinica_superficie">#FFFFFF</color>
+    <color name="clinica_tonal">#DCEFEC</color>
+    <color name="clinica_tonal_suave">#F1F8F7</color>
+    <color name="clinica_borde">#DDEBEA</color>
+    <color name="clinica_borde_campo">#C3DAD7</color>
+    <color name="clinica_texto">#0F2A2E</color>
+    <color name="clinica_texto_secundario">#5B6F73</color>
+    <color name="clinica_texto_tenue">#9DB0B3</color>
+    <color name="clinica_acento">#0B8074</color>
+    <color name="clinica_sobre_acento">#FFFFFF</color>
+    <color name="clinica_marca">#1E5A8A</color>
+    <color name="clinica_marca_suave">#E1ECF7</color>
+    <color name="clinica_tercero">#D9573A</color>
+    <color name="clinica_tercero_suave">#FDE6DF</color>
+    <color name="clinica_seleccion">#0F2A2E</color>
+    <color name="clinica_sobre_seleccion">#FFFFFF</color>
+    <color name="clinica_menu_vidrio_inicio">#F2EEF7F5</color>
+    <color name="clinica_menu_vidrio_fin">#EDDDEDEA</color>
+    <color name="clinica_menu_icono">#154A73</color>
+    <color name="clinica_menu_velo">#590F2A2E</color>
+    <color name="clinica_insignia_fondo">#D6E6F5</color>
+    <color name="clinica_insignia_texto">#1E5A8A</color>
+    <color name="clinica_aurora_marca">#804A8FD0</color>
+    <color name="clinica_aurora_acento">#593FB8A8</color>
+    <color name="clinica_hoja_vidrio_inicio">#4DFFFFFF</color>
+    <color name="clinica_hoja_vidrio_centro">#8CFFFFFF</color>
+    <color name="clinica_hoja_vidrio_fin">#F2FFFFFF</color>
+
+    <!-- ===== Carey: Azul marino · Ámbar · Vino ===== -->
+    <color name="carey_degradado_inicio">#E9E1D2</color>
+    <color name="carey_degradado_centro">#E4E2EC</color>
+    <color name="carey_degradado_fin">#F2DCD2</color>
+    <color name="carey_fondo">#F5F1EA</color>
+    <color name="carey_superficie">#FFFFFF</color>
+    <color name="carey_tonal">#ECE5D8</color>
+    <color name="carey_tonal_suave">#F7F3EC</color>
+    <color name="carey_borde">#E8E1D4</color>
+    <color name="carey_borde_campo">#D3C9B8</color>
+    <color name="carey_texto">#1B2230</color>
+    <color name="carey_texto_secundario">#6B6458</color>
+    <color name="carey_texto_tenue">#ABA393</color>
+    <color name="carey_acento">#1F3A5F</color>
+    <color name="carey_sobre_acento">#FFFFFF</color>
+    <color name="carey_marca">#8A5A10</color>
+    <color name="carey_marca_suave">#F6E9D2</color>
+    <color name="carey_tercero">#8E3B46</color>
+    <color name="carey_tercero_suave">#F5E1E3</color>
+    <color name="carey_seleccion">#1F3A5F</color>
+    <color name="carey_sobre_seleccion">#FFFFFF</color>
+    <color name="carey_menu_vidrio_inicio">#F2F7F2EA</color>
+    <color name="carey_menu_vidrio_fin">#EDEADFCF</color>
+    <color name="carey_menu_icono">#7A4E0E</color>
+    <color name="carey_menu_velo">#591B2230</color>
+    <color name="carey_insignia_fondo">#F3DFB8</color>
+    <color name="carey_insignia_texto">#7A4E0E</color>
+    <color name="carey_aurora_marca">#80C9A15A</color>
+    <color name="carey_aurora_acento">#594F6F9E</color>
+    <color name="carey_hoja_vidrio_inicio">#4DFFFFFF</color>
+    <color name="carey_hoja_vidrio_centro">#8CFFFFFF</color>
+    <color name="carey_hoja_vidrio_fin">#F2FFFFFF</color>
+</resources>

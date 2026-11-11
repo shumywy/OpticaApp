@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:background="@drawable/bg_insignia_conteo"
-        android:fontFamily="@font/lexend_medium"
+        android:fontFamily="?attr/fuenteMedia"
         android:paddingStart="6dp"
         android:paddingTop="2dp"
         android:paddingEnd="6dp"

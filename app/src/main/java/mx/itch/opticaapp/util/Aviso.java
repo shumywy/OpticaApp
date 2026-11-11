@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
@@ -56,7 +55,7 @@ public final class Aviso {
         aviso.setText(texto);
         aviso.setTextColor(Color.WHITE);
         aviso.setTextSize(14);
-        aviso.setTypeface(ResourcesCompat.getFont(actividad, R.font.lexend_medium));
+        aviso.setTypeface(Temas.fuente(actividad, R.attr.fuenteMedia));   // la tipografía elegida
         aviso.setMaxLines(2);
         aviso.setGravity(Gravity.CENTER_VERTICAL);
         aviso.setPadding(Math.round(18 * dp), Math.round(12 * dp), Math.round(20 * dp), Math.round(12 * dp));

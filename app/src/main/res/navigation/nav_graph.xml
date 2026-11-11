@@ -116,7 +116,21 @@
     <fragment
         android:id="@+id/ajustesFragment"
         android:name="mx.itch.opticaapp.ui.ajustes.AjustesFragment"
-        android:label="@string/titulo_ajustes" />
+        android:label="@string/titulo_ajustes">
+        <action
+            android:id="@+id/action_ajustes_to_esquema"
+            app:destination="@id/esquemaFragment"
+            app:enterAnim="@anim/nav_entrar"
+            app:exitAnim="@anim/nav_salir"
+            app:popEnterAnim="@anim/nav_regresar_entrar"
+            app:popExitAnim="@anim/nav_regresar_salir" />
+    </fragment>
+
+    <!-- Ajustes › Apariencia › Ver esquema completo (argumentos: paleta y oscuro) -->
+    <fragment
+        android:id="@+id/esquemaFragment"
+        android:name="mx.itch.opticaapp.ui.ajustes.EsquemaFragment"
+        android:label="@string/titulo_esquema" />
 
     <!-- ===== Menú lateral · Mi cuenta y Administración ===== -->
     <fragment

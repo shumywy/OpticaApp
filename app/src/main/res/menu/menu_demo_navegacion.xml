@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Barra de navegación de muestra en Esquema de color › Componentes (solo enseña los colores) -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/demoNavInicio" android:icon="@drawable/ic_inicio" android:title="Inicio" />
+    <item android:id="@+id/demoNavPacientes" android:icon="@drawable/ic_pacientes" android:title="Pacientes" />
+    <item android:id="@+id/demoNavInventario" android:icon="@drawable/ic_inventario" android:title="Inventario" />
+    <item android:id="@+id/demoNavVentas" android:icon="@drawable/ic_ventas" android:title="Ventas" />
+</menu>

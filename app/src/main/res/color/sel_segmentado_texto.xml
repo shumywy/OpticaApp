@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Texto e ícono de los botones segmentados -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="?attr/colorSobreSeleccion" android:state_checked="true" />
+    <item android:color="?attr/colorTexto" />
+</selector>

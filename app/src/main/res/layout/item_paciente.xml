@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:fontFamily="@font/lexend_semibold"
+                android:fontFamily="?attr/fuenteFuerte"
                 android:maxLines="1"
                 android:textSize="16sp"
                 tools:text="María Fernanda López" />

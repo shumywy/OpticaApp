@@ -3,12 +3,15 @@ package mx.itch.opticaapp.ui.ajustes;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,6 +20,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,24 +37,30 @@ import mx.itch.opticaapp.R;
 import mx.itch.opticaapp.data.Preferencias;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentAjustesBinding;
+import mx.itch.opticaapp.databinding.ItemFuenteBinding;
 import mx.itch.opticaapp.databinding.ItemPaletaBinding;
 import mx.itch.opticaapp.model.Usuario;
 import mx.itch.opticaapp.util.Animaciones;
+import mx.itch.opticaapp.util.EsquemaM3;
 import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.Temas;
 
 /**
  * Pantalla 9: Configuración de la app en este teléfono:
- * apariencia (tema de color y modo), modo sin imágenes, texto grande, fondo de pantalla y cerrar sesión.
- * (El perfil, la óptica y el personal están en el menú lateral → Administración.)
+ * apariencia (tema de color, tipografía y modo), modo sin imágenes, texto grande, fondo de pantalla
+ * y cerrar sesión. (El perfil, la óptica y el personal están en el menú lateral → Administración.)
  *
- * Apariencia: al tocar un tema o un modo, la vista previa cambia de color con una animación;
- * "Aplicar cambios" lo guarda en SharedPreferences para este usuario y vuelve a dibujar la app.
+ * Apariencia (como en la app Atrium): al tocar un tema, una fuente o un modo, la vista previa cambia
+ * con una animación. El tema elegido se despliega con sus colores núcleo y "Ver esquema completo"
+ * (EsquemaFragment). "Aplicar cambios" lo guarda en SharedPreferences para este usuario y vuelve a
+ * dibujar la app.
  */
 public class AjustesFragment extends Fragment {
 
     private static final String ESTADO_PALETA = "paleta_elegida";
     private static final String ESTADO_MODO = "modo_elegido";
+    private static final String ESTADO_FUENTE = "fuente_elegida";
+    private static final String[] NUCLEO_CORTO = {"Primary", "Secondary", "Tertiary", "Error", "Neutral", "N. Variant"};
     private static final long DURACION_COLOR_MS = 320;
 
     private FragmentAjustesBinding binding;
@@ -58,7 +68,9 @@ public class AjustesFragment extends Fragment {
     /** Lo que está aplicado (guardado) y lo que el usuario está viendo en la vista previa. */
     private Temas.Paleta paletaGuardada, paletaElegida;
     private int modoGuardado, modoElegido;
+    private Temas.Fuente fuenteGuardada, fuenteElegida;
     private final List<ItemPaletaBinding> tarjetasPaleta = new ArrayList<>();
+    private final List<ItemFuenteBinding> tarjetasFuente = new ArrayList<>();
     /** Colores que muestra ahora la vista previa (índices Temas.V_...). */
     private int[] coloresVista;
     private ValueAnimator animacionColores;
@@ -105,6 +117,7 @@ public class AjustesFragment extends Fragment {
         if (paletaElegida != null) {
             outState.putString(ESTADO_PALETA, paletaElegida.id);
             outState.putInt(ESTADO_MODO, modoElegido);
+            outState.putString(ESTADO_FUENTE, fuenteElegida.id);
         }
     }
 
@@ -118,6 +131,9 @@ public class AjustesFragment extends Fragment {
         paletaElegida = estado != null && estado.containsKey(ESTADO_PALETA)
                 ? Temas.Paleta.desdeId(estado.getString(ESTADO_PALETA)) : paletaGuardada;
         modoElegido = estado != null ? estado.getInt(ESTADO_MODO, modoGuardado) : modoGuardado;
+        fuenteGuardada = Preferencias.getFuente(ctx);
+        fuenteElegida = estado != null && estado.containsKey(ESTADO_FUENTE)
+                ? Temas.Fuente.desdeId(estado.getString(ESTADO_FUENTE)) : fuenteGuardada;
 
         prepararVistaPrevia();
 
@@ -129,21 +145,50 @@ public class AjustesFragment extends Fragment {
             tarjeta.tvNombrePaleta.setText(paleta.nombre);
             tarjeta.tvLemaPaleta.setText(paleta.lema);
             tarjeta.getRoot().setTag(paleta);
-            tarjeta.getRoot().setOnClickListener(v -> {
+            tarjeta.filaPaleta.setOnClickListener(v -> {
                 if (paletaElegida == paleta) return;
                 paletaElegida = paleta;
                 actualizarTema(true);
+            });
+            // Ver el esquema completo de este tema (sin aplicarlo) en el modo que se está viendo
+            tarjeta.btnVerEsquema.setOnClickListener(v -> {
+                Bundle args = new Bundle();
+                args.putString(EsquemaFragment.ARG_PALETA, paleta.id);
+                args.putBoolean(EsquemaFragment.ARG_OSCURO, Temas.esNoche(requireContext(), modoElegido));
+                NavHostFragment.findNavController(this).navigate(R.id.action_ajustes_to_esquema, args);
             });
             tarjetasPaleta.add(tarjeta);
             binding.contenedorPaletas.addView(tarjeta.getRoot());
         }
 
-        // Modo: 0 = el del teléfono, 1 = claro, 2 = oscuro
-        int[] opcionesModo = {R.id.rbTemaSistema, R.id.rbTemaClaro, R.id.rbTemaOscuro};
-        binding.rgTema.check(opcionesModo[modoElegido]);
-        binding.rgTema.setOnCheckedChangeListener((grupo, idMarcado) -> {
+        // Tipografía: una tarjeta "Aa" por fuente, escrita con esa misma fuente
+        tarjetasFuente.clear();
+        binding.contenedorFuentes.removeAllViews();
+        for (Temas.Fuente fuente : Temas.Fuente.values()) {
+            ItemFuenteBinding tarjeta = ItemFuenteBinding.inflate(getLayoutInflater(), binding.contenedorFuentes, false);
+            Typeface tipo = fuente.tipo(ctx);
+            tarjeta.tvMuestraFuente.setTypeface(Typeface.create(tipo, Typeface.BOLD));
+            tarjeta.tvNombreFuente.setTypeface(Typeface.create(tipo, Typeface.BOLD));
+            tarjeta.tvNombreFuente.setText(fuente.nombre);
+            tarjeta.tvDescripcionFuente.setTypeface(tipo);
+            tarjeta.tvDescripcionFuente.setText(fuente.descripcion);
+            tarjeta.getRoot().setTag(fuente);
+            tarjeta.getRoot().setOnClickListener(v -> {
+                if (fuenteElegida == fuente) return;
+                fuenteElegida = fuente;
+                actualizarTema(true);
+            });
+            tarjetasFuente.add(tarjeta);
+            binding.contenedorFuentes.addView(tarjeta.getRoot());
+        }
+
+        // Modo: 0 = el del teléfono, 1 = claro, 2 = oscuro (botones segmentados de Material)
+        int[] opcionesModo = {R.id.btnModoSistema, R.id.btnModoClaro, R.id.btnModoOscuro};
+        binding.grupoModo.check(opcionesModo[modoElegido]);
+        binding.grupoModo.addOnButtonCheckedListener((grupo, id, marcado) -> {
+            if (!marcado) return;
             for (int i = 0; i < opcionesModo.length; i++) {
-                if (opcionesModo[i] == idMarcado && i != modoElegido) {
+                if (opcionesModo[i] == id && i != modoElegido) {
                     modoElegido = i;
                     actualizarTema(true);
                 }
@@ -151,7 +196,7 @@ public class AjustesFragment extends Fragment {
         });
 
         binding.btnAplicarTema.setOnClickListener(v ->
-                ((MainActivity) requireActivity()).aplicarApariencia(paletaElegida, modoElegido, v));
+                ((MainActivity) requireActivity()).aplicarApariencia(paletaElegida, modoElegido, fuenteElegida, v));
 
         actualizarTema(false);
     }
@@ -212,6 +257,9 @@ public class AjustesFragment extends Fragment {
             contorno.setColor(Temas.color(ctx, R.attr.colorSuperficie));
             contorno.setStroke(Math.round((elegida ? 2 : 1) * dp), elegida ? acento : borde);
             t.getRoot().setBackground(contorno);
+            // La elegida se despliega con sus colores núcleo y "Ver esquema completo"
+            t.detallePaleta.setVisibility(elegida ? View.VISIBLE : View.GONE);
+            if (elegida) pintarNucleo(t, paleta);
 
             GradientDrawable circulo = new GradientDrawable();
             circulo.setShape(GradientDrawable.OVAL);
@@ -225,13 +273,70 @@ public class AjustesFragment extends Fragment {
             }
             t.ivElegida.setBackground(circulo);
             t.tvActual.setVisibility(paleta == paletaGuardada ? View.VISIBLE : View.GONE);
-            t.getRoot().setSelected(elegida);
-            t.getRoot().setContentDescription("Tema " + paleta.nombre + ": " + paleta.lema.replace(" · ", ", ")
+            t.filaPaleta.setSelected(elegida);
+            t.filaPaleta.setContentDescription("Tema " + paleta.nombre + ": " + paleta.lema.replace(" · ", ", ")
                     + (elegida ? ". Elegido" : "") + (paleta == paletaGuardada ? ". Es el actual" : ""));
         }
 
-        boolean hayCambios = paletaElegida != paletaGuardada || modoElegido != modoGuardado;
+        // Tipografías: contorno en la elegida y vista previa escrita con ella
+        for (ItemFuenteBinding f : tarjetasFuente) {
+            Temas.Fuente fuente = (Temas.Fuente) f.getRoot().getTag();
+            boolean elegida = fuente == fuenteElegida;
+            GradientDrawable contorno = new GradientDrawable();
+            contorno.setCornerRadius(18 * dp);
+            contorno.setColor(Temas.color(ctx, elegida ? R.attr.colorSuperficie : R.attr.colorTonalSuave));
+            contorno.setStroke(Math.round((elegida ? 2 : 1) * dp), elegida ? acento : borde);
+            f.getRoot().setBackground(contorno);
+            f.getRoot().setSelected(elegida);
+            f.getRoot().setContentDescription("Tipografía " + fuente.nombre + ", " + fuente.descripcion
+                    + (elegida ? ". Elegida" : ""));
+        }
+        Typeface tipo = fuenteElegida.tipo(ctx);
+        binding.previaOptica.setTypeface(Typeface.create(tipo, Typeface.BOLD));
+        binding.previaTitulo.setTypeface(Typeface.create(tipo, Typeface.BOLD));
+        binding.previaTexto.setTypeface(tipo);
+        binding.previaRol.setTypeface(tipo);
+        binding.previaPrimario.setTypeface(tipo);
+        binding.previaTonal.setTypeface(tipo);
+
+        boolean hayCambios = paletaElegida != paletaGuardada || modoElegido != modoGuardado
+                || fuenteElegida != fuenteGuardada;
         binding.btnAplicarTema.setVisibility(hayCambios ? View.VISIBLE : View.GONE);
+    }
+
+    /** Los 6 colores núcleo del tema en la tarjeta desplegada: círculo, nombre y código. */
+    private void pintarNucleo(ItemPaletaBinding t, Temas.Paleta paleta) {
+        if (t.filaNucleo.getChildCount() > 0) return;   // ya está construido (no cambia con el modo)
+        Context ctx = requireContext();
+        int[] nucleo = Temas.nucleo(ctx, paleta);
+        float dp = getResources().getDisplayMetrics().density;
+        for (int i = 0; i < nucleo.length; i++) {
+            LinearLayout columna = new LinearLayout(ctx);
+            columna.setOrientation(LinearLayout.VERTICAL);
+            columna.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
+            View circulo = new View(ctx);
+            GradientDrawable fondo = new GradientDrawable();
+            fondo.setShape(GradientDrawable.OVAL);
+            fondo.setColor(nucleo[i]);
+            circulo.setBackground(fondo);
+            int lado = Math.round(30 * dp);
+            columna.addView(circulo, new LinearLayout.LayoutParams(lado, lado));
+            TextView nombre = new TextView(ctx);
+            nombre.setText(NUCLEO_CORTO[i]);
+            nombre.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 9.5f);
+            nombre.setTextColor(Temas.color(ctx, R.attr.colorTexto));
+            nombre.setMaxLines(1);
+            nombre.setPadding(0, Math.round(4 * dp), 0, 0);
+            columna.addView(nombre);
+            TextView hex = new TextView(ctx);
+            hex.setText(EsquemaM3.hex(nucleo[i]));
+            hex.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 8.5f);
+            hex.setTypeface(Typeface.MONOSPACE);
+            hex.setTextColor(Temas.color(ctx, R.attr.colorTextoSecundario));
+            columna.addView(hex);
+            columna.setContentDescription(EsquemaM3.NOMBRES_PALETAS_EN[i] + " " + EsquemaM3.hex(nucleo[i]));
+            t.filaNucleo.addView(columna, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        }
     }
 
     private int[] colores(Context ctx, Temas.Paleta paleta, boolean oscuro) {
@@ -364,6 +469,7 @@ public class AjustesFragment extends Fragment {
     public void onDestroyView() {
         if (animacionColores != null) animacionColores.cancel();
         tarjetasPaleta.clear();
+        tarjetasFuente.clear();
         super.onDestroyView();
         binding = null;
     }

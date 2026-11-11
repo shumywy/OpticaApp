@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Etiqueta "Actual" junto al nombre del tema que está aplicado -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="?attr/colorTonal" />
+    <corners android:radius="8dp" />
+</shape>

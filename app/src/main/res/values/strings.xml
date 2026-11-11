@@ -13,6 +13,7 @@
     <string name="titulo_venta">Nueva venta</string>
     <string name="titulo_laboratorio">Órdenes de laboratorio</string>
     <string name="titulo_ajustes">Configuración</string>
+    <string name="titulo_esquema">Esquema de color</string>
     <string name="titulo_perfil">Mi perfil</string>
     <string name="titulo_optica">Datos de la óptica</string>
     <string name="titulo_personal">Personal</string>

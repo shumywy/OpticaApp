@@ -8,41 +8,23 @@
         tiene automáticamente su versión oscura. El tema se elige en Ajustes › Apariencia (util/Temas).
     -->
     <style name="Base.Theme.OpticaApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Roles de Material 3: primario = acento del tema, terciario = tercer color del tema -->
-        <item name="colorPrimary">?attr/colorAcento</item>
-        <item name="colorOnPrimary">?attr/colorSobreAcento</item>
-        <item name="colorPrimaryContainer">?attr/colorTonal</item>
-        <item name="colorOnPrimaryContainer">?attr/colorTexto</item>
-        <item name="colorSecondary">?attr/colorAcento</item>
-        <item name="colorOnSecondary">?attr/colorSobreAcento</item>
-        <item name="colorSecondaryContainer">?attr/colorTonal</item>
-        <item name="colorOnSecondaryContainer">?attr/colorTexto</item>
-        <item name="colorTertiary">?attr/colorTercero</item>
-        <item name="colorTertiaryContainer">?attr/colorTerceroSuave</item>
-        <item name="colorError">@color/rojo</item>
 
-        <!-- Fondo en degradado con los colores del tema; hojas y tarjetas en la superficie -->
+        <!-- Fondo en degradado con los colores del tema. Los roles de Material 3 (colorPrimary,
+             colorSurface...) los pone cada tema con su esquema (colors_esquema.xml) -->
         <item name="android:windowBackground">@drawable/bg_degradado</item>
-        <item name="android:colorBackground">?attr/colorFondo</item>
-        <item name="colorSurface">?attr/colorSuperficie</item>
-        <item name="colorOnSurface">?attr/colorTexto</item>
-        <item name="colorOnSurfaceVariant">?attr/colorTextoSecundario</item>
-        <item name="colorOutline">?attr/colorBorde</item>
-        <item name="colorOutlineVariant">?attr/colorBorde</item>
-        <item name="colorSurfaceContainerLowest">?attr/colorSuperficie</item>
-        <item name="colorSurfaceContainerLow">?attr/colorSuperficie</item>
-        <item name="colorSurfaceContainer">?attr/colorSuperficie</item>
-        <item name="colorSurfaceContainerHigh">?attr/colorSuperficie</item>
-        <item name="colorSurfaceContainerHighest">?attr/colorTonalSuave</item>
         <item name="colorControlNormal">?attr/colorTextoSecundario</item>
 
         <item name="android:textColorPrimary">?attr/colorTexto</item>
         <item name="android:textColorSecondary">?attr/colorTextoSecundario</item>
         <item name="android:textColorHint">?attr/colorTextoTenue</item>
 
-        <!-- Fuente de todos los textos: Lexend (styles.xml solo cambia el grosor y el tamaño) -->
-        <item name="android:fontFamily">@font/lexend_regular</item>
-        <item name="fontFamily">@font/lexend_regular</item>
+        <!-- Tipografía: Lexend por defecto; Ajustes › Apariencia aplica encima un ThemeOverlay.OpticaApp.Fuente.* -->
+        <item name="fuenteLigera">@font/lexend_light</item>
+        <item name="fuenteNormal">@font/lexend_regular</item>
+        <item name="fuenteMedia">@font/lexend_medium</item>
+        <item name="fuenteFuerte">@font/lexend_semibold</item>
+        <item name="android:fontFamily">?attr/fuenteNormal</item>
+        <item name="fontFamily">?attr/fuenteNormal</item>
 
         <!-- Títulos, textos y botones de los cuadros de diálogo -->
         <item name="textAppearanceHeadlineSmall">@style/TextoDialogoTitulo</item>
@@ -97,6 +79,53 @@
         <item name="colorHojaVidrioInicio">@color/cristal_hoja_vidrio_inicio</item>
         <item name="colorHojaVidrioCentro">@color/cristal_hoja_vidrio_centro</item>
         <item name="colorHojaVidrioFin">@color/cristal_hoja_vidrio_fin</item>
+        <!-- Roles de Material 3 (esquema) -->
+        <item name="colorPrimary">@color/cristal_rol_primary</item>
+        <item name="colorOnPrimary">@color/cristal_rol_on_primary</item>
+        <item name="colorPrimaryContainer">@color/cristal_rol_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/cristal_rol_on_primary_container</item>
+        <item name="colorSecondary">@color/cristal_rol_secondary</item>
+        <item name="colorOnSecondary">@color/cristal_rol_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/cristal_rol_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/cristal_rol_on_secondary_container</item>
+        <item name="colorTertiary">@color/cristal_rol_tertiary</item>
+        <item name="colorOnTertiary">@color/cristal_rol_on_tertiary</item>
+        <item name="colorTertiaryContainer">@color/cristal_rol_tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/cristal_rol_on_tertiary_container</item>
+        <item name="colorError">@color/cristal_rol_error</item>
+        <item name="colorOnError">@color/cristal_rol_on_error</item>
+        <item name="colorErrorContainer">@color/cristal_rol_error_container</item>
+        <item name="colorOnErrorContainer">@color/cristal_rol_on_error_container</item>
+        <item name="android:colorBackground">@color/cristal_rol_background</item>
+        <item name="colorOnBackground">@color/cristal_rol_on_background</item>
+        <item name="colorSurface">@color/cristal_rol_surface</item>
+        <item name="colorOnSurface">@color/cristal_rol_on_surface</item>
+        <item name="colorSurfaceVariant">@color/cristal_rol_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/cristal_rol_on_surface_variant</item>
+        <item name="colorOutline">@color/cristal_rol_outline</item>
+        <item name="colorOutlineVariant">@color/cristal_rol_outline_variant</item>
+        <item name="colorSurfaceInverse">@color/cristal_rol_inverse_surface</item>
+        <item name="colorOnSurfaceInverse">@color/cristal_rol_inverse_on_surface</item>
+        <item name="colorPrimaryInverse">@color/cristal_rol_inverse_primary</item>
+        <item name="colorPrimaryFixed">@color/cristal_rol_primary_fixed</item>
+        <item name="colorOnPrimaryFixed">@color/cristal_rol_on_primary_fixed</item>
+        <item name="colorPrimaryFixedDim">@color/cristal_rol_primary_fixed_dim</item>
+        <item name="colorOnPrimaryFixedVariant">@color/cristal_rol_on_primary_fixed_variant</item>
+        <item name="colorSecondaryFixed">@color/cristal_rol_secondary_fixed</item>
+        <item name="colorOnSecondaryFixed">@color/cristal_rol_on_secondary_fixed</item>
+        <item name="colorSecondaryFixedDim">@color/cristal_rol_secondary_fixed_dim</item>
+        <item name="colorOnSecondaryFixedVariant">@color/cristal_rol_on_secondary_fixed_variant</item>
+        <item name="colorTertiaryFixed">@color/cristal_rol_tertiary_fixed</item>
+        <item name="colorOnTertiaryFixed">@color/cristal_rol_on_tertiary_fixed</item>
+        <item name="colorTertiaryFixedDim">@color/cristal_rol_tertiary_fixed_dim</item>
+        <item name="colorOnTertiaryFixedVariant">@color/cristal_rol_on_tertiary_fixed_variant</item>
+        <item name="colorSurfaceDim">@color/cristal_rol_surface_dim</item>
+        <item name="colorSurfaceBright">@color/cristal_rol_surface_bright</item>
+        <item name="colorSurfaceContainerLowest">@color/cristal_rol_surface_container_lowest</item>
+        <item name="colorSurfaceContainerLow">@color/cristal_rol_surface_container_low</item>
+        <item name="colorSurfaceContainer">@color/cristal_rol_surface_container</item>
+        <item name="colorSurfaceContainerHigh">@color/cristal_rol_surface_container_high</item>
+        <item name="colorSurfaceContainerHighest">@color/cristal_rol_surface_container_highest</item>
     </style>
 
     <!-- Clínica: Verde azulado · Azul clínico · Coral -->
@@ -132,6 +161,53 @@
         <item name="colorHojaVidrioInicio">@color/clinica_hoja_vidrio_inicio</item>
         <item name="colorHojaVidrioCentro">@color/clinica_hoja_vidrio_centro</item>
         <item name="colorHojaVidrioFin">@color/clinica_hoja_vidrio_fin</item>
+        <!-- Roles de Material 3 (esquema) -->
+        <item name="colorPrimary">@color/clinica_rol_primary</item>
+        <item name="colorOnPrimary">@color/clinica_rol_on_primary</item>
+        <item name="colorPrimaryContainer">@color/clinica_rol_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/clinica_rol_on_primary_container</item>
+        <item name="colorSecondary">@color/clinica_rol_secondary</item>
+        <item name="colorOnSecondary">@color/clinica_rol_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/clinica_rol_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/clinica_rol_on_secondary_container</item>
+        <item name="colorTertiary">@color/clinica_rol_tertiary</item>
+        <item name="colorOnTertiary">@color/clinica_rol_on_tertiary</item>
+        <item name="colorTertiaryContainer">@color/clinica_rol_tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/clinica_rol_on_tertiary_container</item>
+        <item name="colorError">@color/clinica_rol_error</item>
+        <item name="colorOnError">@color/clinica_rol_on_error</item>
+        <item name="colorErrorContainer">@color/clinica_rol_error_container</item>
+        <item name="colorOnErrorContainer">@color/clinica_rol_on_error_container</item>
+        <item name="android:colorBackground">@color/clinica_rol_background</item>
+        <item name="colorOnBackground">@color/clinica_rol_on_background</item>
+        <item name="colorSurface">@color/clinica_rol_surface</item>
+        <item name="colorOnSurface">@color/clinica_rol_on_surface</item>
+        <item name="colorSurfaceVariant">@color/clinica_rol_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/clinica_rol_on_surface_variant</item>
+        <item name="colorOutline">@color/clinica_rol_outline</item>
+        <item name="colorOutlineVariant">@color/clinica_rol_outline_variant</item>
+        <item name="colorSurfaceInverse">@color/clinica_rol_inverse_surface</item>
+        <item name="colorOnSurfaceInverse">@color/clinica_rol_inverse_on_surface</item>
+        <item name="colorPrimaryInverse">@color/clinica_rol_inverse_primary</item>
+        <item name="colorPrimaryFixed">@color/clinica_rol_primary_fixed</item>
+        <item name="colorOnPrimaryFixed">@color/clinica_rol_on_primary_fixed</item>
+        <item name="colorPrimaryFixedDim">@color/clinica_rol_primary_fixed_dim</item>
+        <item name="colorOnPrimaryFixedVariant">@color/clinica_rol_on_primary_fixed_variant</item>
+        <item name="colorSecondaryFixed">@color/clinica_rol_secondary_fixed</item>
+        <item name="colorOnSecondaryFixed">@color/clinica_rol_on_secondary_fixed</item>
+        <item name="colorSecondaryFixedDim">@color/clinica_rol_secondary_fixed_dim</item>
+        <item name="colorOnSecondaryFixedVariant">@color/clinica_rol_on_secondary_fixed_variant</item>
+        <item name="colorTertiaryFixed">@color/clinica_rol_tertiary_fixed</item>
+        <item name="colorOnTertiaryFixed">@color/clinica_rol_on_tertiary_fixed</item>
+        <item name="colorTertiaryFixedDim">@color/clinica_rol_tertiary_fixed_dim</item>
+        <item name="colorOnTertiaryFixedVariant">@color/clinica_rol_on_tertiary_fixed_variant</item>
+        <item name="colorSurfaceDim">@color/clinica_rol_surface_dim</item>
+        <item name="colorSurfaceBright">@color/clinica_rol_surface_bright</item>
+        <item name="colorSurfaceContainerLowest">@color/clinica_rol_surface_container_lowest</item>
+        <item name="colorSurfaceContainerLow">@color/clinica_rol_surface_container_low</item>
+        <item name="colorSurfaceContainer">@color/clinica_rol_surface_container</item>
+        <item name="colorSurfaceContainerHigh">@color/clinica_rol_surface_container_high</item>
+        <item name="colorSurfaceContainerHighest">@color/clinica_rol_surface_container_highest</item>
     </style>
 
     <!-- Carey: Azul marino · Ámbar · Vino -->
@@ -167,6 +243,115 @@
         <item name="colorHojaVidrioInicio">@color/carey_hoja_vidrio_inicio</item>
         <item name="colorHojaVidrioCentro">@color/carey_hoja_vidrio_centro</item>
         <item name="colorHojaVidrioFin">@color/carey_hoja_vidrio_fin</item>
+        <!-- Roles de Material 3 (esquema) -->
+        <item name="colorPrimary">@color/carey_rol_primary</item>
+        <item name="colorOnPrimary">@color/carey_rol_on_primary</item>
+        <item name="colorPrimaryContainer">@color/carey_rol_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/carey_rol_on_primary_container</item>
+        <item name="colorSecondary">@color/carey_rol_secondary</item>
+        <item name="colorOnSecondary">@color/carey_rol_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/carey_rol_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/carey_rol_on_secondary_container</item>
+        <item name="colorTertiary">@color/carey_rol_tertiary</item>
+        <item name="colorOnTertiary">@color/carey_rol_on_tertiary</item>
+        <item name="colorTertiaryContainer">@color/carey_rol_tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/carey_rol_on_tertiary_container</item>
+        <item name="colorError">@color/carey_rol_error</item>
+        <item name="colorOnError">@color/carey_rol_on_error</item>
+        <item name="colorErrorContainer">@color/carey_rol_error_container</item>
+        <item name="colorOnErrorContainer">@color/carey_rol_on_error_container</item>
+        <item name="android:colorBackground">@color/carey_rol_background</item>
+        <item name="colorOnBackground">@color/carey_rol_on_background</item>
+        <item name="colorSurface">@color/carey_rol_surface</item>
+        <item name="colorOnSurface">@color/carey_rol_on_surface</item>
+        <item name="colorSurfaceVariant">@color/carey_rol_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/carey_rol_on_surface_variant</item>
+        <item name="colorOutline">@color/carey_rol_outline</item>
+        <item name="colorOutlineVariant">@color/carey_rol_outline_variant</item>
+        <item name="colorSurfaceInverse">@color/carey_rol_inverse_surface</item>
+        <item name="colorOnSurfaceInverse">@color/carey_rol_inverse_on_surface</item>
+        <item name="colorPrimaryInverse">@color/carey_rol_inverse_primary</item>
+        <item name="colorPrimaryFixed">@color/carey_rol_primary_fixed</item>
+        <item name="colorOnPrimaryFixed">@color/carey_rol_on_primary_fixed</item>
+        <item name="colorPrimaryFixedDim">@color/carey_rol_primary_fixed_dim</item>
+        <item name="colorOnPrimaryFixedVariant">@color/carey_rol_on_primary_fixed_variant</item>
+        <item name="colorSecondaryFixed">@color/carey_rol_secondary_fixed</item>
+        <item name="colorOnSecondaryFixed">@color/carey_rol_on_secondary_fixed</item>
+        <item name="colorSecondaryFixedDim">@color/carey_rol_secondary_fixed_dim</item>
+        <item name="colorOnSecondaryFixedVariant">@color/carey_rol_on_secondary_fixed_variant</item>
+        <item name="colorTertiaryFixed">@color/carey_rol_tertiary_fixed</item>
+        <item name="colorOnTertiaryFixed">@color/carey_rol_on_tertiary_fixed</item>
+        <item name="colorTertiaryFixedDim">@color/carey_rol_tertiary_fixed_dim</item>
+        <item name="colorOnTertiaryFixedVariant">@color/carey_rol_on_tertiary_fixed_variant</item>
+        <item name="colorSurfaceDim">@color/carey_rol_surface_dim</item>
+        <item name="colorSurfaceBright">@color/carey_rol_surface_bright</item>
+        <item name="colorSurfaceContainerLowest">@color/carey_rol_surface_container_lowest</item>
+        <item name="colorSurfaceContainerLow">@color/carey_rol_surface_container_low</item>
+        <item name="colorSurfaceContainer">@color/carey_rol_surface_container</item>
+        <item name="colorSurfaceContainerHigh">@color/carey_rol_surface_container_high</item>
+        <item name="colorSurfaceContainerHighest">@color/carey_rol_surface_container_highest</item>
+    </style>
+
+    <!--
+        Tipografías (Ajustes › Apariencia). MainActivity aplica una encima del tema de color con
+        getTheme().applyStyle(). Las de Atrium traen tres grosores: la ligera usa el regular y la
+        fuerte el bold. Archivos en res/font (Google Fonts, licencia SIL OFL 1.1, carpeta licencias/).
+    -->
+    <!-- Lexend (la original) -->
+    <style name="ThemeOverlay.OpticaApp.Fuente.Lexend" parent="">
+        <item name="fuenteLigera">@font/lexend_light</item>
+        <item name="fuenteNormal">@font/lexend_regular</item>
+        <item name="fuenteMedia">@font/lexend_medium</item>
+        <item name="fuenteFuerte">@font/lexend_semibold</item>
+    </style>
+    <!-- Inter -->
+    <style name="ThemeOverlay.OpticaApp.Fuente.Inter" parent="">
+        <item name="fuenteLigera">@font/inter_regular</item>
+        <item name="fuenteNormal">@font/inter_regular</item>
+        <item name="fuenteMedia">@font/inter_medium</item>
+        <item name="fuenteFuerte">@font/inter_bold</item>
+    </style>
+    <!-- Manrope -->
+    <style name="ThemeOverlay.OpticaApp.Fuente.Manrope" parent="">
+        <item name="fuenteLigera">@font/manrope_regular</item>
+        <item name="fuenteNormal">@font/manrope_regular</item>
+        <item name="fuenteMedia">@font/manrope_medium</item>
+        <item name="fuenteFuerte">@font/manrope_bold</item>
+    </style>
+    <!-- Montserrat -->
+    <style name="ThemeOverlay.OpticaApp.Fuente.Montserrat" parent="">
+        <item name="fuenteLigera">@font/montserrat_regular</item>
+        <item name="fuenteNormal">@font/montserrat_regular</item>
+        <item name="fuenteMedia">@font/montserrat_medium</item>
+        <item name="fuenteFuerte">@font/montserrat_bold</item>
+    </style>
+    <!-- Space Grotesk -->
+    <style name="ThemeOverlay.OpticaApp.Fuente.SpaceGrotesk" parent="">
+        <item name="fuenteLigera">@font/space_grotesk_regular</item>
+        <item name="fuenteNormal">@font/space_grotesk_regular</item>
+        <item name="fuenteMedia">@font/space_grotesk_medium</item>
+        <item name="fuenteFuerte">@font/space_grotesk_bold</item>
+    </style>
+    <!-- Playfair Display -->
+    <style name="ThemeOverlay.OpticaApp.Fuente.Playfair" parent="">
+        <item name="fuenteLigera">@font/playfair_display_regular</item>
+        <item name="fuenteNormal">@font/playfair_display_regular</item>
+        <item name="fuenteMedia">@font/playfair_display_medium</item>
+        <item name="fuenteFuerte">@font/playfair_display_bold</item>
+    </style>
+    <!-- Lora -->
+    <style name="ThemeOverlay.OpticaApp.Fuente.Lora" parent="">
+        <item name="fuenteLigera">@font/lora_regular</item>
+        <item name="fuenteNormal">@font/lora_regular</item>
+        <item name="fuenteMedia">@font/lora_medium</item>
+        <item name="fuenteFuerte">@font/lora_bold</item>
+    </style>
+    <!-- Roboto, la del sistema -->
+    <style name="ThemeOverlay.OpticaApp.Fuente.Sistema" parent="">
+        <item name="fuenteLigera">sans-serif-light</item>
+        <item name="fuenteNormal">sans-serif</item>
+        <item name="fuenteMedia">sans-serif-medium</item>
+        <item name="fuenteFuerte">sans-serif-medium</item>
     </style>
 
 </resources>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Colores del tema. Cada tema (Cristal, Clínica, Carey) les da un valor en themes.xml y
+        los layouts, estilos y drawables los usan como ?attr/colorTexto, ?attr/colorAcento, etc.
+        Así se cambia toda la paleta de la app con solo cambiar de tema.
+    -->
+    <!-- Degradado del fondo (arriba a la izquierda) -->
+    <attr name="colorDegradadoInicio" format="color" />
+    <!-- Degradado del fondo (centro) -->
+    <attr name="colorDegradadoCentro" format="color" />
+    <!-- Degradado del fondo (abajo a la derecha) -->
+    <attr name="colorDegradadoFin" format="color" />
+    <!-- Fondo liso de la ventana -->
+    <attr name="colorFondo" format="color" />
+    <!-- Hojas, tarjetas y barra inferior -->
+    <attr name="colorSuperficie" format="color" />
+    <!-- Superficie tonal: botón secundario, avatar, barras de progreso -->
+    <attr name="colorTonal" format="color" />
+    <!-- Fondo de campos, búsqueda y chips sin elegir -->
+    <attr name="colorTonalSuave" format="color" />
+    <!-- Bordes y divisores -->
+    <attr name="colorBorde" format="color" />
+    <!-- Contorno de los campos de texto sin foco -->
+    <attr name="colorBordeCampo" format="color" />
+    <!-- Texto principal -->
+    <attr name="colorTexto" format="color" />
+    <!-- Texto de apoyo -->
+    <attr name="colorTextoSecundario" format="color" />
+    <!-- Texto tenue y sugerencias -->
+    <attr name="colorTextoTenue" format="color" />
+    <!-- Primario: botones, foco, enlaces, acción rápida -->
+    <attr name="colorAcento" format="color" />
+    <!-- Texto e íconos sobre el primario -->
+    <attr name="colorSobreAcento" format="color" />
+    <!-- Secundario: píldora de rol, etiquetas, íconos de las hojas -->
+    <attr name="colorMarca" format="color" />
+    <!-- Fondo de las píldoras y círculos del secundario -->
+    <attr name="colorMarcaSuave" format="color" />
+    <!-- Terciario: acentos decorativos -->
+    <attr name="colorTercero" format="color" />
+    <!-- Fondo suave del terciario -->
+    <attr name="colorTerceroSuave" format="color" />
+    <!-- Chip o filtro elegido -->
+    <attr name="colorSeleccion" format="color" />
+    <!-- Texto del chip elegido -->
+    <attr name="colorSobreSeleccion" format="color" />
+    <!-- Menú lateral de vidrio (arriba) -->
+    <attr name="colorMenuVidrioInicio" format="color" />
+    <!-- Menú lateral de vidrio (abajo) -->
+    <attr name="colorMenuVidrioFin" format="color" />
+    <!-- Íconos del menú lateral -->
+    <attr name="colorMenuIcono" format="color" />
+    <!-- Velo detrás del menú lateral -->
+    <attr name="colorMenuVelo" format="color" />
+    <!-- Contador del menú (fondo) -->
+    <attr name="colorInsigniaFondo" format="color" />
+    <!-- Contador del menú (número) -->
+    <attr name="colorInsigniaTexto" format="color" />
+    <!-- Resplandor del panel (secundario) -->
+    <attr name="colorAuroraMarca" format="color" />
+    <!-- Resplandor del panel (primario) -->
+    <attr name="colorAuroraAcento" format="color" />
+    <!-- Hoja de vidrio del panel (arriba) -->
+    <attr name="colorHojaVidrioInicio" format="color" />
+    <!-- Hoja de vidrio del panel (centro) -->
+    <attr name="colorHojaVidrioCentro" format="color" />
+    <!-- Hoja de vidrio del panel (abajo) -->
+    <attr name="colorHojaVidrioFin" format="color" />
+
+    <!--
+        Tipografía del tema (Ajustes › Apariencia). Los estilos y layouts usan ?attr/fuenteNormal,
+        ?attr/fuenteMedia, etc.; cada fuente es un ThemeOverlay.OpticaApp.Fuente.* en themes.xml.
+        Pueden ser un archivo de res/font o el nombre de una familia del sistema ("sans-serif").
+    -->
+    <!-- Títulos grandes y delgados -->
+    <attr name="fuenteLigera" format="reference|string" />
+    <!-- Texto normal -->
+    <attr name="fuenteNormal" format="reference|string" />
+    <!-- Etiquetas, botones y menús -->
+    <attr name="fuenteMedia" format="reference|string" />
+    <!-- Títulos de sección, nombres y precios -->
+    <attr name="fuenteFuerte" format="reference|string" />
+</resources>

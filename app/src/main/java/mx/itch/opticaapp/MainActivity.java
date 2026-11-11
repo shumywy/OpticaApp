@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
         // Tema de color guardado (Cristal, Clínica o Carey). Tiene que ir antes de super.onCreate
         // para que todas las pantallas se dibujen ya con sus colores (Ajustes › Apariencia).
         setTheme(Preferencias.getPaleta(this).estilo);
+        // Tipografía elegida (Lexend, Inter, Manrope...): se aplica encima del tema de color
+        getTheme().applyStyle(Preferencias.getFuente(this).estilo, true);
         // Si Android cerró la app en segundo plano se pierde la sesión en memoria;
         // en ese caso no restauramos las pantallas anteriores y empezamos desde el login.
         super.onCreate(Sesion.estaActiva() ? savedInstanceState : null);
@@ -239,23 +241,26 @@ public class MainActivity extends AppCompatActivity {
     private void aplicarAparienciaDelUsuario() {
         String uid = Sesion.getUsuario().id;
         if (!Preferencias.tieneApariencia(this, uid)) {
-            Preferencias.guardarApariencia(this, uid, Preferencias.getPaleta(this), Preferencias.getTema(this));
+            Preferencias.guardarApariencia(this, uid, Preferencias.getPaleta(this), Preferencias.getTema(this),
+                    Preferencias.getFuente(this));
             return;
         }
-        aplicarApariencia(Preferencias.getPaletaDe(this, uid), Preferencias.getTemaDe(this, uid), null);
+        aplicarApariencia(Preferencias.getPaletaDe(this, uid), Preferencias.getTemaDe(this, uid),
+                Preferencias.getFuenteDe(this, uid), null);
     }
 
     /**
-     * Guarda y aplica un tema de color y un modo (lo llama Ajustes › Apariencia al tocar
-     * "Aplicar cambios"). Si cambia lo que se ve, la pantalla se vuelve a crear con el tema nuevo
-     * y aparece con una onda que sale de "origen" (null = centro de la pantalla).
+     * Guarda y aplica un tema de color, un modo y una tipografía (lo llama Ajustes › Apariencia al
+     * tocar "Aplicar cambios"). Si cambia lo que se ve, la pantalla se vuelve a crear con el tema
+     * nuevo y aparece con una onda que sale de "origen" (null = centro de la pantalla).
      */
-    public void aplicarApariencia(Temas.Paleta paleta, int modo, @Nullable View origen) {
+    public void aplicarApariencia(Temas.Paleta paleta, int modo, Temas.Fuente fuente, @Nullable View origen) {
         Temas.Paleta antes = Preferencias.getPaleta(this);
+        Temas.Fuente fuenteAntes = Preferencias.getFuente(this);
         boolean nocheAntes = Temas.esNoche(this);
         boolean nocheDespues = Temas.esNoche(this, modo);
-        Preferencias.guardarApariencia(this, Sesion.estaActiva() ? Sesion.getUsuario().id : null, paleta, modo);
-        if (paleta == antes && nocheAntes == nocheDespues) {
+        Preferencias.guardarApariencia(this, Sesion.estaActiva() ? Sesion.getUsuario().id : null, paleta, modo, fuente);
+        if (paleta == antes && fuente == fuenteAntes && nocheAntes == nocheDespues) {
             // Nada cambia en pantalla (p. ej. de "Sistema" a "Claro" con el teléfono en claro)
             AppCompatDelegate.setDefaultNightMode(Temas.modoAppCompat(modo));
             return;
