@@ -63,12 +63,12 @@
                     android:id="@+id/ivLogo"
                     android:layout_width="88dp"
                     android:layout_height="88dp"
-                    android:background="@color/superficie"
+                    android:background="?attr/colorSuperficie"
                     android:contentDescription="Logotipo de la óptica"
                     android:padding="2dp"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/Forma.Circulo"
-                    app:strokeColor="@color/superficie"
+                    app:strokeColor="?attr/colorSuperficie"
                     app:strokeWidth="4dp" />
 
                 <ImageView
@@ -81,7 +81,7 @@
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:padding="9dp"
                     android:src="@drawable/ic_camara"
-                    app:tint="@color/blanco" />
+                    app:tint="?attr/colorSobreAcento" />
             </FrameLayout>
         </LinearLayout>
 
@@ -237,7 +237,7 @@
                             android:layout_marginEnd="8dp"
                             android:layout_weight="1"
                             android:text="Copiar"
-                            app:backgroundTint="@color/superficie"
+                            app:backgroundTint="?attr/colorSuperficie"
                             app:icon="@drawable/ic_copiar" />
 
                         <Button
@@ -247,7 +247,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Compartir"
-                            app:backgroundTint="@color/superficie"
+                            app:backgroundTint="?attr/colorSuperficie"
                             app:icon="@drawable/ic_compartir" />
                     </LinearLayout>
                 </LinearLayout>
@@ -265,7 +265,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:indeterminateTint="@color/cielo"
+                android:indeterminateTint="?attr/colorAcento"
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>

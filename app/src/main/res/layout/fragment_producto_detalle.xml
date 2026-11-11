@@ -175,7 +175,7 @@
                                 android:layout_height="24dp"
                                 android:importantForAccessibility="no"
                                 android:src="@drawable/ic_pano"
-                                app:tint="@color/menu_icono" />
+                                app:tint="?attr/colorMenuIcono" />
 
                             <TextView
                                 android:id="@+id/tvEstampado"
@@ -184,7 +184,7 @@
                                 android:layout_marginStart="12dp"
                                 android:layout_weight="1"
                                 android:fontFamily="@font/lexend_medium"
-                                android:textColor="@color/texto"
+                                android:textColor="?attr/colorTexto"
                                 android:textSize="13sp"
                                 tools:text="Estampar logo de la óptica (+$5.00)" />
 
@@ -233,7 +233,7 @@
                                     android:layout_gravity="center"
                                     android:fontFamily="@font/lexend_semibold"
                                     android:maxLines="1"
-                                    android:textColor="@color/texto"
+                                    android:textColor="?attr/colorTexto"
                                     android:textSize="13sp"
                                     android:visibility="gone"
                                     tools:text="Twins" />
@@ -367,7 +367,7 @@
         android:id="@+id/pie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/superficie"
+        android:background="?attr/colorSuperficie"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="24dp"

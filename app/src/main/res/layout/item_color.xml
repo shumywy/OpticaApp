@@ -24,7 +24,7 @@
         android:fontFamily="@font/lexend_medium"
         android:gravity="center"
         android:maxLines="1"
-        android:textColor="@color/texto"
+        android:textColor="?attr/colorTexto"
         android:textSize="11sp"
         tools:text="Gris Oxford" />
 
@@ -35,7 +35,7 @@
         android:fontFamily="@font/lexend_regular"
         android:gravity="center"
         android:maxLines="1"
-        android:textColor="@color/texto_secundario"
+        android:textColor="?attr/colorTextoSecundario"
         android:textSize="10sp"
         tools:text="#3C434A" />
 </LinearLayout>

@@ -64,12 +64,12 @@
                     android:id="@+id/ivFoto"
                     android:layout_width="96dp"
                     android:layout_height="96dp"
-                    android:background="@color/superficie"
+                    android:background="?attr/colorSuperficie"
                     android:contentDescription="Foto de perfil"
                     android:padding="2dp"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/Forma.Circulo"
-                    app:strokeColor="@color/superficie"
+                    app:strokeColor="?attr/colorSuperficie"
                     app:strokeWidth="4dp" />
 
                 <ImageView
@@ -82,7 +82,7 @@
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:padding="9dp"
                     android:src="@drawable/ic_camara"
-                    app:tint="@color/blanco" />
+                    app:tint="?attr/colorSobreAcento" />
             </FrameLayout>
         </LinearLayout>
 
@@ -141,7 +141,7 @@
                     android:focusable="false"
                     android:importantForAutofill="no"
                     android:inputType="none"
-                    android:textColor="@color/texto_secundario"
+                    android:textColor="?attr/colorTextoSecundario"
                     tools:text="laura@opticavistaclara.mx" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -208,7 +208,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:indeterminateTint="@color/cielo"
+                android:indeterminateTint="?attr/colorAcento"
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>

@@ -14,8 +14,10 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
@@ -50,6 +52,8 @@ import mx.itch.opticaapp.model.Usuario;
 import mx.itch.opticaapp.ui.InsigniasBarra;
 import mx.itch.opticaapp.ui.administracion.CorteDeCaja;
 import mx.itch.opticaapp.util.Imagenes;
+import mx.itch.opticaapp.util.RevelarTema;
+import mx.itch.opticaapp.util.Temas;
 
 /**
  * Única Activity de la app. Contiene la barra superior, el contenedor de Fragments
@@ -78,12 +82,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Tema de color guardado (Cristal, Clínica o Carey). Tiene que ir antes de super.onCreate
+        // para que todas las pantallas se dibujen ya con sus colores (Ajustes › Apariencia).
+        setTheme(Preferencias.getPaleta(this).estilo);
         // Si Android cerró la app en segundo plano se pierde la sesión en memoria;
         // en ese caso no restauramos las pantallas anteriores y empezamos desde el login.
         super.onCreate(Sesion.estaActiva() ? savedInstanceState : null);
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        // Si se acaba de cambiar el tema, la pantalla nueva aparece con una onda desde el botón
+        RevelarTema.reproducirSiHay(this);
 
         // El encabezado lo crea NavigationView a partir de app:headerLayout
         encabezado = NavHeaderBinding.bind(binding.navView.getHeaderView(0));
@@ -210,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
             configurarMenuPorRol();
             escucharUsuario();
             insignias.iniciar();
+            aplicarAparienciaDelUsuario();
         } else {
             dejarDeEscucharUsuario();
             insignias.detener();
@@ -218,6 +228,44 @@ public class MainActivity extends AppCompatActivity {
             actualizarInsigniaPersonal();   // sin sesión: la oculta
         }
         invalidateOptionsMenu();
+    }
+
+    // ---------------- Apariencia (tema de color y modo) ----------------
+
+    /**
+     * Cada usuario tiene su tema y su modo guardados en este teléfono. Al iniciar sesión se aplican
+     * los suyos; la primera vez se queda con los que están en pantalla y se guardan como suyos.
+     */
+    private void aplicarAparienciaDelUsuario() {
+        String uid = Sesion.getUsuario().id;
+        if (!Preferencias.tieneApariencia(this, uid)) {
+            Preferencias.guardarApariencia(this, uid, Preferencias.getPaleta(this), Preferencias.getTema(this));
+            return;
+        }
+        aplicarApariencia(Preferencias.getPaletaDe(this, uid), Preferencias.getTemaDe(this, uid), null);
+    }
+
+    /**
+     * Guarda y aplica un tema de color y un modo (lo llama Ajustes › Apariencia al tocar
+     * "Aplicar cambios"). Si cambia lo que se ve, la pantalla se vuelve a crear con el tema nuevo
+     * y aparece con una onda que sale de "origen" (null = centro de la pantalla).
+     */
+    public void aplicarApariencia(Temas.Paleta paleta, int modo, @Nullable View origen) {
+        Temas.Paleta antes = Preferencias.getPaleta(this);
+        boolean nocheAntes = Temas.esNoche(this);
+        boolean nocheDespues = Temas.esNoche(this, modo);
+        Preferencias.guardarApariencia(this, Sesion.estaActiva() ? Sesion.getUsuario().id : null, paleta, modo);
+        if (paleta == antes && nocheAntes == nocheDespues) {
+            // Nada cambia en pantalla (p. ej. de "Sistema" a "Claro" con el teléfono en claro)
+            AppCompatDelegate.setDefaultNightMode(Temas.modoAppCompat(modo));
+            return;
+        }
+        RevelarTema.capturarYLuego(this, origen, () -> {
+            if (isFinishing() || isDestroyed()) return;
+            // Si cambia claro / oscuro, AppCompat recrea la pantalla; si solo cambia la paleta, lo hacemos aquí
+            AppCompatDelegate.setDefaultNightMode(Temas.modoAppCompat(modo));
+            if (nocheAntes == nocheDespues) recreate();
+        });
     }
 
     /** Cambia de sección como si se tocara el botón de la barra inferior (lo usa el panel). */
@@ -308,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
         // Apariencia de vidrio: sin tinte general de íconos (cada opción trae su app:iconTint en menu_lateral.xml)
         // y un velo índigo suave en lugar del negro sobre el contenido
         binding.navView.setItemIconTintList(null);
-        binding.drawer.setScrimColor(ContextCompat.getColor(this, R.color.menu_velo));
+        binding.drawer.setScrimColor(Temas.color(this, R.attr.colorMenuVelo));
 
         // Cada opción es una pantalla del nav_graph, salvo "Corte de caja" (diálogo) y "Cerrar sesión".
         // La opción marcada la pone marcarMenuLateral() cada vez que cambia la pantalla.

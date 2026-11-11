@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Texto de los filtros -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/seleccion_texto" android:state_checked="true" />
-    <item android:color="@color/texto_secundario" />
+    <item android:color="?attr/colorSobreSeleccion" android:state_checked="true" />
+    <item android:color="?attr/colorTextoSecundario" />
 </selector>

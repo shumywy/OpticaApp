@@ -21,7 +21,7 @@
             android:background="@drawable/bg_avatar"
             android:fontFamily="@font/lexend_medium"
             android:gravity="center"
-            android:textColor="@color/texto"
+            android:textColor="?attr/colorTexto"
             android:textSize="14sp"
             tools:text="LM" />
 

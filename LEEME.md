@@ -42,7 +42,7 @@ Aplicación móvil para Android orientada a la gestión de ópticas. Integra exp
 | **Punto de venta** | Carrito, anticipo y saldo, método de pago, descuento automático de existencias, nota de venta en PDF y orden de laboratorio opcional. |
 | **Laboratorio** | Seguimiento de órdenes en cuatro etapas: Enviado, En proceso, Recibido y Entregado, con la fecha de cada una. La barra inferior muestra cuántas órdenes siguen pendientes de entregar. |
 | **Administración** | Datos y logotipo de la óptica, personal y roles, creación de cuentas para el equipo y corte de caja de cualquier día (se elige con un calendario), con el resumen y la lista de ventas; el corte se guarda en Firebase y puede consultarse después. El logotipo aparece en el detalle de los productos y en las recetas y notas de venta en PDF. |
-| **Configuración** | Tema claro, oscuro o del sistema, texto grande, modo sin imágenes y fondo de pantalla. |
+| **Configuración** | Tres temas de color (Cristal, Clínica y Carey), cada uno en modo claro, oscuro o el del sistema, con vista previa en vivo; se guardan por usuario en el teléfono. También texto grande, modo sin imágenes y fondo de pantalla. |
 
 ## 2. Roles y permisos
 
@@ -98,16 +98,18 @@ La aplicación usa una sola `Activity` (`MainActivity`) con 15 `Fragment` conect
 ```
 mx.itch.opticaapp
 ├── MainActivity        Barra superior, barra inferior, menú lateral y navegación
-├── OpticaApp           Clase Application (aplica el tema guardado)
+├── OpticaApp           Clase Application (aplica el modo claro / oscuro guardado)
 ├── data/
 │   ├── Sesion          Usuario y óptica de la sesión; referencias a sus colecciones
 │   ├── Historial       Registros del historial de productos (dentro de un WriteBatch)
-│   └── Preferencias    Preferencias locales (SharedPreferences)
+│   └── Preferencias    Preferencias locales (SharedPreferences): apariencia por usuario y ajustes
 ├── model/              Clases que Firestore convierte en documentos
 ├── ui/                 Un paquete por módulo (Fragment y Adapter)
 │   └── InsigniasBarra  Contadores de la barra inferior (órdenes pendientes y stock bajo)
 └── util/
     ├── Validaciones    Reglas de validación de formularios
+    ├── Temas           Los tres temas de color, colores del tema y vista previa
+    ├── RevelarTema     Transición circular al cambiar de tema
     ├── Campos          Error, activación y visibilidad de los campos de texto de Material
     ├── HojaOpciones    Hoja inferior de opciones con ícono (BottomSheetDialog)
     ├── Formato         Moneda, números, teléfonos e iniciales
@@ -123,7 +125,7 @@ mx.itch.opticaapp
 
 ### 4.2 Navegación
 
-- **Barra inferior:** Inicio, Pacientes, Inventario, Ventas y Laboratorio. Cada sección conserva su propio historial. Laboratorio e Inventario muestran un contador (sección 8.5).
+- **Barra inferior:** Inicio, Pacientes, Inventario, Ventas y Laboratorio. Cada sección conserva su propio historial. Laboratorio e Inventario muestran un contador (sección 8.6).
 - **Menú lateral:** Mi perfil, Configuración, el grupo Administración (solo administrador) y Cerrar sesión. Sus pantallas se abren sobre la sección actual y el botón Atrás regresa a ella.
 - La navegación está bloqueada en el inicio de sesión y el registro, y se reinicia al iniciar o cerrar sesión.
 
@@ -141,7 +143,7 @@ mx.itch.opticaapp
 | 8 | Alta y edición de producto | `ui/inventario/ProductoFormFragment` | `fragment_producto_form.xml` |
 | 9 | Punto de venta | `ui/venta/VentaFragment`, `CarritoAdapter` | `fragment_venta.xml` |
 | 10 | Órdenes de laboratorio | `ui/laboratorio/LaboratorioFragment`, `OrdenesAdapter` | `fragment_laboratorio.xml` |
-| 11 | Configuración | `ui/ajustes/AjustesFragment` | `fragment_ajustes.xml` |
+| 11 | Configuración | `ui/ajustes/AjustesFragment` | `fragment_ajustes.xml`, `item_paleta.xml` |
 | 12 | Mi perfil | `ui/administracion/PerfilFragment` | `fragment_perfil.xml` |
 | 13 | Datos de la óptica | `ui/administracion/OpticaFragment` | `fragment_optica.xml` |
 | 14 | Personal | `ui/administracion/PersonalFragment`, `PersonalAdapter` | `fragment_personal.xml`, `item_persona.xml` |
@@ -312,7 +314,7 @@ Las fotografías se guardan dentro de Firestore, sin Cloud Storage:
 
 ### 6.4 Información que permanece en el dispositivo
 
-Solo las preferencias de apariencia de cada dispositivo (tema, texto grande, modo sin imágenes) y el fondo de pantalla elegido. Los PDF se generan en el dispositivo para compartirlos, pero cada uno queda registrado en Firebase (sección 6.2).
+Solo las preferencias guardadas en SharedPreferences (tema de color y modo de cada usuario, texto grande, modo sin imágenes) y el fondo de pantalla elegido. Los PDF se generan en el dispositivo para compartirlos, pero cada uno queda registrado en Firebase (sección 6.2).
 
 ### 6.5 Cómo comprobar los datos en la consola de Firebase
 
@@ -334,38 +336,68 @@ Las reglas de `firebase/firestore.rules` establecen:
 
 | Elemento | Valor |
 |----------|-------|
-| Fondo | Degradado lila a rosa (`degradado_*`); en modo oscuro, azul noche a morado. |
-| Superficies | Hoja blanca con esquinas superiores de 36 dp (`bg_hoja`). |
-| Texto principal | Índigo oscuro `#1E1B4B` (`texto`). |
-| Texto de apoyo | Gris `#64748B` (`texto_secundario`), en formato normal, sin mayúsculas forzadas. |
-| Acción principal | Azul cielo `#3BB4F2` (`cielo`). |
-| Insignias de rol | Fondo `#EDE9FE`, texto `#5B21B6` (`Texto.Pildora.Rol`). |
+| Fondo | Degradado de tres colores del tema (`?attr/colorDegradadoInicio`, `Centro` y `Fin`). |
+| Superficies | Hoja con esquinas superiores de 36 dp (`bg_hoja`) en `?attr/colorSuperficie`. |
+| Texto principal | `?attr/colorTexto` (en Cristal claro, índigo oscuro `#1E1B4B`). |
+| Texto de apoyo | `?attr/colorTextoSecundario`, en formato normal, sin mayúsculas forzadas. |
+| Acción principal | `?attr/colorAcento`, el color primario del tema. |
+| Insignias de rol | `?attr/colorMarcaSuave` de fondo y `?attr/colorMarca` de texto (`Texto.Pildora.Rol`). |
 | Tipografía | Lexend en cuatro grosores: Light (títulos grandes), Regular (texto), Medium (etiquetas, botones y menús) y SemiBold (títulos de sección, nombres y precios). |
 | Iconografía | Íconos vectoriales de trazo fino (`res/drawable/ic_*`). |
 
-Colores: `res/values/colors.xml` y `res/values-night/colors.xml`. Estilos reutilizables: `res/values/styles.xml`. Tema: `res/values/themes.xml`. Todos los layouts incluyen datos de ejemplo (`tools:text`) para revisarlos en la vista **Design** de Android Studio.
+Colores: los del tema son atributos (`res/values/attrs.xml`) con sus valores en `res/values/colors_temas.xml` (claro) y `res/values-night/colors_temas.xml` (oscuro); los que no cambian con el tema (estados, blancos del vidrio) están en `res/values/colors.xml` y `res/values-night/colors.xml`. Estilos reutilizables: `res/values/styles.xml`. Temas: `res/values/themes.xml`. Todos los layouts incluyen datos de ejemplo (`tools:text`) para revisarlos en la vista **Design** de Android Studio.
 
-### 8.2 Menú lateral
+### 8.2 Temas de color
+
+En **Ajustes › Apariencia** cada usuario elige uno de tres temas y el modo (Sistema, Claro u Oscuro). Cada tema usa tres tonos distintos para los roles de Material 3: primario, secundario y terciario.
+
+| Tema | Idea | Primario | Secundario | Terciario |
+|------|------|----------|------------|-----------|
+| **Cristal** (por defecto, el diseño original) | Fresco y luminoso | Azul cielo `#3BB4F2` | Violeta `#5B21B6` | Rosa `#DB2777` |
+| **Clínica** | Limpio y profesional, de consultorio | Verde azulado `#0B8074` | Azul clínico `#1E5A8A` | Coral `#D9573A` |
+| **Carey** | Elegante y cálido, de boutique de armazones | Azul marino `#1F3A5F` | Ámbar `#8A5A10` | Vino `#8E3B46` |
+
+En modo oscuro cada tema usa los mismos tonos, más claros, sobre fondo oscuro. El rojo, el verde, el naranja, el azul y el violeta de los estatus (error, entregado, pendiente, en proceso, recibido) no cambian con el tema, para que su significado sea siempre el mismo.
+
+**Cómo funciona:**
+
+1. Los layouts, estilos y drawables no usan colores fijos sino atributos del tema: `?attr/colorTexto`, `?attr/colorAcento`, `?attr/colorSuperficie`, etc. (31 atributos, declarados en `values/attrs.xml`).
+2. `themes.xml` tiene una base común (`Base.Theme.OpticaApp`) y tres temas que llenan esos atributos con su paleta: `Theme.OpticaApp` (Cristal), `Theme.OpticaApp.Clinica` y `Theme.OpticaApp.Carey`. Los roles de Material 3 (`colorPrimary`, `colorTertiary`, `colorSurface`…) también apuntan a esos atributos, así que botones, campos y diálogos cambian solos.
+3. Los valores de cada paleta están dos veces con el mismo nombre: en `values/colors_temas.xml` (claro) y en `values-night/colors_temas.xml` (oscuro). Android elige la carpeta según el modo.
+4. `MainActivity.onCreate()` llama a `setTheme()` con el tema guardado antes de dibujar la pantalla. En Java los colores del tema se leen con `Temas.color(contexto, R.attr.colorAcento)`.
+5. En Ajustes, al tocar un tema o un modo, la vista previa cambia de color con una animación y aparece **Aplicar cambios**. Al aplicarlo se guarda en SharedPreferences y la pantalla se vuelve a crear; la transición abre el tema nuevo en círculo desde el botón (`util/RevelarTema`, misma idea que en la app Atrium).
+
+**Qué se guarda en SharedPreferences** (archivo `ajustes`):
+
+| Clave | Valor | Uso |
+|-------|-------|-----|
+| `paleta_{uid}` | `cristal`, `clinica` o `carey` | Tema elegido por ese usuario |
+| `tema_{uid}` | 0 = Sistema, 1 = Claro, 2 = Oscuro | Modo elegido por ese usuario |
+| `paleta` y `tema` | Lo mismo | El tema que está en pantalla; con él se dibuja el inicio de sesión antes de saber quién entra |
+
+Al iniciar sesión, `MainActivity` aplica el tema de ese usuario. La primera vez que un usuario entra en el teléfono se queda con el que está en pantalla y se guarda como suyo.
+
+### 8.3 Menú lateral
 
 Fondo de vidrio esmerilado (`bg_menu_vidrio`): degradado lila translúcido, borde blanco fino y esquinas derechas redondeadas. El encabezado muestra la foto con borde translúcido, la insignia de óptica y rol, el nombre y el correo, actualizados en tiempo real desde `users/{uid}`. La opción **Personal** muestra el número de integrantes mediante una consulta de conteo de Firestore. En Android 12 o superior, el contenido detrás del menú se desenfoca mientras está abierto.
 
-### 8.3 Panel principal
+### 8.4 Panel principal
 
 `FondoLentes` dibuja la imagen de los lentes dos veces: nítida fuera de la hoja y desenfocada dentro de ella, lo que produce el efecto de vidrio en cualquier versión de Android sin bibliotecas adicionales. La imagen tiene animación de entrada, flotación, destello periódico, desplazamiento según la inclinación del dispositivo (acelerómetro) y giro al pulsarla. Las animaciones se detienen fuera de la pantalla y respetan la opción del sistema que desactiva animaciones.
 
-### 8.4 Animaciones
+### 8.5 Animaciones
 
 - **Entre pantallas** (`res/anim`): las secciones cambian con un desvanecimiento y una ligera escala; los detalles y formularios entran desde la derecha.
 - **Dentro de cada pantalla** (`util/Animaciones`): el encabezado aparece en cascada y la hoja sube; las listas muestran sus elementos de forma escalonada. La animación se ejecuta solo la primera vez que se abre cada pantalla.
 
-### 8.5 Componentes de Material Design 3
+### 8.6 Componentes de Material Design 3
 
 La interfaz usa los componentes de Material Components 1.12 con el tema `Theme.Material3.DayNight`, adaptados a los colores y la tipografía de la aplicación.
 
 | Componente | Uso en la aplicación |
 |------------|----------------------|
 | **Campos de texto** (`TextInputLayout` con contorno, estilo `CampoMaterial`) | Todos los formularios y diálogos. La etiqueta sube al escribir, el error aparece en rojo debajo del campo y, según el dato, se muestra contador de caracteres, prefijo `$` (precio, costo del estampado, anticipo, meta semanal), sufijo `años` (edad), `mm` (distancia pupilar) o `°` (eje), texto de ejemplo y ayuda. Los campos de contraseña tienen el ícono para mostrar u ocultar el texto. La tabla de graduación usa la variante compacta `CampoMaterial.Tabla`: una celda con error se marca en rojo y el mensaje aparece debajo de la tabla (por ejemplo, "OD · Eje: …") para no deformarla. Las búsquedas de Pacientes e Inventario conservan su campo propio. |
-| **Insignias** (`BadgeDrawable`) | En la barra inferior: en **Laboratorio**, las órdenes Enviadas, En proceso o Recibidas (violeta); en **Inventario**, los productos con existencias iguales o menores a su mínimo (rojo; solo administrador y vendedor). Se actualizan en tiempo real con *listeners* de Firestore que se detienen al salir de la aplicación (`ui/InsigniasBarra`). A partir de 100 se muestra `99+`. |
+| **Insignias** (`BadgeDrawable`) | En la barra inferior: en **Laboratorio**, las órdenes Enviadas, En proceso o Recibidas (color secundario del tema); en **Inventario**, los productos con existencias iguales o menores a su mínimo (rojo; solo administrador y vendedor). Se actualizan en tiempo real con *listeners* de Firestore que se detienen al salir de la aplicación (`ui/InsigniasBarra`). A partir de 100 se muestra `99+`. |
 | **Hojas inferiores** (`BottomSheetDialog`) | "Tomar foto / Elegir de la galería" (foto de perfil y logotipo), opciones de un paciente, opciones y rol del personal, estatus de una orden de laboratorio, "Agregar color exacto" y corte de caja. La opción vigente se marca con una palomita. Las confirmaciones (eliminar, cerrar sesión) siguen siendo diálogos, como recomienda Material. |
 | **Selector de fechas** (`MaterialDatePicker`) | En el corte de caja, para consultar o guardar el corte de otro día. Solo permite elegir hoy o días anteriores; la fecha elegida (medianoche UTC) se convierte al mismo día en la hora del teléfono (`Fechas.desdeSelector`). |
 
@@ -376,6 +408,9 @@ La interfaz usa los componentes de Material Components 1.12 con el tema `Theme.M
 - Si dos usuarios venden la última pieza de un producto al mismo tiempo, las existencias pueden quedar en negativo; la aplicación lo muestra como "Agotado". En ese caso, las columnas "antes / después" del historial se calculan con los datos que tenía cada dispositivo; el valor vigente de existencias siempre es el del documento del producto.
 - Las operaciones realizadas sin conexión se guardan en el dispositivo y se sincronizan al recuperar la red; mientras tanto, el botón correspondiente permanece en espera.
 - Al guardar las fotografías dentro de los documentos, cada lectura de una lista también descarga sus imágenes. Para inventarios de varios cientos de productos convendría migrarlas a Cloud Storage.
+- El tema se guarda en el teléfono, no en Firebase: si el usuario entra desde otro teléfono, ahí elige su tema de nuevo.
+- Al abrir la app, Android muestra un instante la ventana de arranque con el tema Cristal (el del `AndroidManifest`) antes de aplicar el tema guardado.
+- En Cristal claro, el texto blanco sobre el azul cielo de los botones tiene un contraste de 2.3:1, menor al 4.5:1 que recomienda WCAG para texto normal; se conservó por ser el diseño original. Clínica y Carey superan 4.5:1 en todos sus pares de texto.
 - Firestore no puede comparar dos campos de un mismo documento (`stock <= stockMinimo`), por lo que el contador de Inventario escucha la colección de productos completa y cuenta en el dispositivo. Después de la primera lectura solo se descargan los productos que cambian.
 
 ## 10. Licencias

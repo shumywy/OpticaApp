@@ -1,38 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-        Paleta: fondo en degradado lila → rosa, hojas blancas, textos principales en índigo oscuro,
-        etiquetas de apoyo en gris neutro, botón principal azul cielo y píldoras de rol en violeta suave.
-        values-night/colors.xml tiene los mismos nombres para el tema oscuro.
+        Colores que NO cambian con el tema: estados (verde entregado, naranja pendiente, rojo error...),
+        blancos translúcidos del vidrio y el aviso flotante. values-night/colors.xml tiene su versión oscura.
+
+        Los colores del tema (texto, acento, degradado, superficies...) son atributos ?attr/color...
+        definidos en values/attrs.xml; cada tema (Cristal, Clínica, Carey) les da su valor en
+        themes.xml con las paletas de values/colors_temas.xml y values-night/colors_temas.xml.
     -->
 
-    <!-- Degradado del fondo (de arriba-izquierda a abajo-derecha) -->
-    <color name="degradado_inicio">#C9CEF7</color>
-    <color name="degradado_centro">#E1D6F8</color>
-    <color name="degradado_fin">#F8CFEA</color>
-
-    <!-- Superficies -->
-    <color name="fondo">#EEF0FB</color>
-    <color name="superficie">#FFFFFF</color>
-    <color name="lavanda">#DFE3F8</color>
-    <color name="lavanda_suave">#F2F3FC</color>
+    <!-- Blanco translúcido de la búsqueda y las tarjetas de cristal -->
     <color name="blanco_translucido">#D9FFFFFF</color>
-    <color name="borde">#E4E6F2</color>
-    <color name="icono_fondo">#F2F3FC</color>
-
-    <!-- Textos: principal en índigo oscuro y de apoyo (subtítulos, instrucciones) en gris neutro -->
-    <color name="texto">#1E1B4B</color>
-    <color name="texto_secundario">#64748B</color>
-    <color name="texto_tenue">#A3A8BF</color>
-
-    <!-- Marca -->
-    <color name="marino">#1E1B4B</color>
-    <color name="cielo">#3BB4F2</color>
-    <color name="cielo_claro">#E2F3FD</color>
-
-    <!-- Selección (chips y filtros elegidos): fondo marino con texto blanco -->
-    <color name="seleccion">#1E1B4B</color>
-    <color name="seleccion_texto">#FFFFFF</color>
 
     <!-- Se conserva "azul" porque el código Java lo usa para la orden "En proceso" -->
     <color name="azul">#2A86D1</color>
@@ -45,24 +23,15 @@
     <color name="naranja_claro">#FDEFDF</color>
     <color name="rojo">#E5383B</color>
     <color name="rojo_claro">#FDE7E8</color>
-    <!-- Píldora de rol / Administrador: fondo violeta suave y texto violeta -->
+    <!-- Estatus "Recibido" y rol Administrador en la lista de Personal (el violeta de marca es ?attr/colorMarca) -->
     <color name="morado">#5B21B6</color>
     <color name="morado_claro">#EDE9FE</color>
-    <!-- Menú lateral de vidrio (textos: @color/texto y @color/texto_secundario) -->
-    <color name="menu_vidrio_inicio">#F2F1EDFA</color>
-    <color name="menu_vidrio_fin">#EDE4DBF7</color>
+    <!-- Menú lateral de vidrio: bordes y brillos blancos; "Cerrar sesión" en rojo -->
     <color name="menu_vidrio_borde">#33FFFFFF</color>
-    <color name="menu_icono">#4C1D95</color>
     <color name="menu_salir">#BE123C</color>
     <color name="menu_seleccion">#B3FFFFFF</color>
     <color name="menu_divisor">#1A64748B</color>
     <color name="menu_foto_borde">#B3FFFFFF</color>
-    <color name="menu_velo">#591E1B4B</color>
-    <color name="insignia_conteo_fondo">#E9D5FF</color>
-    <color name="insignia_conteo_texto">#6B21A8</color>
-
-    <!-- Contorno de los campos de texto (TextInputLayout) cuando no tienen el foco -->
-    <color name="campo_borde">#C9CDE3</color>
 
     <!-- Aviso flotante de confirmación (util/Aviso) -->
     <color name="aviso_fondo">#1F2937</color>
@@ -73,15 +42,10 @@
     <color name="blanco">#FFFFFF</color>
     <color name="ic_launcher_background">#E1D6F8</color>
 
-    <!-- Panel de vidrio (Inicio): tarjetas translúcidas y resplandor morado detrás de los lentes -->
+    <!-- Panel de vidrio (Inicio): tarjetas translúcidas (el resplandor de color es ?attr/colorAurora...) -->
     <color name="vidrio_inicio">#A6FFFFFF</color>
     <color name="vidrio_fin">#52FFFFFF</color>
     <color name="vidrio_borde">#C7FFFFFF</color>
-    <color name="hoja_vidrio_inicio">#4DFFFFFF</color>
-    <color name="hoja_vidrio_centro">#8CFFFFFF</color>
-    <color name="hoja_vidrio_fin">#F2FFFFFF</color>
     <color name="vidrio_mosaico_inicio">#E6FFFFFF</color>
     <color name="vidrio_mosaico_fin">#99F2F0FF</color>
-    <color name="aurora_morado">#8C7862E8</color>
-    <color name="aurora_azul">#595E80F0</color>
 </resources>

@@ -8,7 +8,7 @@
                 android:centerY="0.30"
                 android:endColor="#00000000"
                 android:gradientRadius="75%p"
-                android:startColor="@color/aurora_morado"
+                android:startColor="?attr/colorAuroraMarca"
                 android:type="radial" />
         </shape>
     </item>
@@ -19,7 +19,7 @@
                 android:centerY="0.50"
                 android:endColor="#00000000"
                 android:gradientRadius="60%p"
-                android:startColor="@color/aurora_azul"
+                android:startColor="?attr/colorAuroraAcento"
                 android:type="radial" />
         </shape>
     </item>

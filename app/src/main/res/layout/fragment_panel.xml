@@ -68,7 +68,7 @@
                         android:layout_gravity="center"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_campana"
-                        app:tint="@color/texto" />
+                        app:tint="?attr/colorTexto" />
 
                     <View
                         android:id="@+id/puntoAvisos"
@@ -96,12 +96,12 @@
                         android:id="@+id/ivAvatar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/superficie"
+                        android:background="?attr/colorSuperficie"
                         android:importantForAccessibility="no"
                         android:padding="1.5dp"
                         android:scaleType="centerCrop"
                         app:shapeAppearanceOverlay="@style/Forma.Circulo"
-                        app:strokeColor="@color/superficie"
+                        app:strokeColor="?attr/colorSuperficie"
                         app:strokeWidth="2dp" />
                 </FrameLayout>
             </LinearLayout>
@@ -207,7 +207,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
                         android:max="100"
-                        app:indicatorColor="@color/cielo"
+                        app:indicatorColor="?attr/colorAcento"
                         app:trackColor="@color/vidrio_borde"
                         app:trackCornerRadius="4dp"
                         app:trackThickness="8dp"
@@ -541,7 +541,7 @@
                                 android:layout_height="40dp"
                                 android:importantForAccessibility="no"
                                 android:src="@drawable/ic_ventas"
-                                app:tint="@color/cielo" />
+                                app:tint="?attr/colorAcento" />
 
                             <TextView
                                 android:id="@+id/tvAccion"
@@ -550,7 +550,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="18dp"
                                 android:text="Nueva"
-                                android:textColor="@color/blanco"
+                                android:textColor="?attr/colorSobreAcento"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -560,7 +560,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="venta"
-                                android:textColor="@color/blanco" />
+                                android:textColor="?attr/colorSobreAcento" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

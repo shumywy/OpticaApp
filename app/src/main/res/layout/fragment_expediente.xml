@@ -70,7 +70,7 @@
                     android:background="@drawable/bg_icono_circulo"
                     android:fontFamily="@font/lexend_medium"
                     android:gravity="center"
-                    android:textColor="@color/texto"
+                    android:textColor="?attr/colorTexto"
                     android:textSize="17sp"
                     tools:text="MF" />
 
@@ -83,7 +83,7 @@
                     android:contentDescription="Editar datos del paciente"
                     android:padding="6dp"
                     android:src="@drawable/ic_editar"
-                    app:tint="@color/blanco" />
+                    app:tint="?attr/colorSobreAcento" />
             </FrameLayout>
         </LinearLayout>
 

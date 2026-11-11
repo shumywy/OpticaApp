@@ -10,9 +10,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    app:cardBackgroundColor="@color/superficie"
+    app:cardBackgroundColor="?attr/colorSuperficie"
     app:cardCornerRadius="18dp"
-    app:strokeColor="@color/borde"
+    app:strokeColor="?attr/colorBorde"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -67,7 +67,7 @@
                 android:layout_height="14dp"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_telefono"
-                app:tint="@color/texto_secundario" />
+                app:tint="?attr/colorTextoSecundario" />
 
             <TextView
                 android:id="@+id/tvTelefono"
@@ -86,8 +86,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@drawable/bg_pildora_morado"
-            android:textColor="@color/morado"
+            android:background="@drawable/bg_pildora_marca"
+            android:textColor="?attr/colorMarca"
             tools:text="OD -1.25 / OI -1.50" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

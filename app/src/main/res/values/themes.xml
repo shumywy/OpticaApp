@@ -1,38 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Tema de la app. Cambiar un color o una fuente aquí lo cambia en todas las pantallas. -->
-    <style name="Theme.OpticaApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Botones y switches en azul cielo -->
-        <item name="colorPrimary">@color/cielo</item>
-        <item name="colorOnPrimary">@color/blanco</item>
-        <item name="colorPrimaryContainer">@color/lavanda</item>
-        <item name="colorOnPrimaryContainer">@color/texto</item>
-        <item name="colorSecondary">@color/cielo</item>
-        <item name="colorOnSecondary">@color/blanco</item>
-        <item name="colorSecondaryContainer">@color/lavanda</item>
-        <item name="colorOnSecondaryContainer">@color/texto</item>
-        <item name="colorTertiary">@color/morado</item>
+    <!--
+        Base común de los tres temas. Ningún color está fijo aquí: todos salen de los atributos
+        ?attr/color... (values/attrs.xml), que cada tema llena con su paleta. Los valores están en
+        values/colors_temas.xml (claro) y values-night/colors_temas.xml (oscuro), así que cada tema
+        tiene automáticamente su versión oscura. El tema se elige en Ajustes › Apariencia (util/Temas).
+    -->
+    <style name="Base.Theme.OpticaApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Roles de Material 3: primario = acento del tema, terciario = tercer color del tema -->
+        <item name="colorPrimary">?attr/colorAcento</item>
+        <item name="colorOnPrimary">?attr/colorSobreAcento</item>
+        <item name="colorPrimaryContainer">?attr/colorTonal</item>
+        <item name="colorOnPrimaryContainer">?attr/colorTexto</item>
+        <item name="colorSecondary">?attr/colorAcento</item>
+        <item name="colorOnSecondary">?attr/colorSobreAcento</item>
+        <item name="colorSecondaryContainer">?attr/colorTonal</item>
+        <item name="colorOnSecondaryContainer">?attr/colorTexto</item>
+        <item name="colorTertiary">?attr/colorTercero</item>
+        <item name="colorTertiaryContainer">?attr/colorTerceroSuave</item>
         <item name="colorError">@color/rojo</item>
 
-        <!-- Fondo en degradado lila → rosa; las hojas y tarjetas son blancas -->
+        <!-- Fondo en degradado con los colores del tema; hojas y tarjetas en la superficie -->
         <item name="android:windowBackground">@drawable/bg_degradado</item>
-        <item name="android:colorBackground">@color/fondo</item>
-        <item name="colorSurface">@color/superficie</item>
-        <item name="colorOnSurface">@color/texto</item>
-        <item name="colorOnSurfaceVariant">@color/texto_secundario</item>
-        <item name="colorOutline">@color/borde</item>
-        <item name="colorOutlineVariant">@color/borde</item>
-        <item name="colorSurfaceContainerLowest">@color/superficie</item>
-        <item name="colorSurfaceContainerLow">@color/superficie</item>
-        <item name="colorSurfaceContainer">@color/superficie</item>
-        <item name="colorSurfaceContainerHigh">@color/superficie</item>
-        <item name="colorSurfaceContainerHighest">@color/lavanda_suave</item>
-        <item name="colorControlNormal">@color/texto_secundario</item>
+        <item name="android:colorBackground">?attr/colorFondo</item>
+        <item name="colorSurface">?attr/colorSuperficie</item>
+        <item name="colorOnSurface">?attr/colorTexto</item>
+        <item name="colorOnSurfaceVariant">?attr/colorTextoSecundario</item>
+        <item name="colorOutline">?attr/colorBorde</item>
+        <item name="colorOutlineVariant">?attr/colorBorde</item>
+        <item name="colorSurfaceContainerLowest">?attr/colorSuperficie</item>
+        <item name="colorSurfaceContainerLow">?attr/colorSuperficie</item>
+        <item name="colorSurfaceContainer">?attr/colorSuperficie</item>
+        <item name="colorSurfaceContainerHigh">?attr/colorSuperficie</item>
+        <item name="colorSurfaceContainerHighest">?attr/colorTonalSuave</item>
+        <item name="colorControlNormal">?attr/colorTextoSecundario</item>
 
-        <item name="android:textColorPrimary">@color/texto</item>
-        <item name="android:textColorSecondary">@color/texto_secundario</item>
-        <item name="android:textColorHint">@color/texto_tenue</item>
+        <item name="android:textColorPrimary">?attr/colorTexto</item>
+        <item name="android:textColorSecondary">?attr/colorTextoSecundario</item>
+        <item name="android:textColorHint">?attr/colorTextoTenue</item>
 
         <!-- Fuente de todos los textos: Lexend (styles.xml solo cambia el grosor y el tamaño) -->
         <item name="android:fontFamily">@font/lexend_regular</item>
@@ -56,6 +62,111 @@
         <item name="floatingActionButtonStyle">@style/BotonFlotante</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.OpticaApp.HojaInferior</item>
         <item name="materialCalendarTheme">@style/ThemeOverlay.OpticaApp.Calendario</item>
+    </style>
+
+    <!-- Cristal: Azul cielo · Violeta · Rosa (tema por defecto, el del AndroidManifest) -->
+    <style name="Theme.OpticaApp" parent="Base.Theme.OpticaApp">
+        <item name="colorDegradadoInicio">@color/cristal_degradado_inicio</item>
+        <item name="colorDegradadoCentro">@color/cristal_degradado_centro</item>
+        <item name="colorDegradadoFin">@color/cristal_degradado_fin</item>
+        <item name="colorFondo">@color/cristal_fondo</item>
+        <item name="colorSuperficie">@color/cristal_superficie</item>
+        <item name="colorTonal">@color/cristal_tonal</item>
+        <item name="colorTonalSuave">@color/cristal_tonal_suave</item>
+        <item name="colorBorde">@color/cristal_borde</item>
+        <item name="colorBordeCampo">@color/cristal_borde_campo</item>
+        <item name="colorTexto">@color/cristal_texto</item>
+        <item name="colorTextoSecundario">@color/cristal_texto_secundario</item>
+        <item name="colorTextoTenue">@color/cristal_texto_tenue</item>
+        <item name="colorAcento">@color/cristal_acento</item>
+        <item name="colorSobreAcento">@color/cristal_sobre_acento</item>
+        <item name="colorMarca">@color/cristal_marca</item>
+        <item name="colorMarcaSuave">@color/cristal_marca_suave</item>
+        <item name="colorTercero">@color/cristal_tercero</item>
+        <item name="colorTerceroSuave">@color/cristal_tercero_suave</item>
+        <item name="colorSeleccion">@color/cristal_seleccion</item>
+        <item name="colorSobreSeleccion">@color/cristal_sobre_seleccion</item>
+        <item name="colorMenuVidrioInicio">@color/cristal_menu_vidrio_inicio</item>
+        <item name="colorMenuVidrioFin">@color/cristal_menu_vidrio_fin</item>
+        <item name="colorMenuIcono">@color/cristal_menu_icono</item>
+        <item name="colorMenuVelo">@color/cristal_menu_velo</item>
+        <item name="colorInsigniaFondo">@color/cristal_insignia_fondo</item>
+        <item name="colorInsigniaTexto">@color/cristal_insignia_texto</item>
+        <item name="colorAuroraMarca">@color/cristal_aurora_marca</item>
+        <item name="colorAuroraAcento">@color/cristal_aurora_acento</item>
+        <item name="colorHojaVidrioInicio">@color/cristal_hoja_vidrio_inicio</item>
+        <item name="colorHojaVidrioCentro">@color/cristal_hoja_vidrio_centro</item>
+        <item name="colorHojaVidrioFin">@color/cristal_hoja_vidrio_fin</item>
+    </style>
+
+    <!-- Clínica: Verde azulado · Azul clínico · Coral -->
+    <style name="Theme.OpticaApp.Clinica" parent="Base.Theme.OpticaApp">
+        <item name="colorDegradadoInicio">@color/clinica_degradado_inicio</item>
+        <item name="colorDegradadoCentro">@color/clinica_degradado_centro</item>
+        <item name="colorDegradadoFin">@color/clinica_degradado_fin</item>
+        <item name="colorFondo">@color/clinica_fondo</item>
+        <item name="colorSuperficie">@color/clinica_superficie</item>
+        <item name="colorTonal">@color/clinica_tonal</item>
+        <item name="colorTonalSuave">@color/clinica_tonal_suave</item>
+        <item name="colorBorde">@color/clinica_borde</item>
+        <item name="colorBordeCampo">@color/clinica_borde_campo</item>
+        <item name="colorTexto">@color/clinica_texto</item>
+        <item name="colorTextoSecundario">@color/clinica_texto_secundario</item>
+        <item name="colorTextoTenue">@color/clinica_texto_tenue</item>
+        <item name="colorAcento">@color/clinica_acento</item>
+        <item name="colorSobreAcento">@color/clinica_sobre_acento</item>
+        <item name="colorMarca">@color/clinica_marca</item>
+        <item name="colorMarcaSuave">@color/clinica_marca_suave</item>
+        <item name="colorTercero">@color/clinica_tercero</item>
+        <item name="colorTerceroSuave">@color/clinica_tercero_suave</item>
+        <item name="colorSeleccion">@color/clinica_seleccion</item>
+        <item name="colorSobreSeleccion">@color/clinica_sobre_seleccion</item>
+        <item name="colorMenuVidrioInicio">@color/clinica_menu_vidrio_inicio</item>
+        <item name="colorMenuVidrioFin">@color/clinica_menu_vidrio_fin</item>
+        <item name="colorMenuIcono">@color/clinica_menu_icono</item>
+        <item name="colorMenuVelo">@color/clinica_menu_velo</item>
+        <item name="colorInsigniaFondo">@color/clinica_insignia_fondo</item>
+        <item name="colorInsigniaTexto">@color/clinica_insignia_texto</item>
+        <item name="colorAuroraMarca">@color/clinica_aurora_marca</item>
+        <item name="colorAuroraAcento">@color/clinica_aurora_acento</item>
+        <item name="colorHojaVidrioInicio">@color/clinica_hoja_vidrio_inicio</item>
+        <item name="colorHojaVidrioCentro">@color/clinica_hoja_vidrio_centro</item>
+        <item name="colorHojaVidrioFin">@color/clinica_hoja_vidrio_fin</item>
+    </style>
+
+    <!-- Carey: Azul marino · Ámbar · Vino -->
+    <style name="Theme.OpticaApp.Carey" parent="Base.Theme.OpticaApp">
+        <item name="colorDegradadoInicio">@color/carey_degradado_inicio</item>
+        <item name="colorDegradadoCentro">@color/carey_degradado_centro</item>
+        <item name="colorDegradadoFin">@color/carey_degradado_fin</item>
+        <item name="colorFondo">@color/carey_fondo</item>
+        <item name="colorSuperficie">@color/carey_superficie</item>
+        <item name="colorTonal">@color/carey_tonal</item>
+        <item name="colorTonalSuave">@color/carey_tonal_suave</item>
+        <item name="colorBorde">@color/carey_borde</item>
+        <item name="colorBordeCampo">@color/carey_borde_campo</item>
+        <item name="colorTexto">@color/carey_texto</item>
+        <item name="colorTextoSecundario">@color/carey_texto_secundario</item>
+        <item name="colorTextoTenue">@color/carey_texto_tenue</item>
+        <item name="colorAcento">@color/carey_acento</item>
+        <item name="colorSobreAcento">@color/carey_sobre_acento</item>
+        <item name="colorMarca">@color/carey_marca</item>
+        <item name="colorMarcaSuave">@color/carey_marca_suave</item>
+        <item name="colorTercero">@color/carey_tercero</item>
+        <item name="colorTerceroSuave">@color/carey_tercero_suave</item>
+        <item name="colorSeleccion">@color/carey_seleccion</item>
+        <item name="colorSobreSeleccion">@color/carey_sobre_seleccion</item>
+        <item name="colorMenuVidrioInicio">@color/carey_menu_vidrio_inicio</item>
+        <item name="colorMenuVidrioFin">@color/carey_menu_vidrio_fin</item>
+        <item name="colorMenuIcono">@color/carey_menu_icono</item>
+        <item name="colorMenuVelo">@color/carey_menu_velo</item>
+        <item name="colorInsigniaFondo">@color/carey_insignia_fondo</item>
+        <item name="colorInsigniaTexto">@color/carey_insignia_texto</item>
+        <item name="colorAuroraMarca">@color/carey_aurora_marca</item>
+        <item name="colorAuroraAcento">@color/carey_aurora_acento</item>
+        <item name="colorHojaVidrioInicio">@color/carey_hoja_vidrio_inicio</item>
+        <item name="colorHojaVidrioCentro">@color/carey_hoja_vidrio_centro</item>
+        <item name="colorHojaVidrioFin">@color/carey_hoja_vidrio_fin</item>
     </style>
 
 </resources>

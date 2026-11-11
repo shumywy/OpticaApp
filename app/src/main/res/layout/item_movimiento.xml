@@ -20,7 +20,7 @@
             android:layout_height="18dp"
             android:layout_gravity="center"
             android:importantForAccessibility="no"
-            app:tint="@color/menu_icono"
+            app:tint="?attr/colorMenuIcono"
             tools:src="@drawable/ic_ventas" />
     </FrameLayout>
 
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/lexend_medium"
-            android:textColor="@color/texto"
+            android:textColor="?attr/colorTexto"
             android:textSize="14sp"
             tools:text="Venta" />
 
@@ -47,7 +47,7 @@
             android:layout_marginTop="2dp"
             android:fontFamily="@font/lexend_regular"
             android:lineSpacingMultiplier="1.2"
-            android:textColor="@color/texto_secundario"
+            android:textColor="?attr/colorTextoSecundario"
             android:textSize="12sp"
             tools:text="Venta de 1 × Paño Twins · Gris Oxford a $50.00 · cliente: Ana Ruiz" />
 
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/lexend_regular"
-            android:textColor="@color/texto_tenue"
+            android:textColor="?attr/colorTextoTenue"
             android:textSize="11sp"
             tools:text="20/10/2026 18:42 · Fernanda Mancilla" />
     </LinearLayout>
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/lexend_regular"
-            android:textColor="@color/texto_tenue"
+            android:textColor="?attr/colorTextoTenue"
             android:textSize="11sp"
             tools:text="Quedan 9" />
     </LinearLayout>

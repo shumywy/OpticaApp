@@ -57,6 +57,7 @@ import mx.itch.opticaapp.util.Formato;
 import mx.itch.opticaapp.util.HojaOpciones;
 import mx.itch.opticaapp.util.Imagenes;
 import mx.itch.opticaapp.util.SelectorDeFoto;
+import mx.itch.opticaapp.util.Temas;
 import mx.itch.opticaapp.util.Validaciones;
 
 /**
@@ -301,13 +302,14 @@ public class ProductoDetalleFragment extends Fragment {
         } else if (metadatos.isFromCache()) {
             texto = "Sin conexión";
             fondo = R.drawable.bg_pildora_gris;
-            color = R.color.texto_secundario;
+            color = 0;   // gris del tema (abajo)
         } else {
             texto = "Guardado en Firebase";
             fondo = R.drawable.bg_pildora_verde;
             color = R.color.verde;
         }
-        int tinte = ContextCompat.getColor(requireContext(), color);
+        int tinte = color != 0 ? ContextCompat.getColor(requireContext(), color)
+                : Temas.color(requireContext(), R.attr.colorTextoSecundario);
         binding.tvSincronizacion.setText(texto);
         binding.tvSincronizacion.setBackgroundResource(fondo);
         binding.tvSincronizacion.setTextColor(tinte);
@@ -400,7 +402,7 @@ public class ProductoDetalleFragment extends Fragment {
         BottomSheetDialog hoja = new BottomSheetDialog(requireContext());
         HojaColorBinding d = HojaColorBinding.inflate(LayoutInflater.from(hoja.getContext()));
         d.muestraPrevia.setSeleccionada(true);
-        d.muestraPrevia.setColor(ContextCompat.getColor(requireContext(), R.color.texto_tenue));
+        d.muestraPrevia.setColor(Temas.color(requireContext(), R.attr.colorTextoTenue));
         // Vista previa en vivo mientras se escriben el nombre y el código
         d.etNombreColor.addTextChangedListener(new AlEscribir(texto ->
                 d.tvMuestraNombre.setText(texto.trim().isEmpty() ? "Nuevo color" : texto.trim())));
@@ -410,7 +412,7 @@ public class ProductoDetalleFragment extends Fragment {
                 d.muestraPrevia.setColor(new VarianteColor("", hex).colorAndroid());
                 d.tvMuestraHex.setText(hex);
             } else {
-                d.muestraPrevia.setColor(ContextCompat.getColor(requireContext(), R.color.texto_tenue));
+                d.muestraPrevia.setColor(Temas.color(requireContext(), R.attr.colorTextoTenue));
                 d.tvMuestraHex.setText("Escribe el código, por ejemplo #3C434A");
             }
         }));

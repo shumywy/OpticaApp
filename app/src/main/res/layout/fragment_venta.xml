@@ -260,7 +260,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/borde" />
+                    android:background="?attr/colorBorde" />
 
                 <!-- Switch azul cielo -->
                 <com.google.android.material.materialswitch.MaterialSwitch
@@ -298,7 +298,7 @@
         android:id="@+id/pie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/superficie"
+        android:background="?attr/colorSuperficie"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="24dp"
@@ -333,7 +333,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="12dp"
-            android:indeterminateTint="@color/cielo"
+            android:indeterminateTint="?attr/colorAcento"
             android:visibility="gone" />
 
         <Button

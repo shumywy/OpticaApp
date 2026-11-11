@@ -44,10 +44,10 @@
             android:layout_marginTop="10dp"
             android:contentDescription="Cambiar el día del corte"
             app:chipIcon="@drawable/ic_calendario"
-            app:chipIconTint="@color/morado"
+            app:chipIconTint="?attr/colorMarca"
             app:chipIconVisible="true"
             app:closeIcon="@drawable/ic_flecha_abajo"
-            app:closeIconTint="@color/morado"
+            app:closeIconTint="?attr/colorMarca"
             app:closeIconVisible="true"
             tools:text="Hoy · 20 oct" />
 
@@ -58,7 +58,7 @@
             android:layout_marginTop="12dp"
             android:indeterminate="true"
             android:visibility="gone"
-            app:indicatorColor="@color/cielo"
+            app:indicatorColor="?attr/colorAcento"
             app:trackCornerRadius="2dp" />
 
         <!-- Resumen: 2 × 2 mosaicos -->

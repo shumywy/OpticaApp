@@ -3,7 +3,7 @@ package mx.itch.opticaapp.ui;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.ColorRes;
+import androidx.annotation.ColorInt;
 import androidx.annotation.IdRes;
 import androidx.annotation.PluralsRes;
 import androidx.core.content.ContextCompat;
@@ -18,6 +18,7 @@ import java.util.Arrays;
 import mx.itch.opticaapp.R;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.model.Orden;
+import mx.itch.opticaapp.util.Temas;
 
 /**
  * Numeritos (insignias, BadgeDrawable de Material) de la barra inferior:
@@ -57,7 +58,12 @@ public final class InsigniasBarra {
                         return;
                     }
                     if (resultado != null) {
-                        mostrar(R.id.laboratorioFragment, resultado.size(), R.color.morado, R.plurals.insignia_ordenes);
+                        Context ctx = barra.getContext();
+                        // Color secundario del tema; en oscuro es claro, así que el número va oscuro
+                        mostrar(R.id.laboratorioFragment, resultado.size(), Temas.color(ctx, R.attr.colorMarca),
+                                Temas.esNoche(ctx) ? Temas.color(ctx, R.attr.colorSuperficie)
+                                        : ContextCompat.getColor(ctx, R.color.blanco),
+                                R.plurals.insignia_ordenes);
                     }
                 });
 
@@ -80,7 +86,9 @@ public final class InsigniasBarra {
                         Long minimo = d.getLong("stockMinimo");
                         if (stock != null && minimo != null && stock <= minimo) bajos++;
                     }
-                    mostrar(R.id.inventarioFragment, bajos, R.color.rojo, R.plurals.insignia_stock_bajo);
+                    Context ctx = barra.getContext();
+                    mostrar(R.id.inventarioFragment, bajos, ContextCompat.getColor(ctx, R.color.rojo),
+                            ContextCompat.getColor(ctx, R.color.blanco), R.plurals.insignia_stock_bajo);
                 });
     }
 
@@ -102,16 +110,16 @@ public final class InsigniasBarra {
         barra.removeBadge(R.id.inventarioFragment);
     }
 
-    private void mostrar(@IdRes int seccion, int cantidad, @ColorRes int color, @PluralsRes int descripcion) {
+    private void mostrar(@IdRes int seccion, int cantidad, @ColorInt int fondo, @ColorInt int numero,
+                         @PluralsRes int descripcion) {
         if (cantidad <= 0) {
             BadgeDrawable existente = barra.getBadge(seccion);
             if (existente != null) existente.setVisible(false);
             return;
         }
-        Context ctx = barra.getContext();
         BadgeDrawable insignia = barra.getOrCreateBadge(seccion);
-        insignia.setBackgroundColor(ContextCompat.getColor(ctx, color));
-        insignia.setBadgeTextColor(ContextCompat.getColor(ctx, R.color.blanco));
+        insignia.setBackgroundColor(fondo);
+        insignia.setBadgeTextColor(numero);
         insignia.setTextAppearance(R.style.TextoInsignia);
         insignia.setMaxNumber(99);   // de 100 en adelante muestra "99+"
         insignia.setContentDescriptionQuantityStringsResource(descripcion);

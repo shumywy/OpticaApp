@@ -253,7 +253,7 @@ public final class Imagenes {
         vista.setScaleType(ImageView.ScaleType.FIT_CENTER);
         vista.setImageResource(icono);
         ImageViewCompat.setImageTintList(vista,
-                ColorStateList.valueOf(ContextCompat.getColor(vista.getContext(), R.color.texto_tenue)));
+                ColorStateList.valueOf(Temas.color(vista.getContext(), R.attr.colorTextoTenue)));
         Runnable ajustar = () -> {
             // Si mientras tanto ya se puso una foto (listas que reciclan renglones), no se toca
             if (!Boolean.TRUE.equals(vista.getTag(R.id.imagen_es_icono))) return;

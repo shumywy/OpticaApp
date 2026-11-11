@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import mx.itch.opticaapp.R;
+import mx.itch.opticaapp.util.Temas;
 
 /**
  * Círculo de una variante de color en el detalle del producto.
@@ -52,14 +53,14 @@ public class MuestraColor extends View {
 
         anillo.setStyle(Paint.Style.STROKE);
         anillo.setStrokeWidth(2 * dp);
-        anillo.setColor(ContextCompat.getColor(context, R.color.texto_tenue));
+        anillo.setColor(Temas.color(context, R.attr.colorTextoTenue));
 
-        blanco.setColor(ContextCompat.getColor(context, R.color.superficie));
+        blanco.setColor(Temas.color(context, R.attr.colorSuperficie));
 
         punteado.setStyle(Paint.Style.STROKE);
         punteado.setStrokeWidth(1.5f * dp);
         punteado.setStrokeCap(Paint.Cap.ROUND);
-        punteado.setColor(ContextCompat.getColor(context, R.color.texto_tenue));
+        punteado.setColor(Temas.color(context, R.attr.colorTextoTenue));
 
         if (tejido == null) tejido = crearTejido();
         BitmapShader sombreado = new BitmapShader(tejido, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);

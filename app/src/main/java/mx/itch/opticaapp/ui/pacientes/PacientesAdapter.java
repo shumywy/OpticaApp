@@ -17,6 +17,7 @@ import mx.itch.opticaapp.databinding.ItemPacienteBinding;
 import mx.itch.opticaapp.model.Paciente;
 import mx.itch.opticaapp.util.Fechas;
 import mx.itch.opticaapp.util.Formato;
+import mx.itch.opticaapp.util.Temas;
 
 /** Adaptador del RecyclerView de pacientes: cada renglón es una ficha de expediente. */
 public class PacientesAdapter extends RecyclerView.Adapter<PacientesAdapter.Fila> {
@@ -77,13 +78,13 @@ public class PacientesAdapter extends RecyclerView.Adapter<PacientesAdapter.Fila
         }
     }
 
-    /** Insignia lila con "OD … / OI …" si ya tiene graduación; gris con "Sin graduación" si no. */
+    /** Insignia del color secundario del tema con "OD … / OI …"; gris con "Sin graduación" si no tiene. */
     private void mostrarGraduacion(TextView vista, String resumen) {
         boolean tiene = resumen != null && !resumen.trim().isEmpty();
         vista.setText(tiene ? resumen : "Sin graduación");
-        vista.setBackgroundResource(tiene ? R.drawable.bg_pildora_morado : R.drawable.bg_pildora_gris);
-        vista.setTextColor(ContextCompat.getColor(vista.getContext(),
-                tiene ? R.color.morado : R.color.texto_secundario));
+        vista.setBackgroundResource(tiene ? R.drawable.bg_pildora_marca : R.drawable.bg_pildora_gris);
+        vista.setTextColor(Temas.color(vista.getContext(),
+                tiene ? R.attr.colorMarca : R.attr.colorTextoSecundario));
     }
 
     @Override
