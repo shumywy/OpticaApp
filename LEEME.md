@@ -8,8 +8,8 @@ Aplicación móvil para Android orientada a la gestión de ópticas. Integra exp
 | **Integrantes** | Gilberto Navarrete García · Luisa Fernanda Mancilla Portillo |
 | **Plataforma** | Android 8.0 (API 26) o superior · `compileSdk` 36 |
 | **Lenguaje** | Java 11 y XML |
-| **Bibliotecas** | Material Components 3, Navigation Component 2.9, ViewBinding, Glide 4.16, Credential Manager |
-| **Servicios** | Firebase Authentication y Cloud Firestore (plan gratuito Spark) |
+| **Bibliotecas** | Material Components 3, Navigation Component 2.9, ViewBinding, Glide 4.16, Credential Manager, ZXing core 3.5 (QR) |
+| **Servicios** | Firebase Authentication, Cloud Firestore y Firebase Hosting (plan gratuito Spark) |
 | **Paquete** | `mx.itch.opticaapp` |
 
 ---
@@ -39,10 +39,11 @@ Aplicación móvil para Android orientada a la gestión de ópticas. Integra exp
 | **Pacientes** | Alta y edición de datos (nombre, teléfono y edad), búsqueda por nombre o teléfono, orden por fecha o alfabético y fichas con la última consulta y la graduación vigente. Al mantener presionado un paciente se abre una hoja con sus opciones: abrir expediente, editar datos y llamar. |
 | **Expediente clínico** | Registro de consultas (esfera, cilindro, eje, adición, distancia pupilar, agudeza visual, tipo de lente), historial y receta en PDF. |
 | **Inventario** | Catálogo con fotografía, búsqueda, alta, edición y baja de productos, y alerta de existencias mínimas. El detalle de cada producto muestra sus características, variantes de color (con alta de colores exactos), la opción de estampar el logotipo de la óptica con un costo adicional, su estado en Firebase y el historial completo de movimientos. La barra inferior muestra cuántos productos tienen existencias bajas. |
-| **Punto de venta** | Carrito, anticipo y saldo, método de pago, descuento automático de existencias, nota de venta en PDF y orden de laboratorio opcional. |
-| **Laboratorio** | Seguimiento de órdenes en cuatro etapas: Enviado, En proceso, Recibido y Entregado, con la fecha de cada una. La barra inferior muestra cuántas órdenes siguen pendientes de entregar. |
+| **Punto de venta** | Carrito, anticipo y saldo, método de pago, efectivo recibido y cambio, descuento automático de existencias y orden de laboratorio opcional con fecha estimada de entrega. Cada venta lleva un folio consecutivo (`V-000123`). |
+| **Ticket** | Al cobrar se abre el ticket de la venta: se envía por WhatsApp, se imprime (impresora térmica de 58 mm o cualquier otra), se guarda en PDF o se comparte. Si la venta tiene orden de laboratorio o saldo, el ticket trae un **código QR** que abre una página web con el estado del pedido y el saldo (sección 4.8). La nota de venta tamaño carta sigue disponible en **Más opciones**. |
+| **Laboratorio** | Seguimiento de órdenes en cuatro etapas: Enviado, En proceso, Recibido y Entregado, con la fecha de cada una, folio consecutivo (`L-000045`) y fecha prometida. Cada cambio de estatus se refleja en la página del QR del cliente. La barra inferior muestra cuántas órdenes siguen pendientes de entregar. |
 | **Administración** | Datos y logotipo de la óptica, personal y roles, creación de cuentas para el equipo y corte de caja de cualquier día (se elige con un calendario), con el resumen y la lista de ventas; el corte se guarda en Firebase y puede consultarse después. El logotipo aparece en el detalle de los productos y en las recetas y notas de venta en PDF. |
-| **Configuración** | Tres temas de color (Cristal, Clínica y Carey), cada uno en modo claro, oscuro o el del sistema, y ocho tipografías, con vista previa en vivo; se guardan por usuario en el teléfono. Cada tema muestra sus colores núcleo y su esquema completo de Material 3 (48 roles, paletas tonales, ficha de cada color y muestrario de componentes). También texto grande, modo sin imágenes y fondo de pantalla. |
+| **Configuración** | Tres temas de color (Prisma, Iris y Montura), cada uno en modo claro, oscuro o el del sistema, y ocho tipografías, con vista previa en vivo; se guardan por usuario en el teléfono. Cada tema muestra sus colores núcleo y su esquema completo de Material 3 (48 roles, paletas tonales, ficha de cada color y muestrario de componentes). También texto grande, modo sin imágenes y fondo de pantalla. |
 
 ## 2. Roles y permisos
 
@@ -78,7 +79,17 @@ El dueño de la óptica (quien la registró) siempre conserva el rol de administ
    - Para Google es necesario registrar la huella SHA-1 del equipo de desarrollo. Se obtiene con `./gradlew signingReport` (en Windows, `gradlew signingReport`) y se agrega en **Configuración del proyecto › Tus apps › Agregar huella digital**. Después se vuelve a descargar `google-services.json`.
 4. En **Firestore Database**, crear la base de datos en modo producción y publicar en la pestaña **Reglas** el contenido de `firebase/firestore.rules`.
 
-No es necesario habilitar Cloud Storage ni contratar el plan Blaze: las fotografías se almacenan comprimidas dentro de Firestore (sección 6.3).
+5. Publicar la página de seguimiento del QR y las reglas con Firebase CLI, desde la carpeta `OpticaApp`:
+
+   ```bash
+   npm install -g firebase-tools
+   firebase login
+   firebase deploy --only hosting,firestore:rules
+   ```
+
+   `firebase.json` toma las reglas de `firebase/firestore.rules` y la página de `firebase/hosting`; `.firebaserc` apunta al proyecto `opticaapp-moviles12` (si se usa otro proyecto, cambiarlo ahí). La página queda en `https://<proyecto>.web.app/s/<token>`, el mismo dominio que arma la app con el id del proyecto de `google-services.json`.
+
+No es necesario habilitar Cloud Storage ni contratar el plan Blaze: las fotografías se almacenan comprimidas dentro de Firestore (sección 6.3), y Hosting está incluido en el plan gratuito.
 
 ### 3.3 Compilación y primer uso
 
@@ -91,7 +102,7 @@ No es necesario habilitar Cloud Storage ni contratar el plan Blaze: las fotograf
 
 ## 4. Arquitectura
 
-La aplicación usa una sola `Activity` (`MainActivity`) con 16 `Fragment` conectados por Navigation Component (`res/navigation/nav_graph.xml`). Las vistas se enlazan con ViewBinding y los datos se leen con *listeners* de Firestore en tiempo real.
+La aplicación usa una sola `Activity` (`MainActivity`) con 17 `Fragment` conectados por Navigation Component (`res/navigation/nav_graph.xml`). Las vistas se enlazan con ViewBinding y los datos se leen con *listeners* de Firestore en tiempo real.
 
 ### 4.1 Estructura de paquetes
 
@@ -102,6 +113,8 @@ mx.itch.opticaapp
 ├── data/
 │   ├── Sesion          Usuario y óptica de la sesión; referencias a sus colecciones
 │   ├── Historial       Registros del historial de productos (dentro de un WriteBatch)
+│   ├── Folios          Folios consecutivos de ventas y órdenes (transacción en contadores/folios)
+│   ├── Seguimientos    Documento público del QR y su dirección web
 │   └── Preferencias    Preferencias locales (SharedPreferences): apariencia por usuario y ajustes
 ├── model/              Clases que Firestore convierte en documentos
 ├── ui/                 Un paquete por módulo (Fragment y Adapter)
@@ -120,6 +133,9 @@ mx.itch.opticaapp
     ├── SelectorDeFoto  Hoja "Tomar foto / Elegir de la galería" reutilizable
     ├── Aviso           Aviso flotante de confirmación ("Producto guardado")
     ├── Pdf             Receta y nota de venta con PdfDocument
+    ├── TicketPdf       Ticket de 58 mm en PDF, solo negro, con el QR de seguimiento
+    ├── Qr              Código QR con ZXing (vectorial para el PDF y en imagen para pantalla)
+    ├── Impresion       Envío del PDF al servicio de impresión de Android (PrintManager)
     ├── Documentos      Registro de cada PDF generado en Firestore
     ├── Animaciones     Animaciones de entrada de cada pantalla
     └── AlEscribir      TextWatcher simplificado
@@ -144,6 +160,7 @@ mx.itch.opticaapp
 | 7 | Detalle de producto | `ui/inventario/ProductoDetalleFragment`, `MuestraColor` | `fragment_producto_detalle.xml`, `item_color.xml`, `item_etiqueta.xml`, `hoja_color.xml` |
 | 8 | Alta y edición de producto | `ui/inventario/ProductoFormFragment` | `fragment_producto_form.xml` |
 | 9 | Punto de venta | `ui/venta/VentaFragment`, `CarritoAdapter` | `fragment_venta.xml` |
+| 9a | Venta registrada (ticket) | `ui/venta/VentaRegistradaFragment`, `PapelTicket` | `fragment_venta_registrada.xml`, `item_ticket_renglon.xml` |
 | 10 | Órdenes de laboratorio | `ui/laboratorio/LaboratorioFragment`, `OrdenesAdapter` | `fragment_laboratorio.xml` |
 | 11 | Configuración | `ui/ajustes/AjustesFragment` | `fragment_ajustes.xml`, `item_paleta.xml`, `item_fuente.xml` |
 | 11a | Esquema de color | `ui/ajustes/EsquemaFragment`, `CuadriculaEsquema`, `FichaColor` | `fragment_esquema.xml`, `item_nucleo.xml`, `item_tonos.xml`, `vista_componentes.xml`, `hoja_ficha_color.xml` |
@@ -185,6 +202,25 @@ Al eliminar un producto, su historial permanece en Firestore como registro de au
 
 `FirebaseAuth` inicia sesión automáticamente con la cuenta que crea. Para que el administrador no pierda su sesión, **Nueva cuenta** utiliza una segunda instancia de Firebase (`"altas"`) que crea la cuenta, guarda el documento `users/{uid}` con el código de invitación de la óptica y cierra su propia sesión. Si el documento no se puede guardar, la cuenta recién creada se elimina para permitir un nuevo intento.
 
+### 4.8 Ticket de venta y seguimiento por QR
+
+**Al cobrar**, `VentaFragment` primero reserva los folios con una transacción sobre `opticas/{id}/contadores/folios` (si dos teléfonos cobran a la vez, Firestore repite una de las transacciones y nunca se entrega el mismo número dos veces). Después guarda la venta en su `WriteBatch` de siempre y abre **Venta registrada**, que muestra el ticket con aspecto de papel (`PapelTicket`, bordes en zigzag) y cuatro acciones:
+
+| Acción | Cómo funciona |
+|--------|---------------|
+| Enviar por WhatsApp | Comparte el PDF con WhatsApp (o WhatsApp Business) y un mensaje con el enlace de seguimiento. Si el paciente tiene teléfono de 10 dígitos, intenta abrir directo su chat (`52` + número). Sin WhatsApp, abre el menú normal de compartir. |
+| Imprimir | `util/Impresion` manda el PDF a `PrintManager` sugiriendo papel de 58 mm. Sirve con impresoras Wi-Fi, de oficina o térmicas Bluetooth que tengan su complemento de impresión instalado (por ejemplo RawBT). |
+| Guardar PDF | Android pregunta dónde guardarlo (Descargas, Drive…) con `ActivityResultContracts.CreateDocument`; no necesita permisos de almacenamiento. |
+| Nueva venta | Regresa al punto de venta, ya limpio. |
+
+En **Más opciones** (⋮): compartir con otra app, nota de venta tamaño carta (el formato anterior) y copiar el enlace de seguimiento. Cada ticket generado queda registrado en `documentos` con el tipo `TICKET`.
+
+**El ticket en PDF** (`util/TicketPdf`) mide 58 mm de ancho y su largo depende de los renglones: se recorre una vez para medir y otra para dibujar. Va solo en negro (el logotipo se pasa a gris) e incluye datos de la óptica, folio, fecha, quién atendió, cliente abreviado, productos, total, método de pago, recibido y cambio, anticipo, una franja negra con el saldo pendiente, la orden de laboratorio con su fecha estimada y el QR.
+
+**El QR** lleva la dirección `https://<proyecto>.web.app/s/<token>`. El token es el id aleatorio de 20 caracteres del documento `seguimiento/{token}`, que solo tiene lo que el cliente necesita: nombre y teléfono de la óptica, folios, cliente abreviado ("María F. L."), trabajo, estatus con sus fechas, fecha estimada, total, anticipo y saldo. Se crea solo si la venta tiene orden de laboratorio o saldo, y Laboratorio lo actualiza cada vez que cambia el estatus de la orden.
+
+**La página** (`firebase/hosting/s/index.html`) es HTML, CSS y JavaScript sin bibliotecas. Lee el documento con la API REST de Firestore, sin iniciar sesión, y muestra el estatus con su línea de etapas (Enviado al laboratorio, En proceso, Listos para recoger y Entregado), la fecha estimada, el saldo pendiente en el color terciario y un botón para llamar a la óptica. Se actualiza sola cada minuto mientras está abierta y respeta el modo oscuro del teléfono del cliente.
+
 ## 5. Validación de datos
 
 Todas las reglas están centralizadas en `util/Validaciones`. Cada formulario revisa todos sus campos a la vez y muestra cada error en rojo debajo de su propio campo (`util/Campos.error`); el mensaje desaparece en cuanto el usuario corrige el texto. Además, los layouts limitan la entrada con `android:maxLength` y, cuando aplica, con `android:digits`, de modo que el teclado no permite escribir caracteres o longitudes fuera de regla. Los campos con límite visible (teléfono, dirección, descripciones, observaciones) muestran un contador, por ejemplo `7/10` o `120/500`.
@@ -219,7 +255,7 @@ Verificaciones adicionales de consistencia:
 
 - **Pacientes duplicados:** al registrar o editar, si ya existe otro paciente con el mismo teléfono o el mismo nombre, se solicita confirmación antes de guardar. Si en la edición no cambió ningún dato, no se escribe en la base de datos.
 - **Productos duplicados:** no se permiten dos productos con el mismo nombre en el inventario.
-- **Venta:** la cantidad no puede superar las existencias (considerando lo que ya está en el carrito); el anticipo no puede ser negativo ni mayor que el total; un saldo pendiente y una orden de laboratorio requieren un paciente registrado.
+- **Venta:** la cantidad no puede superar las existencias (considerando lo que ya está en el carrito); el anticipo no puede ser negativo ni mayor que el total; un saldo pendiente y una orden de laboratorio requieren un paciente registrado; el efectivo recibido (opcional, solo en efectivo) no puede ser menor que lo que se paga en ese momento; la orden de laboratorio requiere una fecha estimada de entrega, que el calendario solo deja elegir de hoy en adelante.
 - **Nueva cuenta:** no se permite usar el correo del propio administrador; los correos ya registrados se rechazan.
 - **Personal:** nadie puede cambiar su propio rol ni el del dueño de la óptica.
 - **Mi perfil:** no se escribe en la base de datos si el nombre no cambió.
@@ -268,19 +304,29 @@ opticas/{opticaId}/productos/{id}/movimientos/{id}   model/Movimiento
   existenciasAntes, existenciasDespues, ventaId, usuarioId, usuarioNombre, fecha
 
 opticas/{opticaId}/ventas/{id}                model/Venta
-  pacienteId, pacienteNombre, items [{productoId, nombre, categoria, precio, cantidad}],
-  total, anticipo, saldo, metodoPago, vendedorId, vendedorNombre, fecha
+  folio (V-000123), pacienteId, pacienteNombre, items [{productoId, nombre, categoria, precio, cantidad}],
+  total, anticipo, saldo, metodoPago, recibido, cambio, vendedorId, vendedorNombre, fecha,
+  ordenFolio, ordenDescripcion, fechaEntrega, seguimiento (token del QR)
 
 opticas/{opticaId}/ordenes/{id}               model/Orden
-  ventaId, pacienteId, pacienteNombre, descripcion, estatus (ENVIADO | EN_PROCESO | RECIBIDO | ENTREGADO),
-  fechaCreacion, fechaEnvio, fechaEnProceso, fechaRecibido, fechaEntregado
+  folio (L-000045), ventaId, ventaFolio, pacienteId, pacienteNombre, descripcion,
+  estatus (ENVIADO | EN_PROCESO | RECIBIDO | ENTREGADO), fechaCreacion, fechaEnvio, fechaEnProceso,
+  fechaRecibido, fechaEntregado, fechaEntrega (estimada), seguimiento
+
+opticas/{opticaId}/contadores/folios
+  ventas, ordenes (último número usado de cada uno)
+
+seguimiento/{token}                           model/Seguimiento  (público: lo abre el QR)
+  opticaId, optica, opticaTelefono, opticaDireccion, folio, ordenFolio, cliente ("María F. L."),
+  trabajo, estatus, fechaVenta, fechaEntrega, fechaEnvio, fechaEnProceso, fechaRecibido,
+  fechaEntregado, total, anticipo, saldo, actualizado
 
 opticas/{opticaId}/cortes/{id}                model/Corte
   dia (yyyy-MM-dd), ventas, totalVendido, cobrado, saldoPendiente,
   porMetodo {Efectivo, Tarjeta, Transferencia}, realizadoPorId, realizadoPorNombre, fecha
 
 opticas/{opticaId}/documentos/{id}            model/Documento
-  tipo (RECETA | NOTA_VENTA), descripcion, referenciaId (paciente o venta), pacienteNombre,
+  tipo (RECETA | NOTA_VENTA | TICKET), descripcion, referenciaId (paciente o venta), pacienteNombre,
   nombreArchivo, tamanoBytes, pdf ("data:application/pdf;base64,…"), archivoIncluido,
   generadoPorId, generadoPorNombre, fecha
 ```
@@ -292,7 +338,7 @@ Operaciones compuestas, ejecutadas en un solo lote (`WriteBatch`) para que se ap
 | Operación | Escrituras |
 |-----------|-----------|
 | Registro de óptica | Documento de la óptica, código de invitación y usuario administrador. |
-| Venta | Documento de la venta, resta de existencias por producto (`FieldValue.increment`), un movimiento `VENTA` por renglón y, si se solicita, la orden de laboratorio. |
+| Venta | Documento de la venta, resta de existencias por producto (`FieldValue.increment`), un movimiento `VENTA` por renglón y, si se solicita, la orden de laboratorio. Antes, una transacción reserva los folios; después, aparte del lote, se crea el documento de seguimiento (si fallara, la venta se guarda igual). |
 | Alta, edición o baja de producto | El producto (documento completo, campos modificados o eliminación) y su movimiento en el historial. |
 | Agregar o quitar un color | La lista `colores` (`FieldValue.arrayUnion` / `arrayRemove`) y su movimiento `EDICION`. |
 | Consulta | Documento de la consulta y actualización de `ultimaConsulta` y `resumenGraduacion` del paciente. |
@@ -332,6 +378,7 @@ Las reglas de `firebase/firestore.rules` establecen:
 - Un usuario puede modificar sus propios datos, pero no su rol ni su óptica; el administrador puede modificar el rol del personal de su óptica.
 - Los códigos de invitación pueden consultarse de uno en uno, pero no listarse.
 - Los datos de cada óptica (pacientes, productos, ventas y órdenes) solo son accesibles para su personal; los datos generales de la óptica solo los modifica su administrador.
+- `seguimiento/{token}` es la única colección pública: cualquiera puede leer **un** documento si conoce su token (el del QR), pero nadie puede listar la colección para buscar otros. Solo el personal de la óptica dueña puede crearlo, modificarlo o borrarlo, y no puede pasarlo a otra óptica. No guarda teléfonos de pacientes ni ids internos.
 
 ## 8. Interfaz de usuario
 
@@ -341,7 +388,7 @@ Las reglas de `firebase/firestore.rules` establecen:
 |----------|-------|
 | Fondo | Degradado de tres colores del tema (`?attr/colorDegradadoInicio`, `Centro` y `Fin`). |
 | Superficies | Hoja con esquinas superiores de 36 dp (`bg_hoja`) en `?attr/colorSuperficie`. |
-| Texto principal | `?attr/colorTexto` (en Cristal claro, índigo oscuro `#1E1B4B`). |
+| Texto principal | `?attr/colorTexto` (en Prisma claro, índigo oscuro `#1E1B4B`). |
 | Texto de apoyo | `?attr/colorTextoSecundario`, en formato normal, sin mayúsculas forzadas. |
 | Acción principal | `?attr/colorAcento`, el color primario del tema. |
 | Insignias de rol | `?attr/colorMarcaSuave` de fondo y `?attr/colorMarca` de texto (`Texto.Pildora.Rol`). |
@@ -356,16 +403,16 @@ En **Ajustes › Apariencia** cada usuario elige uno de tres temas y el modo (Si
 
 | Tema | Idea | Primario | Secundario | Terciario |
 |------|------|----------|------------|-----------|
-| **Cristal** (por defecto, el diseño original) | Fresco y luminoso | Azul cielo `#3BB4F2` | Violeta `#5B21B6` | Rosa `#DB2777` |
-| **Clínica** | Limpio y profesional, de consultorio | Verde azulado `#0B8074` | Azul clínico `#1E5A8A` | Coral `#D9573A` |
-| **Carey** | Elegante y cálido, de boutique de armazones | Azul marino `#1F3A5F` | Ámbar `#8A5A10` | Vino `#8E3B46` |
+| **Prisma** (por defecto, el diseño original) | Fresco y luminoso, la luz que se abre en colores | Azul cielo `#3BB4F2` | Violeta `#5B21B6` | Rosa `#DB2777` |
+| **Iris** | Limpio y profesional, el color del ojo con aire de consultorio | Verde azulado `#0B8074` | Azul clínico `#1E5A8A` | Coral `#D9573A` |
+| **Montura** | Elegante y cálido, como los armazones clásicos | Azul marino `#1F3A5F` | Ámbar `#8A5A10` | Vino `#8E3B46` |
 
 En modo oscuro cada tema usa los mismos tonos, más claros, sobre fondo oscuro. El rojo, el verde, el naranja, el azul y el violeta de los estatus (error, entregado, pendiente, en proceso, recibido) no cambian con el tema, para que su significado sea siempre el mismo.
 
 **Cómo funciona:**
 
 1. Los layouts, estilos y drawables no usan colores fijos sino atributos del tema: `?attr/colorTexto`, `?attr/colorAcento`, `?attr/colorSuperficie`, etc. (31 atributos, declarados en `values/attrs.xml`).
-2. `themes.xml` tiene una base común (`Base.Theme.OpticaApp`) y tres temas que llenan esos atributos con su paleta: `Theme.OpticaApp` (Cristal), `Theme.OpticaApp.Clinica` y `Theme.OpticaApp.Carey`. Cada tema también llena los roles de Material 3 (`colorPrimary`, `colorTertiary`, `colorSurface`…) con su esquema (ver abajo), así que botones, campos y diálogos cambian solos.
+2. `themes.xml` tiene una base común (`Base.Theme.OpticaApp`) y tres temas que llenan esos atributos con su paleta: `Theme.OpticaApp` (Prisma), `Theme.OpticaApp.Iris` y `Theme.OpticaApp.Montura`. Cada tema también llena los roles de Material 3 (`colorPrimary`, `colorTertiary`, `colorSurface`…) con su esquema (ver abajo), así que botones, campos y diálogos cambian solos.
 3. Los valores de cada paleta están dos veces con el mismo nombre: en `values/colors_temas.xml` (claro) y en `values-night/colors_temas.xml` (oscuro). Android elige la carpeta según el modo.
 4. `MainActivity.onCreate()` llama a `setTheme()` con el tema guardado antes de dibujar la pantalla. En Java los colores del tema se leen con `Temas.color(contexto, R.attr.colorAcento)`.
 5. En Ajustes, al tocar un tema, una tipografía o un modo, la vista previa cambia con una animación y aparece **Aplicar cambios**. Al aplicarlo se guarda en SharedPreferences y la pantalla se vuelve a crear; la transición abre el tema nuevo en círculo desde el botón (`util/RevelarTema`, misma idea que en la app Atrium).
@@ -375,9 +422,9 @@ En modo oscuro cada tema usa los mismos tonos, más claros, sobre fondo oscuro. 
 En la tarjeta del tema elegido se ven sus colores núcleo y el botón **Ver esquema completo**, que abre la pantalla **Esquema de color** (`EsquemaFragment`, adaptada de Atrium):
 
 - La cuadrícula de los 48 roles, organizada como Material Theme Builder, en claro u oscuro (botones segmentados).
-- Las paletas tonales (tonos 0 a 100).
 - Al tocar cualquier color, una hoja con su código HEX y RGB, su tono, su contraste con el color que va encima (AA / AAA de WCAG) y para qué se usa.
 - Un muestrario de componentes de Material 3 (progreso, campos, chips, botones, FAB, botones segmentados, controles de selección, pestañas, barra de navegación, tarjetas, avisos y diálogo) pintados con ese tema, aunque no sea el que está aplicado.
+- Al final, las paletas tonales (tonos 0 a 100) de las que salen los roles.
 
 **Tipografía.** Los estilos y layouts no usan una fuente fija sino atributos (`?attr/fuenteNormal`, `fuenteMedia`, `fuenteFuerte`, `fuenteLigera`). Lexend es la de la base; cada otra fuente es un `ThemeOverlay.OpticaApp.Fuente.*` que `MainActivity` aplica encima del tema con `getTheme().applyStyle()`. Opciones: Lexend (la original), Inter, Manrope, Montserrat, Space Grotesk, Playfair Display, Lora y Roboto (la del sistema). Las fuentes de Atrium traen tres grosores, así que en ellas los títulos ligeros usan el regular y los textos fuertes el bold.
 
@@ -385,7 +432,7 @@ En la tarjeta del tema elegido se ven sus colores núcleo y el botón **Ver esqu
 
 | Clave | Valor | Uso |
 |-------|-------|-----|
-| `paleta_{uid}` | `cristal`, `clinica` o `carey` | Tema elegido por ese usuario |
+| `paleta_{uid}` | `prisma`, `iris` o `montura` | Tema elegido por ese usuario |
 | `tema_{uid}` | 0 = Sistema, 1 = Claro, 2 = Oscuro | Modo elegido por ese usuario |
 | `fuente_{uid}` | `lexend`, `inter`, `manrope`, `montserrat`, `space_grotesk`, `playfair`, `lora` o `sistema` | Tipografía elegida por ese usuario |
 | `paleta`, `tema` y `fuente` | Lo mismo | La apariencia que está en pantalla; con ella se dibuja el inicio de sesión antes de saber quién entra |
@@ -411,7 +458,7 @@ La interfaz usa los componentes de Material Components 1.12 con el tema `Theme.M
 
 | Componente | Uso en la aplicación |
 |------------|----------------------|
-| **Campos de texto** (`TextInputLayout` con contorno, estilo `CampoMaterial`) | Todos los formularios y diálogos. La etiqueta sube al escribir, el error aparece en rojo debajo del campo y, según el dato, se muestra contador de caracteres, prefijo `$` (precio, costo del estampado, anticipo, meta semanal), sufijo `años` (edad), `mm` (distancia pupilar) o `°` (eje), texto de ejemplo y ayuda. Los campos de contraseña tienen el ícono para mostrar u ocultar el texto. La tabla de graduación usa la variante compacta `CampoMaterial.Tabla`: una celda con error se marca en rojo y el mensaje aparece debajo de la tabla (por ejemplo, "OD · Eje: …") para no deformarla. Las búsquedas de Pacientes e Inventario conservan su campo propio. |
+| **Campos de texto** (`TextInputLayout` con contorno, estilo `CampoMaterial`) | Todos los formularios y diálogos. La etiqueta sube al escribir, el error aparece en rojo debajo del campo y, según el dato, se muestra contador de caracteres, prefijo `$` (precio, costo del estampado, anticipo, efectivo recibido, meta semanal), sufijo `años` (edad), `mm` (distancia pupilar) o `°` (eje), texto de ejemplo y ayuda. Los campos de contraseña tienen el ícono para mostrar u ocultar el texto. La tabla de graduación usa la variante compacta `CampoMaterial.Tabla`: una celda con error se marca en rojo y el mensaje aparece debajo de la tabla (por ejemplo, "OD · Eje: …") para no deformarla. Las búsquedas de Pacientes e Inventario conservan su campo propio. |
 | **Insignias** (`BadgeDrawable`) | En la barra inferior: en **Laboratorio**, las órdenes Enviadas, En proceso o Recibidas (color secundario del tema); en **Inventario**, los productos con existencias iguales o menores a su mínimo (rojo; solo administrador y vendedor). Se actualizan en tiempo real con *listeners* de Firestore que se detienen al salir de la aplicación (`ui/InsigniasBarra`). A partir de 100 se muestra `99+`. |
 | **Hojas inferiores** (`BottomSheetDialog`) | "Tomar foto / Elegir de la galería" (foto de perfil y logotipo), opciones de un paciente, opciones y rol del personal, estatus de una orden de laboratorio, "Agregar color exacto" y corte de caja. La opción vigente se marca con una palomita. Las confirmaciones (eliminar, cerrar sesión) siguen siendo diálogos, como recomienda Material. |
 | **Botones segmentados** (`MaterialButtonToggleGroup`, estilo `BotonSegmentado`) | **Modo** (Sistema, Claro, Oscuro) en Ajustes y **Esquema claro / oscuro** en Esquema de color. El elegido se rellena con el color de selección del tema, como los filtros. |
@@ -427,11 +474,17 @@ La interfaz usa los componentes de Material Components 1.12 con el tema `Theme.M
 - El tema, el modo y la tipografía se guardan en el teléfono, no en Firebase: si el usuario entra desde otro teléfono, ahí los elige de nuevo.
 - Las tipografías que vienen de Atrium (Inter, Manrope, Montserrat, Space Grotesk, Playfair Display y Lora) traen tres grosores (regular, medium y bold); los textos ligeros de los títulos se ven en regular con ellas. Los PDF (receta y nota de venta) siempre usan la fuente del sistema.
 - Los roles de Material 3 que el diseño original no usaba (secundario, terciario, contenedores, fijos, inversos, error container) se calcularon con el algoritmo de Material; algunos componentes de Material que antes tomaban un color del tema ahora toman su rol calculado, de la misma familia de color.
-- Al abrir la app, Android muestra un instante la ventana de arranque con el tema Cristal (el del `AndroidManifest`) antes de aplicar el tema guardado.
-- En Cristal claro, el texto blanco sobre el azul cielo de los botones tiene un contraste de 2.3:1, menor al 4.5:1 que recomienda WCAG para texto normal; se conservó por ser el diseño original. Clínica y Carey superan 4.5:1 en todos sus pares de texto.
+- Al abrir la app, Android muestra un instante la ventana de arranque con el tema Prisma (el del `AndroidManifest`) antes de aplicar el tema guardado.
+- En Prisma claro, el texto blanco sobre el azul cielo de los botones tiene un contraste de 2.3:1, menor al 4.5:1 que recomienda WCAG para texto normal; se conservó por ser el diseño original. Iris y Montura superan 4.5:1 en todos sus pares de texto.
 - Firestore no puede comparar dos campos de un mismo documento (`stock <= stockMinimo`), por lo que el contador de Inventario escucha la colección de productos completa y cuenta en el dispositivo. Después de la primera lectura solo se descargan los productos que cambian.
+
+- Si no hay conexión al cobrar, la transacción del folio no se puede hacer: después de 6 segundos la venta se guarda con un folio provisional hecho con el id del documento (`V-K3F9QA`), que se distingue de los consecutivos porque lleva letras. Si la transacción llega a completarse tarde, ese número consecutivo queda sin usar.
+- La app no registra abonos a un saldo, así que el saldo de la página del QR es el que quedó al cobrar.
+- WhatsApp solo abre directo el chat del paciente si su número está guardado en los contactos del teléfono; si no, pide elegir a quién mandarlo. El parámetro `jid` que se usa para eso no es parte de una API oficial de WhatsApp.
+- La página del QR solo funciona después de publicar Hosting y las reglas (sección 3.2, paso 5). Mientras tanto, escanear el QR muestra un error del navegador o "Seguimiento no disponible"; la venta y el ticket funcionan igual.
+- Al imprimir, el tamaño de 58 mm es una sugerencia: si la impresora elegida no lo maneja, Android ajusta el ticket al papel que tenga.
 
 ## 10. Licencias
 
 - **Lexend**, **Inter**, **Manrope**, **Montserrat**, **Space Grotesk**, **Playfair Display** y **Lora** — SIL Open Font License 1.1 (`licencias/OFL_*.txt`).
-- Bibliotecas de AndroidX, Material Components, Firebase y Glide — Apache License 2.0.
+- Bibliotecas de AndroidX, Material Components, Firebase, Glide y ZXing — Apache License 2.0.

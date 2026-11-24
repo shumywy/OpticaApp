@@ -1,7 +1,11 @@
 package mx.itch.opticaapp.model;
 
+import java.io.Serializable;
+
 /** Un renglón de una venta. Se guarda dentro de la lista "items" del documento Venta. */
-public class ItemVenta {
+public class ItemVenta implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public String productoId;
     public String nombre;

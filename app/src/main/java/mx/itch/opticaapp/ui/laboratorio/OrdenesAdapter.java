@@ -46,15 +46,18 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.Fila> {
     @Override
     public void onBindViewHolder(@NonNull Fila fila, int posicion) {
         Orden o = lista.get(posicion);
-        String folio = o.id != null && o.id.length() >= 5 ? o.id.substring(0, 5).toUpperCase(Locale.ROOT) : "";
-        fila.b.tvTitulo.setText("#" + folio + " · " + o.pacienteNombre);
+        // Órdenes nuevas: folio consecutivo ("L-000045"); las anteriores muestran el inicio de su id
+        String folio = o.folio != null && !o.folio.isEmpty() ? o.folio
+                : "#" + (o.id != null && o.id.length() >= 5 ? o.id.substring(0, 5).toUpperCase(Locale.ROOT) : "");
+        fila.b.tvTitulo.setText(folio + " · " + o.pacienteNombre);
         fila.b.tvDescripcion.setText(o.descripcion);
         mostrarEstatus(fila.b.tvEstatus, o.estatus);
         // Cada etapa avanza 25 %: Enviado 25, En proceso 50, Recibido 75, Entregado 100
         fila.b.barraEtapas.setProgress((Orden.indiceEtapa(o.estatus) + 1) * 25);
         fila.b.tvEtapas.setText(lineaDeEtapas(o.estatus));
         fila.b.tvFechas.setText("Enviada: " + Fechas.corta(o.fechaEnvio)
-                + (o.fechaEntregado != null ? "  ·  Entregada: " + Fechas.corta(o.fechaEntregado) : ""));
+                + (o.fechaEntregado != null ? "  ·  Entregada: " + Fechas.corta(o.fechaEntregado)
+                : o.fechaEntrega != null ? "  ·  Promesa: " + Fechas.corta(o.fechaEntrega) : ""));
         fila.itemView.setOnClickListener(v -> alTocar.alTocar(o));
     }
 

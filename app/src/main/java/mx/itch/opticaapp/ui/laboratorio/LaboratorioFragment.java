@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 
@@ -21,6 +22,8 @@ import java.util.Date;
 import java.util.List;
 
 import mx.itch.opticaapp.R;
+import mx.itch.opticaapp.data.Folios;
+import mx.itch.opticaapp.data.Seguimientos;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.DialogOrdenBinding;
 import mx.itch.opticaapp.databinding.FragmentLaboratorioBinding;
@@ -142,12 +145,19 @@ public class LaboratorioFragment extends Fragment {
         hoja.mostrar();
     }
 
-    /** Guarda el estatus y la fecha en que se llegó a esa etapa. */
+    /**
+     * Guarda el estatus y la fecha en que se llegó a esa etapa. Si la orden salió de una venta con
+     * ticket, también actualiza su documento público: así el cliente ve el cambio al escanear el QR.
+     */
     private void cambiarEstatus(Orden orden, String nuevo) {
         if (nuevo.equals(orden.estatus)) return;
+        Date ahora = new Date();
         Sesion.coleccion("ordenes").document(orden.id)
-                .update("estatus", nuevo, Orden.campoFecha(nuevo), new Date())
+                .update("estatus", nuevo, Orden.campoFecha(nuevo), ahora)
                 .addOnFailureListener(e -> mensaje("No se pudo actualizar: " + e.getMessage()));
+        if (orden.seguimiento != null && !orden.seguimiento.isEmpty()) {
+            Seguimientos.cambiarEstatus(orden.seguimiento, nuevo, ahora);
+        }
     }
 
     /** Orden creada a mano (por ejemplo, un trabajo que no salió de una venta en la app). */
@@ -175,8 +185,15 @@ public class LaboratorioFragment extends Fragment {
             o.estatus = Orden.ENVIADO;
             o.fechaCreacion = new Date();
             o.fechaEnvio = o.fechaCreacion;
-            Sesion.coleccion("ordenes").add(o)
-                    .addOnFailureListener(e -> mensaje("No se pudo guardar: " + e.getMessage()));
+            o.ventaFolio = "";
+            o.seguimiento = "";
+            // También lleva folio consecutivo; sin conexión, uno provisional
+            DocumentReference ref = Sesion.coleccion("ordenes").document();
+            Folios.reservar(false, true).addOnCompleteListener(t -> {
+                o.folio = t.isSuccessful() && t.getResult() != null
+                        ? Folios.orden(t.getResult()[1]) : Folios.provisional("L", ref.getId());
+                ref.set(o).addOnFailureListener(e -> mensaje("No se pudo guardar: " + e.getMessage()));
+            });
             dialogo.dismiss();
         }));
         dialogo.show();

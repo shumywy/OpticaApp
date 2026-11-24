@@ -11,6 +11,7 @@
     <string name="titulo_inventario">Inventario</string>
     <string name="titulo_producto">Producto</string>
     <string name="titulo_venta">Nueva venta</string>
+    <string name="titulo_venta_registrada">Venta registrada</string>
     <string name="titulo_laboratorio">Órdenes de laboratorio</string>
     <string name="titulo_ajustes">Configuración</string>
     <string name="titulo_esquema">Esquema de color</string>

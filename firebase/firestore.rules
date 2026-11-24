@@ -67,10 +67,22 @@ service cloud.firestore {
       allow read: if esMiembro(opticaId);
       allow update: if esAdmin(opticaId);
 
-      // pacientes, consultas, productos, ventas, ordenes...
+      // pacientes, consultas, productos, ventas, ordenes, contadores...
       match /{coleccion}/{documento=**} {
         allow read, write: if esMiembro(opticaId);
       }
+    }
+
+    // ---------- Seguimiento público (QR del ticket) ----------
+    // Cualquiera con el token (id aleatorio de 20 caracteres que va en el QR) puede leer ESE
+    // documento sin iniciar sesión; nadie puede listar la colección para buscar otros.
+    match /seguimiento/{token} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if esMiembro(request.resource.data.opticaId);
+      allow update: if esMiembro(resource.data.opticaId)
+                    && request.resource.data.opticaId == resource.data.opticaId;
+      allow delete: if esMiembro(resource.data.opticaId);
     }
   }
 }

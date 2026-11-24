@@ -6,17 +6,19 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
 
 /**
- * Registro de un PDF generado (receta o nota de venta): /opticas/{opticaId}/documentos/{documentoId}.
+ * Registro de un PDF generado (receta, nota de venta o ticket): /opticas/{opticaId}/documentos/{documentoId}.
  * Si el archivo pesa 700 KB o menos, se guarda completo en el campo "pdf".
  */
 public class Documento {
 
     public static final String RECETA = "RECETA";
     public static final String NOTA_VENTA = "NOTA_VENTA";
+    /** Ticket de 58 mm con el QR de seguimiento. */
+    public static final String TICKET = "TICKET";
 
     @DocumentId
     public String id;
-    /** RECETA o NOTA_VENTA. */
+    /** RECETA, NOTA_VENTA o TICKET. */
     public String tipo;
     public String descripcion;
     /** Paciente de la receta, o venta de la nota. */

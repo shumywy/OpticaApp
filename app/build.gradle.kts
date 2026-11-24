@@ -61,4 +61,7 @@ dependencies {
 
     // Carga de imágenes desde internet
     implementation(libs.glide)
+
+    // Código QR del ticket (solo el núcleo de ZXing: genera la matriz, sin cámara)
+    implementation(libs.zxing.core)
 }

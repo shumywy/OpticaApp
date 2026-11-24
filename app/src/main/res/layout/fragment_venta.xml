@@ -233,6 +233,24 @@
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Solo en efectivo: con lo que entregó el cliente se calcula el cambio del ticket -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilRecibido"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Efectivo recibido (opcional)"
+                    app:prefixText="$"
+                    app:helperText="Para calcular el cambio del ticket">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etRecibido"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="10"
+                        android:importantForAutofill="no"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -288,6 +306,28 @@
                         android:maxLength="200"
                         android:importantForAutofill="no"
                         android:inputType="textCapSentences" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Fecha que se le promete al cliente: sale en el ticket y en la página del QR -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilEntrega"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Entrega estimada"
+                    android:visibility="gone"
+                    app:endIconContentDescription="Elegir fecha de entrega"
+                    app:endIconDrawable="@drawable/ic_calendario"
+                    app:endIconMode="custom"
+                    app:helperText="Sale en el ticket y en el seguimiento del QR">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEntrega"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:importantForAutofill="no"
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </LinearLayout>

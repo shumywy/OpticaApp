@@ -17,7 +17,11 @@ public class Orden {
 
     @DocumentId
     public String id;
+    /** Folio consecutivo de la óptica: "L-000045". Vacío en órdenes anteriores a los folios. */
+    public String folio;
     public String ventaId;
+    /** Folio de la venta de donde salió ("V-000123"), o vacío. */
+    public String ventaFolio;
     public String pacienteId;
     public String pacienteNombre;
     public String descripcion;
@@ -27,6 +31,10 @@ public class Orden {
     public Date fechaEnProceso;
     public Date fechaRecibido;
     public Date fechaEntregado;
+    /** Fecha estimada de entrega que se le dijo al cliente. */
+    public Date fechaEntrega;
+    /** Token de /seguimiento/{token} (lo que abre el QR del ticket); vacío si no hay. */
+    public String seguimiento;
 
     public Orden() {
     }

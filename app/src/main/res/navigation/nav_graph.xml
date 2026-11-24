@@ -106,7 +106,21 @@
     <fragment
         android:id="@+id/ventaFragment"
         android:name="mx.itch.opticaapp.ui.venta.VentaFragment"
-        android:label="@string/titulo_venta" />
+        android:label="@string/titulo_venta">
+        <action
+            android:id="@+id/action_venta_to_registrada"
+            app:destination="@id/ventaRegistradaFragment"
+            app:enterAnim="@anim/nav_entrar"
+            app:exitAnim="@anim/nav_salir"
+            app:popEnterAnim="@anim/nav_regresar_entrar"
+            app:popExitAnim="@anim/nav_regresar_salir" />
+    </fragment>
+
+    <!-- Ticket de la venta recién cobrada (argumentos: venta y telefono) -->
+    <fragment
+        android:id="@+id/ventaRegistradaFragment"
+        android:name="mx.itch.opticaapp.ui.venta.VentaRegistradaFragment"
+        android:label="@string/titulo_venta_registrada" />
 
     <fragment
         android:id="@+id/laboratorioFragment"

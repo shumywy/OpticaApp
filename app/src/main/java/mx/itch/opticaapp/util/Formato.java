@@ -38,6 +38,20 @@ public final class Formato {
     }
 
     /**
+     * "María Fernanda López" -> "María F. L.". Para el ticket y la página de seguimiento,
+     * donde no hace falta el nombre completo del cliente.
+     */
+    public static String nombreCorto(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) return "";
+        String[] partes = nombre.trim().split("\\s+");
+        StringBuilder sb = new StringBuilder(partes[0]);
+        for (int i = 1; i < partes.length; i++) {
+            sb.append(' ').append(Character.toUpperCase(partes[i].charAt(0))).append('.');
+        }
+        return sb.toString();
+    }
+
+    /**
      * Lee un número escrito por el usuario aceptando coma o punto decimal y el signo $.
      * Devuelve null si está vacío o mal escrito. Solo acepta dígitos con signo y punto opcionales:
      * rechaza "NaN", "Infinity", "1e5" o "0x10", que Double.parseDouble sí aceptaría.

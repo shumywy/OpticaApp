@@ -10,6 +10,7 @@ firebaseBom = "34.0.0"
 credentials = "1.5.0"
 googleid = "1.1.1"
 glide = "4.16.0"
+zxing = "3.5.3"
 
 [libraries]
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -25,6 +26,7 @@ credentials = { group = "androidx.credentials", name = "credentials", version.re
 credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
 googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

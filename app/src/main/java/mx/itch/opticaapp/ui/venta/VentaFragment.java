@@ -10,19 +10,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.WriteBatch;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,10 +35,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import mx.itch.opticaapp.R;
+import mx.itch.opticaapp.data.Folios;
 import mx.itch.opticaapp.data.Historial;
+import mx.itch.opticaapp.data.Seguimientos;
 import mx.itch.opticaapp.data.Sesion;
 import mx.itch.opticaapp.databinding.FragmentVentaBinding;
-import mx.itch.opticaapp.model.Documento;
 import mx.itch.opticaapp.model.ItemVenta;
 import mx.itch.opticaapp.model.Movimiento;
 import mx.itch.opticaapp.model.Orden;
@@ -44,15 +49,16 @@ import mx.itch.opticaapp.model.Venta;
 import mx.itch.opticaapp.util.AlEscribir;
 import mx.itch.opticaapp.util.Animaciones;
 import mx.itch.opticaapp.util.Campos;
-import mx.itch.opticaapp.util.Documentos;
+import mx.itch.opticaapp.util.Fechas;
 import mx.itch.opticaapp.util.Formato;
-import mx.itch.opticaapp.util.Pdf;
 import mx.itch.opticaapp.util.Validaciones;
 
 /**
  * Pantalla 7: punto de venta.
- * Al confirmar, en una sola escritura (WriteBatch): se guarda la venta, se descuenta el stock
- * de cada producto con FieldValue.increment y, si se pidió, se crea la orden de laboratorio.
+ * Al confirmar se reservan los folios (transacción en contadores/folios) y luego, en una sola
+ * escritura (WriteBatch): se guarda la venta, se descuenta el stock de cada producto con
+ * FieldValue.increment, se crea la orden de laboratorio si se pidió y el documento público de
+ * seguimiento al que lleva el QR del ticket. Al terminar se abre la pantalla del ticket.
  */
 public class VentaFragment extends Fragment {
 
@@ -64,6 +70,14 @@ public class VentaFragment extends Fragment {
     public static final String ARG_EXTRA = "extra";
 
     private static final String PUBLICO_GENERAL = "Público general";
+
+    private static final String TAG_ENTREGA = "calendario_entrega";
+    private static final String ESTADO_ENTREGA = "entrega";
+    /** Días que se proponen para la entrega de una orden de laboratorio. */
+    private static final int DIAS_ENTREGA = 7;
+
+    /** Fecha estimada de entrega de la orden (null mientras no se activa el switch). */
+    private Date entrega;
 
     /** Producto que hay que agregar en cuanto llegue la lista de productos de Firestore. */
     private String productoPorAgregar;
@@ -111,8 +125,29 @@ public class VentaFragment extends Fragment {
 
         binding.btnAgregar.setOnClickListener(v -> agregarAlCarrito());
         binding.etAnticipo.addTextChangedListener(new AlEscribir(texto -> actualizarTotales()));
-        binding.swOrden.setOnCheckedChangeListener((boton, marcado) ->
-                Campos.mostrar(binding.etOrdenDescripcion, marcado));
+        if (savedInstanceState != null && savedInstanceState.getLong(ESTADO_ENTREGA, 0) > 0) {
+            entrega = new Date(savedInstanceState.getLong(ESTADO_ENTREGA));
+        }
+        binding.swOrden.setOnCheckedChangeListener((boton, marcado) -> {
+            Campos.mostrar(binding.etOrdenDescripcion, marcado);
+            Campos.mostrar(binding.etEntrega, marcado);
+            if (marcado && entrega == null) ponerEntrega(entregaPorOmision());
+        });
+        binding.etEntrega.setOnClickListener(v -> elegirEntrega());
+        binding.tilEntrega.setEndIconOnClickListener(v -> elegirEntrega());
+        // Si se giró la pantalla con el calendario abierto, se vuelve a conectar su botón
+        Fragment abierto = getChildFragmentManager().findFragmentByTag(TAG_ENTREGA);
+        if (abierto instanceof MaterialDatePicker) {
+            @SuppressWarnings("unchecked")
+            MaterialDatePicker<Long> calendario = (MaterialDatePicker<Long>) abierto;
+            alElegirEntrega(calendario);
+        }
+        // "Efectivo recibido" solo tiene sentido en efectivo
+        binding.rgMetodo.setOnCheckedChangeListener((grupo, id) -> {
+            Campos.mostrar(binding.etRecibido, id == R.id.rbEfectivo);
+            actualizarTotales();
+        });
+        binding.etRecibido.addTextChangedListener(new AlEscribir(texto -> actualizarTotales()));
         binding.btnConfirmar.setOnClickListener(v -> confirmarVenta());
         actualizarTotales();
 
@@ -172,8 +207,56 @@ public class VentaFragment extends Fragment {
         escuchaProductos = null;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (entrega != null) outState.putLong(ESTADO_ENTREGA, entrega.getTime());
+    }
+
     private String texto(String s) {
         return s == null ? "" : s.toLowerCase(Locale.ROOT);
+    }
+
+    // ---------------- Entrega estimada ----------------
+
+    private Date entregaPorOmision() {
+        Calendar c = Calendar.getInstance();
+        c.setTime(Fechas.inicioDelDia());
+        c.add(Calendar.DAY_OF_MONTH, DIAS_ENTREGA);
+        return c.getTime();
+    }
+
+    private void ponerEntrega(Date dia) {
+        entrega = dia;
+        binding.etEntrega.setText(Fechas.diaConNombre(dia));
+        Campos.error(binding.etEntrega, null);
+    }
+
+    /** Calendario de Material que solo deja elegir de hoy en adelante. */
+    private void elegirEntrega() {
+        FragmentManager fm = getChildFragmentManager();
+        if (fm.isStateSaved() || fm.findFragmentByTag(TAG_ENTREGA) != null) return;
+        long hoy = Fechas.paraSelector(new Date());
+        CalendarConstraints limites = new CalendarConstraints.Builder()
+                .setStart(hoy)
+                .setValidator(DateValidatorPointForward.from(hoy))
+                .build();
+        MaterialDatePicker<Long> calendario = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Entrega estimada")
+                .setSelection(Fechas.paraSelector(entrega != null ? entrega : entregaPorOmision()))
+                .setCalendarConstraints(limites)
+                .setPositiveButtonText("Listo")
+                .setNegativeButtonText("Cancelar")
+                .build();
+        alElegirEntrega(calendario);
+        calendario.show(fm, TAG_ENTREGA);
+    }
+
+    private void alElegirEntrega(MaterialDatePicker<Long> calendario) {
+        calendario.addOnPositiveButtonClickListener(seleccion -> {
+            if (seleccion == null || binding == null) return;
+            ponerEntrega(Fechas.desdeSelector(seleccion));
+        });
     }
 
     // ---------------- Carrito ----------------
@@ -286,6 +369,13 @@ public class VentaFragment extends Fragment {
         } else {
             binding.tvSaldo.setText(Formato.moneda(Math.max(0, total - anticipo)));
         }
+        // Cambio en vivo debajo de "Efectivo recibido"
+        Double recibido = Formato.leerNumero(binding.etRecibido.getText().toString());
+        if (anticipo != null && recibido != null && anticipo > 0 && recibido >= anticipo) {
+            binding.tilRecibido.setHelperText("Cambio: " + Formato.moneda(recibido - anticipo));
+        } else {
+            binding.tilRecibido.setHelperText("Para calcular el cambio del ticket");
+        }
     }
 
     // ---------------- Confirmar ----------------
@@ -309,6 +399,23 @@ public class VentaFragment extends Fragment {
         double anticipo = anticipo();
         boolean conPaciente = binding.spPaciente.getSelectedItemPosition() > 0;
 
+        // Efectivo recibido (opcional): no puede ser menos de lo que se paga ahora
+        double recibido = 0;
+        String recibidoTexto = binding.etRecibido.getText().toString().trim();
+        if (binding.rgMetodo.getCheckedRadioButtonId() == R.id.rbEfectivo && !recibidoTexto.isEmpty()) {
+            String errorRecibido = Validaciones.importe(recibidoTexto, 1_000_000);
+            Double leido = Formato.leerNumero(recibidoTexto);
+            if (errorRecibido == null && leido != null && leido < anticipo) {
+                errorRecibido = "Es menos de lo que paga ahora (" + Formato.moneda(anticipo) + ")";
+            }
+            if (errorRecibido != null || leido == null) {
+                Campos.error(binding.etRecibido, errorRecibido != null ? errorRecibido : "Solo números");
+                return;
+            }
+            Campos.error(binding.etRecibido, null);
+            recibido = leido;
+        }
+
         // Un saldo pendiente necesita a quién cobrárselo: no se permite con "Público en general"
         if (!conPaciente && anticipo < total) {
             Campos.error(binding.etAnticipo, "Para dejar saldo pendiente elige un paciente registrado");
@@ -328,14 +435,20 @@ public class VentaFragment extends Fragment {
                 Campos.error(binding.etOrdenDescripcion, errorTrabajo);
                 return;
             }
+            if (entrega == null) {
+                Campos.error(binding.etEntrega, "Elige cuándo estarán listos");
+                return;
+            }
         }
 
         Venta venta = new Venta();
+        String telefono = "";
         int posicionCliente = binding.spPaciente.getSelectedItemPosition();
         if (posicionCliente > 0 && posicionCliente - 1 < pacientes.size()) {
             Paciente p = pacientes.get(posicionCliente - 1);
             venta.pacienteId = p.id;
             venta.pacienteNombre = p.nombre;
+            telefono = p.telefono != null ? p.telefono : "";
         } else {
             venta.pacienteId = "";
             venta.pacienteNombre = PUBLICO_GENERAL;
@@ -345,16 +458,69 @@ public class VentaFragment extends Fragment {
         venta.anticipo = anticipo;
         venta.saldo = Math.round((total - anticipo) * 100) / 100.0;   // sin residuos de decimales
         venta.metodoPago = metodoDePago();
+        venta.recibido = recibido;
+        venta.cambio = recibido > 0 ? Math.round((recibido - anticipo) * 100) / 100.0 : 0;
         venta.vendedorId = Sesion.getUsuario().id;
         venta.vendedorNombre = Sesion.getUsuario().nombre;
         venta.fecha = new Date();
+        venta.ordenFolio = "";
+        venta.ordenDescripcion = "";
+        venta.seguimiento = "";
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        WriteBatch lote = db.batch();
-        DocumentReference ventaRef = Sesion.coleccion("ventas").document();
-        lote.set(ventaRef, venta);
-        Map<String, Integer> existencias = new HashMap<>();   // para el historial: existencias antes de cada renglón
+        Orden orden = null;
+        if (conOrden) {
+            orden = new Orden();
+            orden.pacienteId = venta.pacienteId;
+            orden.pacienteNombre = venta.pacienteNombre;
+            orden.descripcion = trabajo;
+            orden.estatus = Orden.ENVIADO;
+            orden.fechaCreacion = venta.fecha;
+            orden.fechaEnvio = venta.fecha;
+            orden.fechaEntrega = entrega;
+            venta.ordenDescripcion = trabajo;
+            venta.fechaEntrega = entrega;
+        }
+
+        // Existencias de cada producto antes de la venta (para el historial), tomadas ahora y no
+        // al terminar de reservar el folio, por si mientras tanto llega otra lectura de Firestore
+        Map<String, Integer> existencias = new HashMap<>();
         for (Producto p : productosDisponibles) existencias.put(p.id, p.stock);
+
+        mostrarCargando(true);
+        Orden ordenFinal = orden;
+        String telefonoFinal = telefono;
+        Folios.reservar(true, conOrden).addOnCompleteListener(t ->
+                guardarVenta(venta, ordenFinal, t.isSuccessful() ? t.getResult() : null, existencias, telefonoFinal));
+    }
+
+    /**
+     * Segunda parte del cobro, ya con los folios. Si no se pudieron reservar (sin conexión),
+     * se usa un folio provisional y la venta se guarda igual: Firestore la sube al volver la red.
+     */
+    private void guardarVenta(Venta venta, @Nullable Orden orden, @Nullable long[] folios,
+                              Map<String, Integer> existencias, String telefono) {
+        DocumentReference ventaRef = Sesion.coleccion("ventas").document();
+        venta.folio = folios != null ? Folios.venta(folios[0]) : Folios.provisional("V", ventaRef.getId());
+
+        WriteBatch lote = FirebaseFirestore.getInstance().batch();
+        DocumentReference ordenRef = null;
+        if (orden != null) {
+            ordenRef = Sesion.coleccion("ordenes").document();
+            orden.folio = folios != null ? Folios.orden(folios[1]) : Folios.provisional("L", ordenRef.getId());
+            orden.ventaId = ventaRef.getId();
+            orden.ventaFolio = venta.folio;
+            venta.ordenFolio = orden.folio;
+        }
+        // Documento público del QR: solo si hay algo que seguir (orden de laboratorio o saldo)
+        DocumentReference seguimientoRef = null;
+        if (orden != null || venta.saldo > 0) {
+            seguimientoRef = Seguimientos.nuevo();
+            venta.seguimiento = seguimientoRef.getId();
+            if (orden != null) orden.seguimiento = venta.seguimiento;
+        }
+        if (orden != null) lote.set(ordenRef, orden);
+        lote.set(ventaRef, venta);
+
         for (ItemVenta i : venta.items) {
             // Resta las piezas vendidas directamente en el servidor
             lote.update(Sesion.coleccion("productos").document(i.productoId),
@@ -363,35 +529,27 @@ public class VentaFragment extends Fragment {
             Integer antes = existencias.get(i.productoId);
             int previas = antes != null ? antes : 0;
             Historial.registrar(lote, i.productoId, Movimiento.VENTA,
-                    "Venta de " + i.cantidad + " × " + i.nombre + " a " + Formato.moneda(i.precio)
+                    "Venta " + venta.folio + " de " + i.cantidad + " × " + i.nombre + " a " + Formato.moneda(i.precio)
                             + " · cliente: " + venta.pacienteNombre,
                     -i.cantidad, previas, ventaRef.getId());
             existencias.put(i.productoId, previas - i.cantidad);
         }
-        if (conOrden) {
-            Orden orden = new Orden();
-            orden.ventaId = ventaRef.getId();
-            orden.pacienteId = venta.pacienteId;
-            orden.pacienteNombre = venta.pacienteNombre;
-            orden.descripcion = trabajo;
-            orden.estatus = Orden.ENVIADO;
-            orden.fechaCreacion = venta.fecha;
-            orden.fechaEnvio = venta.fecha;
-            lote.set(Sesion.coleccion("ordenes").document(), orden);
-        }
 
-        mostrarCargando(true);
         lote.commit()
                 .addOnSuccessListener(x -> {
                     venta.id = ventaRef.getId();
                     mostrarCargando(false);
                     limpiar();
-                    ventaRegistrada(venta);
+                    abrirTicket(venta, telefono);
                 })
                 .addOnFailureListener(e -> {
                     mostrarCargando(false);
                     mensaje("No se pudo registrar la venta: " + e.getMessage());
                 });
+        // Aparte del lote: si falla, la venta se guarda igual (ver Seguimientos)
+        if (seguimientoRef != null) {
+            Seguimientos.publicar(seguimientoRef, Seguimientos.desde(venta, orden, Sesion.getOptica()));
+        }
     }
 
     /** Texto del método elegido en el control segmentado. */
@@ -402,28 +560,15 @@ public class VentaFragment extends Fragment {
         return "Efectivo";
     }
 
-    private void ventaRegistrada(Venta venta) {
+    /** Pantalla del ticket (si el usuario sigue en Punto de venta). */
+    private void abrirTicket(Venta venta, String telefono) {
         if (!isAdded()) return;
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Venta registrada")
-                .setMessage("Total: " + Formato.moneda(venta.total)
-                        + "\nAnticipo: " + Formato.moneda(venta.anticipo)
-                        + "\nSaldo pendiente: " + Formato.moneda(venta.saldo))
-                .setPositiveButton("Nota de venta PDF", (d, w) -> compartirNota(venta))
-                .setNegativeButton("Cerrar", null)
-                .show();
-    }
-
-    private void compartirNota(Venta venta) {
-        try {
-            File pdf = Pdf.notaVenta(requireContext(), Sesion.getOptica(), venta);
-            // Queda registrada en Firebase (opticas/{id}/documentos) con el PDF incluido
-            Documentos.registrar(pdf, Documento.NOTA_VENTA, "Nota de venta · " + Formato.moneda(venta.total),
-                    venta.id, venta.pacienteNombre);
-            Pdf.compartir(requireContext(), pdf);
-        } catch (IOException e) {
-            mensaje("No se pudo crear el PDF: " + e.getMessage());
-        }
+        NavController nav = NavHostFragment.findNavController(this);
+        if (nav.getCurrentDestination() == null || nav.getCurrentDestination().getId() != R.id.ventaFragment) return;
+        Bundle args = new Bundle();
+        args.putSerializable(VentaRegistradaFragment.ARG_VENTA, venta);
+        args.putString(VentaRegistradaFragment.ARG_TELEFONO, telefono);
+        nav.navigate(R.id.action_venta_to_registrada, args);
     }
 
     private void limpiar() {
@@ -431,8 +576,11 @@ public class VentaFragment extends Fragment {
         carrito.clear();
         adaptadorCarrito.notifyDataSetChanged();
         binding.etAnticipo.setText("");
+        binding.etRecibido.setText("");
         binding.swOrden.setChecked(false);
         binding.etOrdenDescripcion.setText("");
+        binding.etEntrega.setText("");
+        entrega = null;
         binding.spPaciente.setSelection(0);
         binding.rgMetodo.check(R.id.rbEfectivo);
         actualizarTotales();
