@@ -189,7 +189,7 @@ public class LaboratorioFragment extends Fragment {
             o.seguimiento = "";
             // También lleva folio consecutivo; sin conexión, uno provisional
             DocumentReference ref = Sesion.coleccion("ordenes").document();
-            Folios.reservar(false, true).addOnCompleteListener(t -> {
+            Folios.reservar(null, ref.getId(), o.pacienteNombre, 0).addOnCompleteListener(t -> {
                 o.folio = t.isSuccessful() && t.getResult() != null
                         ? Folios.orden(t.getResult()[1]) : Folios.provisional("L", ref.getId());
                 ref.set(o).addOnFailureListener(e -> mensaje("No se pudo guardar: " + e.getMessage()));

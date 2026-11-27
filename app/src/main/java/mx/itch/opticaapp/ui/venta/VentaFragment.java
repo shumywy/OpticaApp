@@ -487,25 +487,27 @@ public class VentaFragment extends Fragment {
         for (Producto p : productosDisponibles) existencias.put(p.id, p.stock);
 
         mostrarCargando(true);
+        // Los ids se crean aquí para que el documento de folios guarde a qué venta y orden se dieron
+        DocumentReference ventaRef = Sesion.coleccion("ventas").document();
+        DocumentReference ordenRef = conOrden ? Sesion.coleccion("ordenes").document() : null;
         Orden ordenFinal = orden;
         String telefonoFinal = telefono;
-        Folios.reservar(true, conOrden).addOnCompleteListener(t ->
-                guardarVenta(venta, ordenFinal, t.isSuccessful() ? t.getResult() : null, existencias, telefonoFinal));
+        Folios.reservar(ventaRef.getId(), ordenRef != null ? ordenRef.getId() : null, venta.pacienteNombre, venta.total)
+                .addOnCompleteListener(t -> guardarVenta(venta, ventaRef, ordenFinal, ordenRef,
+                        t.isSuccessful() ? t.getResult() : null, existencias, telefonoFinal));
     }
 
     /**
      * Segunda parte del cobro, ya con los folios. Si no se pudieron reservar (sin conexión),
      * se usa un folio provisional y la venta se guarda igual: Firestore la sube al volver la red.
      */
-    private void guardarVenta(Venta venta, @Nullable Orden orden, @Nullable long[] folios,
+    private void guardarVenta(Venta venta, DocumentReference ventaRef, @Nullable Orden orden,
+                              @Nullable DocumentReference ordenRef, @Nullable long[] folios,
                               Map<String, Integer> existencias, String telefono) {
-        DocumentReference ventaRef = Sesion.coleccion("ventas").document();
         venta.folio = folios != null ? Folios.venta(folios[0]) : Folios.provisional("V", ventaRef.getId());
 
         WriteBatch lote = FirebaseFirestore.getInstance().batch();
-        DocumentReference ordenRef = null;
-        if (orden != null) {
-            ordenRef = Sesion.coleccion("ordenes").document();
+        if (orden != null && ordenRef != null) {
             orden.folio = folios != null ? Folios.orden(folios[1]) : Folios.provisional("L", ordenRef.getId());
             orden.ventaId = ventaRef.getId();
             orden.ventaFolio = venta.folio;
@@ -518,7 +520,7 @@ public class VentaFragment extends Fragment {
             venta.seguimiento = seguimientoRef.getId();
             if (orden != null) orden.seguimiento = venta.seguimiento;
         }
-        if (orden != null) lote.set(ordenRef, orden);
+        if (orden != null && ordenRef != null) lote.set(ordenRef, orden);
         lote.set(ventaRef, venta);
 
         for (ItemVenta i : venta.items) {

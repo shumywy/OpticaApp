@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Venta registrada: vista previa del ticket (papel con bordes en zigzag, fondo PapelTicket
+    puesto desde el código) y, abajo fijos, los botones para enviarlo, imprimirlo o guardarlo.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ===== Palomita, título y folio sobre el degradado ===== -->
+            <LinearLayout
+                android:id="@+id/encabezado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="24dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="14dp">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginEnd="14dp"
+                    android:background="@drawable/bg_circulo_cielo"
+                    android:importantForAccessibility="no"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_check"
+                    app:tint="?attr/colorSobreAcento" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Texto.Titulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¡Venta registrada!" />
+
+                    <TextView
+                        android:id="@+id/tvSubtitulo"
+                        style="@style/Texto.Categoria"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        tools:text="Folio V-000123 · 23 nov 2026, 11:40" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnMas"
+                    style="@style/BotonIcono"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:contentDescription="Más opciones"
+                    android:src="@drawable/ic_mas" />
+            </LinearLayout>
+
+            <!-- ===== Ticket (el padding incluye 8 dp para la sombra del papel) ===== -->
+            <LinearLayout
+                android:id="@+id/ticket"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:orientation="vertical"
+                android:paddingStart="28dp"
+                android:paddingTop="28dp"
+                android:paddingEnd="28dp"
+                android:paddingBottom="34dp">
+
+                <ImageView
+                    android:id="@+id/ivLogo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center_horizontal"
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
+                    android:maxWidth="160dp"
+                    android:src="@drawable/ic_lentes"
+                    app:tint="?attr/colorTexto" />
+
+                <TextView
+                    android:id="@+id/tvOptica"
+                    style="@style/Texto.TituloHoja"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    tools:text="Óptica Vista Clara" />
+
+                <TextView
+                    android:id="@+id/tvDatosOptica"
+                    style="@style/Texto.Secundario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    tools:text="Av. Juárez 18, Centro, Chilpancingo · 747 471 2290" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/linea_punteada"
+                    android:layerType="software" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Texto.Categoria"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Cliente" />
+
+                    <TextView
+                        android:id="@+id/tvCliente"
+                        style="@style/Texto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="?attr/fuenteMedia"
+                        android:gravity="end"
+                        tools:text="María Fernanda López" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/filaAtendio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Texto.Categoria"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Atendió" />
+
+                    <TextView
+                        android:id="@+id/tvAtendio"
+                        style="@style/Texto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        tools:text="Laura Martínez" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/linea_punteada"
+                    android:layerType="software" />
+
+                <!-- Un renglón (item_ticket_renglon) por producto -->
+                <LinearLayout
+                    android:id="@+id/llRenglones"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/linea_punteada"
+                    android:layerType="software" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Texto.Seccion"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Total" />
+
+                    <TextView
+                        android:id="@+id/tvTotal"
+                        style="@style/Texto.Precio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="tnum"
+                        tools:text="$2,230.00" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvPagoEtiqueta"
+                        style="@style/Texto.Secundario"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        tools:text="Anticipo · Efectivo" />
+
+                    <TextView
+                        android:id="@+id/tvPago"
+                        style="@style/Texto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="tnum"
+                        tools:text="$1,000.00" />
+                </LinearLayout>
+
+                <!-- Solo en efectivo, si capturaron cuánto les dieron -->
+                <LinearLayout
+                    android:id="@+id/filaCambio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tvRecibido"
+                        style="@style/Texto.Secundario"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFeatureSettings="tnum"
+                        tools:text="Recibido $1,100.00" />
+
+                    <TextView
+                        android:id="@+id/tvCambio"
+                        style="@style/Texto.Secundario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="tnum"
+                        tools:text="Cambio $100.00" />
+                </LinearLayout>
+
+                <!-- Píldora terciaria: lo que el cliente todavía debe -->
+                <LinearLayout
+                    android:id="@+id/filaSaldo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_pildora_tercero"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="14dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="10dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        style="@style/Texto"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="?attr/fuenteMedia"
+                        android:text="Saldo pendiente"
+                        android:textColor="?attr/colorTercero" />
+
+                    <TextView
+                        android:id="@+id/tvSaldo"
+                        style="@style/Texto.Valor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="tnum"
+                        android:textColor="?attr/colorTercero"
+                        tools:text="$1,230.00" />
+                </LinearLayout>
+
+                <!-- Orden de laboratorio y QR de seguimiento -->
+                <LinearLayout
+                    android:id="@+id/bloqueSeguimiento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/linea_punteada"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:id="@+id/tvOrden"
+                        style="@style/Texto.Fila"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="Orden L-000045 · Mica antirreflejante" />
+
+                    <TextView
+                        android:id="@+id/tvEntrega"
+                        style="@style/Texto.Secundario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        tools:text="Tus lentes estarán listos el 28 de noviembre" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/ivQr"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            android:layout_marginEnd="14dp"
+                            android:contentDescription="Código QR para ver el estado del pedido"
+                            android:scaleType="fitCenter"
+                            tools:src="@drawable/ic_qr" />
+
+                        <TextView
+                            android:id="@+id/tvQrLeyenda"
+                            style="@style/Texto.Secundario"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            tools:text="Escanea con la cámara para ver el estado de tu pedido y tu saldo." />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    style="@style/Texto.Etiqueta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:text="Este comprobante no es una factura." />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ===== Pie fijo con las acciones ===== -->
+    <LinearLayout
+        android:id="@+id/pie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_hoja"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="18dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp">
+
+        <Button
+            android:id="@+id/btnWhatsApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enviar por WhatsApp"
+            app:icon="@drawable/ic_mensaje" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnImprimir"
+                style="@style/Boton.Secundario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="Imprimir"
+                app:icon="@drawable/ic_imprimir" />
+
+            <Button
+                android:id="@+id/btnGuardar"
+                style="@style/Boton.Secundario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:text="Guardar PDF"
+                app:icon="@drawable/ic_descargar" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnNuevaVenta"
+            style="@style/Boton.Texto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Nueva venta" />
+    </LinearLayout>
+</LinearLayout>

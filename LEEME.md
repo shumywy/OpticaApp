@@ -314,7 +314,10 @@ opticas/{opticaId}/ordenes/{id}               model/Orden
   fechaRecibido, fechaEntregado, fechaEntrega (estimada), seguimiento
 
 opticas/{opticaId}/contadores/folios
-  ventas, ordenes (último número usado de cada uno)
+  ventas, ordenes (último número usado de cada uno), prefijoVenta, prefijoOrden, digitos,
+  ultimoFolioVenta, ultimaVentaId, ultimaVentaCliente, ultimaVentaTotal, fechaUltimaVenta,
+  ultimoFolioOrden, ultimaOrdenId, ultimaOrdenCliente, fechaUltimaOrden,
+  ultimoUsuarioId, ultimoUsuarioNombre, creado, actualizado
 
 seguimiento/{token}                           model/Seguimiento  (público: lo abre el QR)
   opticaId, optica, opticaTelefono, opticaDireccion, folio, ordenFolio, cliente ("María F. L."),

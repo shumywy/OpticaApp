@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#C9CEF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C2142" media="(prefers-color-scheme: dark)">
+<title>Estado de tu pedido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!--
+  Seguimiento del pedido (lo abre el QR del ticket de Óptica App).
+  Dirección: https://<proyecto>.web.app/s/<token>
+  Lee el documento público /seguimiento/<token> con la API REST de Firestore; las reglas
+  permiten leer un documento exacto sin iniciar sesión, pero no listar la colección.
+-->
+<style>
+  :root {
+    --deg-1: #C9CEF7; --deg-2: #E1D6F8; --deg-3: #F8CFEA;
+    --fondo: #EEF0FB; --superficie: #FFFFFF; --tonal: #DFE3F8; --borde: #E4E6F2;
+    --texto: #1E1B4B; --texto-2: #64748B; --texto-3: #94A3B8;
+    --acento: #3BB4F2; --sobre-acento: #0E1222;
+    --marca: #5B21B6; --marca-suave: #EDE9FE;
+    --tercero: #B0175D; --tercero-suave: #FCE7F3;
+    --sombra: 0 10px 30px rgba(30, 27, 75, .10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --deg-1: #1C2142; --deg-2: #2A2349; --deg-3: #3B2242;
+      --fondo: #14172A; --superficie: #181B2E; --tonal: #272C4B; --borde: #2E3352;
+      --texto: #EEF0FA; --texto-2: #94A3B8; --texto-3: #64748B;
+      --acento: #4CBEF5; --sobre-acento: #0E1222;
+      --marca: #C4B5FD; --marca-suave: #2E2458;
+      --tercero: #F472B6; --tercero-suave: #3D1F33;
+      --sombra: 0 10px 30px rgba(0, 0, 0, .35);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(160deg, var(--deg-1) 0%, var(--deg-2) 45%, var(--deg-3) 100%);
+    background-color: var(--fondo);
+    color: var(--texto);
+    font-family: 'Lexend', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+  .pagina { max-width: 460px; margin: 0 auto; padding: 28px 16px 40px; }
+
+  header { padding: 4px 8px 22px; }
+  .eyebrow { font-size: 14px; font-weight: 600; margin: 0; }
+  h1 { font-size: 30px; font-weight: 300; letter-spacing: -.02em; line-height: 1.05; margin: 6px 0 0; }
+  .datos-optica { color: var(--texto-2); font-size: 13px; margin: 8px 0 0; line-height: 1.45; }
+
+  .tarjeta {
+    background: var(--superficie); border-radius: 28px; padding: 22px 20px;
+    box-shadow: var(--sombra); margin-bottom: 14px;
+  }
+  .folio { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .folio small { color: var(--texto-2); font-size: 12px; font-weight: 500; }
+  .folio strong { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .pildora { font-size: 12px; font-weight: 500; padding: 5px 11px; border-radius: 999px; white-space: nowrap; }
+  .pildora.marca { background: var(--marca-suave); color: var(--marca); }
+
+  .estatus { display: flex; gap: 14px; align-items: center; margin-top: 18px; }
+  .icono-estatus {
+    width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+    display: grid; place-items: center; background: var(--acento); color: var(--sobre-acento);
+  }
+  .icono-estatus svg { width: 26px; height: 26px; }
+  .estatus h2 { font-size: 22px; font-weight: 500; margin: 0; letter-spacing: -.01em; }
+  .estatus p { margin: 3px 0 0; color: var(--texto-2); font-size: 14px; line-height: 1.4; }
+
+  .trabajo { margin: 16px 0 0; font-size: 13px; color: var(--texto-2); }
+  .trabajo b { color: var(--texto); font-weight: 500; }
+
+  /* Línea de etapas */
+  ol.etapas { list-style: none; margin: 20px 0 0; padding: 0; }
+  ol.etapas li { position: relative; display: flex; gap: 14px; padding: 0 0 16px; }
+  ol.etapas li:last-child { padding-bottom: 0; }
+  ol.etapas li::before {
+    content: ""; position: absolute; left: 10px; top: 22px; bottom: 0; width: 2px; background: var(--borde);
+  }
+  ol.etapas li:last-child::before { display: none; }
+  ol.etapas li.hecha::before { background: var(--acento); }
+  .punto {
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; position: relative; z-index: 1;
+    border: 2px solid var(--borde); background: var(--superficie); display: grid; place-items: center;
+  }
+  .hecha .punto { background: var(--acento); border-color: var(--acento); color: var(--sobre-acento); }
+  .actual .punto { box-shadow: 0 0 0 5px color-mix(in srgb, var(--acento) 25%, transparent); }
+  .punto svg { width: 12px; height: 12px; }
+  .etapa-texto { padding-top: 1px; }
+  .etapa-texto b { display: block; font-weight: 500; font-size: 15px; }
+  .pendiente .etapa-texto b { color: var(--texto-2); font-weight: 400; }
+  .etapa-texto span { font-size: 12px; color: var(--texto-2); }
+
+  .entrega { display: flex; gap: 14px; align-items: center; }
+  .entrega .icono { width: 44px; height: 44px; border-radius: 14px; background: var(--tonal); display: grid; place-items: center; flex-shrink: 0; }
+  .entrega .icono svg { width: 22px; height: 22px; }
+  .entrega small { color: var(--texto-2); font-size: 12px; font-weight: 500; }
+  .entrega p { margin: 2px 0 0; font-size: 16px; font-weight: 500; }
+
+  .renglon { display: flex; justify-content: space-between; font-size: 14px; padding: 4px 0; color: var(--texto-2); }
+  .renglon span:last-child { color: var(--texto); font-variant-numeric: tabular-nums; }
+  .renglon.total { font-size: 17px; color: var(--texto); font-weight: 500; padding-bottom: 8px; }
+  .saldo {
+    margin-top: 10px; display: flex; justify-content: space-between; align-items: center;
+    background: var(--tercero-suave); color: var(--tercero); border-radius: 16px; padding: 12px 14px; font-weight: 500;
+  }
+  .saldo strong { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pagado { margin-top: 10px; background: var(--marca-suave); color: var(--marca); border-radius: 16px; padding: 12px 14px; font-weight: 500; text-align: center; }
+
+  .acciones { display: flex; gap: 10px; margin-top: 4px; }
+  .boton {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 52px; border-radius: 16px; border: 0; font: inherit; font-size: 15px; font-weight: 500;
+    text-decoration: none; cursor: pointer;
+  }
+  .boton svg { width: 20px; height: 20px; }
+  .boton.principal { background: var(--acento); color: var(--sobre-acento); }
+  .boton.tonal { background: var(--tonal); color: var(--texto); }
+  .boton:focus-visible { outline: 3px solid var(--marca); outline-offset: 2px; }
+
+  .pie { text-align: center; color: var(--texto-2); font-size: 12px; margin-top: 18px; line-height: 1.5; }
+
+  /* Cargando */
+  .esqueleto { border-radius: 10px; background: var(--tonal); animation: brillo 1.2s ease-in-out infinite alternate; }
+  @keyframes brillo { from { opacity: .55; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .esqueleto { animation: none; } }
+
+  .mensaje { text-align: center; padding: 34px 22px; }
+  .mensaje .icono-estatus { margin: 0 auto 14px; background: var(--tonal); color: var(--texto); }
+  .mensaje h2 { font-size: 20px; font-weight: 500; margin: 0; }
+  .mensaje p { color: var(--texto-2); font-size: 14px; line-height: 1.5; margin: 8px 0 0; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main class="pagina">
+  <header>
+    <p class="eyebrow" id="optica">Óptica App</p>
+    <h1>Estado de tu pedido</h1>
+    <p class="datos-optica" id="datosOptica" hidden></p>
+  </header>
+
+  <!-- Mientras carga -->
+  <section class="tarjeta" id="cargando" aria-busy="true" aria-label="Cargando">
+    <div class="esqueleto" style="height:16px;width:45%"></div>
+    <div style="display:flex;gap:14px;align-items:center;margin-top:20px">
+      <div class="esqueleto" style="width:52px;height:52px;border-radius:50%"></div>
+      <div style="flex:1"><div class="esqueleto" style="height:20px;width:70%"></div>
+      <div class="esqueleto" style="height:14px;width:90%;margin-top:8px"></div></div>
+    </div>
+    <div class="esqueleto" style="height:110px;margin-top:22px;border-radius:16px"></div>
+  </section>
+
+  <!-- Error o pedido no encontrado -->
+  <section class="tarjeta mensaje" id="error" hidden role="alert">
+    <div class="icono-estatus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></div>
+    <h2 id="errorTitulo">No encontramos tu pedido</h2>
+    <p id="errorTexto">Revisa que hayas escaneado el QR de tu ticket o pregunta en la óptica.</p>
+  </section>
+
+  <!-- Pedido -->
+  <div id="pedido" hidden>
+    <section class="tarjeta" aria-live="polite">
+      <div class="folio">
+        <div><small>Ticket</small><br><strong id="folio">—</strong></div>
+        <span class="pildora marca" id="cliente" hidden></span>
+      </div>
+
+      <div class="estatus">
+        <div class="icono-estatus" id="iconoEstatus"></div>
+        <div>
+          <h2 id="estatusTitulo">—</h2>
+          <p id="estatusTexto"></p>
+        </div>
+      </div>
+
+      <p class="trabajo" id="trabajo" hidden></p>
+      <ol class="etapas" id="etapas" hidden></ol>
+    </section>
+
+    <section class="tarjeta" id="tarjetaEntrega" hidden>
+      <div class="entrega">
+        <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14.5" rx="3"/><path d="M8 3.5v4M16 3.5v4M4 10h16"/></svg></div>
+        <div><small id="entregaEtiqueta">Entrega estimada</small><p id="entrega">—</p></div>
+      </div>
+    </section>
+
+    <section class="tarjeta" id="tarjetaPago">
+      <div class="renglon total"><span>Total</span><span id="total">—</span></div>
+      <div class="renglon"><span id="anticipoEtiqueta">Anticipo</span><span id="anticipo">—</span></div>
+      <div class="saldo" id="saldoCaja" hidden><span>Saldo pendiente</span><strong id="saldo">—</strong></div>
+      <div class="pagado" id="pagado" hidden>Pagado por completo</div>
+    </section>
+
+    <div class="acciones">
+      <a class="boton principal" id="llamar" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5h3.2l1.6 4-2 1.3a10.5 10.5 0 0 0 6.4 6.4l1.3-2 4 1.6V19a1.5 1.5 0 0 1-1.6 1.5A15.5 15.5 0 0 1 3.5 6.1 1.5 1.5 0 0 1 5 4.5z"/></svg>
+        Llamar
+      </a>
+      <button class="boton tonal" id="actualizar" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5v4h-4"/></svg>
+        Actualizar
+      </button>
+    </div>
+    <p class="pie"><span id="actualizado"></span><br><span id="nota">Presenta tu ticket al recoger tus lentes.</span></p>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // El proyecto sale del dominio de Hosting (opticaapp-moviles12.web.app); este es el de respaldo
+  var PROYECTO_POR_OMISION = 'opticaapp-moviles12';
+  var host = location.hostname;
+  var proyecto = /\.(web\.app|firebaseapp\.com)$/.test(host) ? host.split('.')[0] : PROYECTO_POR_OMISION;
+
+  var ICONOS = {
+    nube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18.5h10a4 4 0 0 0 .6-7.95A5.5 5.5 0 0 0 7 9.5a4.5 4.5 0 0 0 0 9z"/></svg>',
+    lab: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 3.5h5M10.5 3.5v5.2L5.4 17.6A2 2 0 0 0 7.1 20.5h9.8a2 2 0 0 0 1.7-2.9l-5.1-8.9V3.5M7.8 14h8.4"/></svg>',
+    tienda: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5 5.5 4.5h13L20 9.5M4 9.5h16M4 9.5v10h16v-10M9.5 19.5v-5h5v5"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    dinero: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="6.5" width="17" height="11" rx="2.5"/><circle cx="12" cy="12" r="2.5"/></svg>'
+  };
+
+  var ETAPAS = [
+    { clave: 'ENVIADO', fecha: 'fechaEnvio', nombre: 'Enviado al laboratorio', icono: 'nube',
+      titulo: 'Enviado al laboratorio', texto: 'Tu orden ya está en el laboratorio.' },
+    { clave: 'EN_PROCESO', fecha: 'fechaEnProceso', nombre: 'En proceso', icono: 'lab',
+      titulo: 'En proceso', texto: 'El laboratorio está fabricando tus lentes.' },
+    { clave: 'RECIBIDO', fecha: 'fechaRecibido', nombre: 'Listos para recoger', icono: 'tienda',
+      titulo: '¡Listos para recoger!', texto: 'Tus lentes ya están en la óptica. Pasa por ellos con tu ticket.' },
+    { clave: 'ENTREGADO', fecha: 'fechaEntregado', nombre: 'Entregado', icono: 'check',
+      titulo: 'Entregado', texto: 'Ya recogiste tus lentes. ¡Gracias por tu preferencia!' }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var moneda = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+  var fechaCorta = new Intl.DateTimeFormat('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  var fechaLarga = new Intl.DateTimeFormat('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  function token() {
+    var m = location.pathname.match(/\/s\/([A-Za-z0-9]{20})\/?$/);
+    if (m) return m[1];
+    var t = new URLSearchParams(location.search).get('t');
+    return t && /^[A-Za-z0-9]{20}$/.test(t) ? t : null;
+  }
+
+  /** Convierte los campos de la API REST ({stringValue: ...}) a valores normales. */
+  function valor(v) {
+    if (!v) return null;
+    if ('stringValue' in v) return v.stringValue;
+    if ('doubleValue' in v) return Number(v.doubleValue);
+    if ('integerValue' in v) return Number(v.integerValue);
+    if ('timestampValue' in v) return new Date(v.timestampValue);
+    if ('booleanValue' in v) return v.booleanValue;
+    return null;
+  }
+  function campos(doc) {
+    var r = {};
+    Object.keys(doc.fields || {}).forEach(function (k) { r[k] = valor(doc.fields[k]); });
+    return r;
+  }
+
+  function mostrarError(titulo, texto) {
+    $('cargando').hidden = true;
+    $('pedido').hidden = true;
+    $('errorTitulo').textContent = titulo;
+    $('errorTexto').textContent = texto;
+    $('error').hidden = false;
+  }
+
+  /** "7474712290" → "747 471 2290" (si no son 10 dígitos, se deja como venga). */
+  function telefono(t) {
+    var d = (t || '').replace(/[^0-9]/g, '');
+    return d.length === 10 ? d.slice(0, 3) + ' ' + d.slice(3, 6) + ' ' + d.slice(6) : (t || '');
+  }
+
+  function capital(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+  function pintar(s) {
+    document.title = 'Pedido ' + (s.folio || '') + ' · ' + (s.optica || 'Óptica');
+    $('optica').textContent = s.optica || 'Óptica App';
+    var datos = [s.opticaDireccion, telefono(s.opticaTelefono)].filter(Boolean).join(' · ');
+    $('datosOptica').textContent = datos;
+    $('datosOptica').hidden = !datos;
+
+    $('folio').textContent = s.folio || '—';
+    $('cliente').textContent = s.cliente || '';
+    $('cliente').hidden = !s.cliente;
+
+    var indice = -1;
+    ETAPAS.forEach(function (e, i) { if (e.clave === s.estatus) indice = i; });
+    var conOrden = indice >= 0;
+
+    if (conOrden) {
+      var e = ETAPAS[indice];
+      $('iconoEstatus').innerHTML = ICONOS[e.icono];
+      $('estatusTitulo').textContent = e.titulo;
+      $('estatusTexto').textContent = e.texto;
+      $('trabajo').innerHTML = '';
+      if (s.trabajo || s.ordenFolio) {
+        var b = document.createElement('b');
+        b.textContent = s.trabajo || 'Lentes';
+        $('trabajo').append('Orden ' + (s.ordenFolio || '') + ' · ', b);
+        $('trabajo').hidden = false;
+      }
+      var lista = $('etapas');
+      lista.innerHTML = '';
+      ETAPAS.forEach(function (et, i) {
+        var li = document.createElement('li');
+        li.className = i < indice ? 'hecha' : i === indice ? 'hecha actual' : 'pendiente';
+        if (i === indice) li.setAttribute('aria-current', 'step');
+        var punto = document.createElement('span');
+        punto.className = 'punto';
+        if (i <= indice) punto.innerHTML = ICONOS.check;
+        var t = document.createElement('div');
+        t.className = 'etapa-texto';
+        var nombre = document.createElement('b');
+        nombre.textContent = et.nombre;
+        t.appendChild(nombre);
+        var f = s[et.fecha];
+        if (f instanceof Date && i <= indice) {
+          var span = document.createElement('span');
+          span.textContent = capital(fechaCorta.format(f));
+          t.appendChild(span);
+        }
+        li.append(punto, t);
+        lista.appendChild(li);
+      });
+      lista.hidden = false;
+    } else {
+      $('iconoEstatus').innerHTML = ICONOS.dinero;
+      $('estatusTitulo').textContent = s.saldo > 0 ? 'Compra con saldo' : 'Compra pagada';
+      $('estatusTexto').textContent = s.saldo > 0
+        ? 'Puedes liquidar tu saldo en la óptica cuando gustes.'
+        : 'Tu compra está liquidada. ¡Gracias!';
+      $('etapas').hidden = true;
+      $('trabajo').hidden = true;
+    }
+
+    // Entrega estimada (no se muestra si ya se entregó)
+    var entregado = s.estatus === 'ENTREGADO';
+    if (s.fechaEntrega instanceof Date && !entregado) {
+      $('entregaEtiqueta').textContent = s.estatus === 'RECIBIDO' ? 'Se esperaban para' : 'Entrega estimada';
+      $('entrega').textContent = capital(fechaLarga.format(s.fechaEntrega));
+      $('tarjetaEntrega').hidden = false;
+    } else if (entregado && s.fechaEntregado instanceof Date) {
+      $('entregaEtiqueta').textContent = 'Entregados el';
+      $('entrega').textContent = capital(fechaLarga.format(s.fechaEntregado));
+      $('tarjetaEntrega').hidden = false;
+    } else {
+      $('tarjetaEntrega').hidden = true;
+    }
+
+    var total = Number(s.total) || 0, anticipo = Number(s.anticipo) || 0, saldo = Number(s.saldo) || 0;
+    $('total').textContent = moneda.format(total);
+    $('anticipoEtiqueta').textContent = saldo > 0 ? 'Anticipo' : 'Pagado';
+    $('anticipo').textContent = moneda.format(anticipo);
+    $('saldo').textContent = moneda.format(saldo);
+    $('saldoCaja').hidden = !(saldo > 0);
+    $('pagado').hidden = saldo > 0;
+
+    var tel = (s.opticaTelefono || '').replace(/[^0-9+]/g, '');
+    if (tel) { $('llamar').href = 'tel:' + tel; $('llamar').hidden = false; }
+    else { $('llamar').hidden = true; }
+
+    $('nota').textContent = conOrden ? 'Presenta tu ticket al recoger tus lentes.' : 'Presenta tu ticket al pagar tu saldo.';
+
+    var cuando = s.actualizado instanceof Date ? s.actualizado : null;
+    $('actualizado').textContent = cuando ? 'Última actualización: ' + fechaCorta.format(cuando) : '';
+
+    $('cargando').hidden = true;
+    $('error').hidden = true;
+    $('pedido').hidden = false;
+  }
+
+  var cargandoAhora = false;
+  function cargar() {
+    var t = token();
+    if (!t) {
+      mostrarError('Falta el código del pedido', 'Abre esta página escaneando el QR de tu ticket.');
+      return;
+    }
+    if (cargandoAhora) return;
+    cargandoAhora = true;
+    $('actualizar').disabled = true;
+    var url = 'https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(proyecto) +
+      '/databases/(default)/documents/seguimiento/' + t;
+    fetch(url, { cache: 'no-store' })
+      .then(function (r) {
+        if (r.status === 404) throw { titulo: 'No encontramos tu pedido', texto: 'Revisa que hayas escaneado el QR de tu ticket o pregunta en la óptica.' };
+        if (r.status === 403) throw { titulo: 'Seguimiento no disponible', texto: 'La óptica todavía no activa esta página. Pregunta por tu pedido directamente.' };
+        if (!r.ok) throw { titulo: 'No se pudo consultar', texto: 'Intenta de nuevo en un momento.' };
+        return r.json();
+      })
+      .then(function (doc) { pintar(campos(doc)); })
+      .catch(function (e) {
+        // Si ya se veía el pedido, se conserva y solo se avisa en el pie
+        if (!$('pedido').hidden) { $('actualizado').textContent = 'Sin conexión: mostrando lo último que se cargó.'; return; }
+        mostrarError(e && e.titulo ? e.titulo : 'Sin conexión', e && e.texto ? e.texto : 'Revisa tu internet e intenta de nuevo.');
+      })
+      .then(function () { cargandoAhora = false; $('actualizar').disabled = false; });
+  }
+
+  $('actualizar').addEventListener('click', cargar);
+  // Se refresca solo cada minuto mientras la página está a la vista
+  setInterval(function () { if (document.visibilityState === 'visible') cargar(); }, 60000);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') cargar(); });
+  cargar();
+})();
+</script>
+</body>
+</html>

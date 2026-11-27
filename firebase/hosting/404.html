@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Página no encontrada</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --texto: #1E1B4B; --texto-2: #64748B; --superficie: #FFFFFF; --d1: #C9CEF7; --d2: #E1D6F8; --d3: #F8CFEA; }
+  @media (prefers-color-scheme: dark) {
+    :root { --texto: #EEF0FA; --texto-2: #94A3B8; --superficie: #181B2E; --d1: #1C2142; --d2: #2A2349; --d3: #3B2242; }
+  }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px; box-sizing: border-box;
+    background: linear-gradient(160deg, var(--d1), var(--d2) 45%, var(--d3)); color: var(--texto);
+    font-family: 'Lexend', system-ui, sans-serif; }
+  .tarjeta { background: var(--superficie); border-radius: 28px; padding: 28px 24px; max-width: 380px; text-align: center;
+    box-shadow: 0 10px 30px rgba(30, 27, 75, .10); }
+  h1 { font-weight: 300; font-size: 26px; margin: 0 0 8px; }
+  p { color: var(--texto-2); line-height: 1.5; margin: 0; font-size: 15px; }
+</style>
+</head>
+<body>
+  <div class="tarjeta">
+    <h1>No encontramos esta página</h1>
+    <p>Escanea con la cámara el código QR de tu ticket para ver cómo va tu pedido y tu saldo.</p>
+  </div>
+</body>
+</html>

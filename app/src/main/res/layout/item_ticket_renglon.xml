@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Renglón de un producto en la vista previa del ticket -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="8dp">
+
+    <TextView
+        android:id="@+id/tvNombre"
+        style="@style/Texto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="?attr/fuenteMedia"
+        tools:text="Armazón Acetato A-102" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvDetalle"
+            style="@style/Texto.Categoria"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFeatureSettings="tnum"
+            tools:text="1 × $1,450.00" />
+
+        <TextView
+            android:id="@+id/tvImporte"
+            style="@style/Texto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFeatureSettings="tnum"
+            tools:text="$1,450.00" />
+    </LinearLayout>
+</LinearLayout>
